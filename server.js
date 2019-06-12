@@ -1,7 +1,5 @@
-// server.js
-// where your node app starts
-
-// init project
+const cmd = require("node-cmd");
+const crypto = require("crypto");
 const request = require('request');
 const http = require("http");
 const https = require("https");
@@ -24,6 +22,26 @@ app.get('*', async (req, res) => {
   }
 });
 
+app.post('*', async (req, res) => {
+  // If event is "push"
+  if (req.path.match(/^\/git$/i)) {
+    let hmac = crypto.createHmac("sha1", process.env.GIT_TOKEN);
+    let sig  = "sha1=" + hmac.update(JSON.stringify(req.body)).digest("hex");
+    if (req.headers['x-github-event'] == "push" &&
+        sig == req.headers['x-hub-signature']) {
+      cmd.run('chmod 777 git.sh'); /* :/ Fix no perms after updating */
+      cmd.get('./git.sh', (err, data) => {  // Run our script
+        if (data) console.log(data);
+        if (err) console.log(err);
+      });
+      cmd.run('refresh');  // Refresh project
+      console.log("> [GIT] Updated with origin/master");
+    }
+  }
+
+  return res.sendStatus(200); // Send back OK status
+});
+
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
   console.log('Webserver started. Port: ' + listener.address().port);
@@ -42,4 +60,4 @@ bot.on('message', msg => {
 });
 
 
-bot.login(process.env.DISCORD_TOKEN);
+//bot.login(process.env.DISCORD_TOKEN);
