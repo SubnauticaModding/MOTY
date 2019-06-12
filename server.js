@@ -37,9 +37,8 @@ app.post('*', async (req, res) => {
       cmd.run('refresh');  // Refresh project
       console.log("> [GIT] Updated with origin/master");
     }
+    return res.sendStatus(200);
   }
-
-  return res.sendStatus(200); // Send back OK status
 });
 
 // listen for requests :)
