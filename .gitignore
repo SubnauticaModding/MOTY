@@ -1,0 +1,9 @@
+
+.idea/workspace.xml
+.idea/misc.xml
+.idea/MOTY.iml
+.idea/modules.xml
+.idea/vcs.xml
+node_modules/
+package-lock.json
+/secrets.txt
