@@ -41,7 +41,7 @@ app.post('*', async (req, res) => {
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
   console.log('Webserver started. Port: ' + listener.address().port);
-  // TEST
+  
 });
 
 bot.on('ready', () => {
