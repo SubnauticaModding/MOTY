@@ -24,11 +24,8 @@ app.get('*', async (req, res) => {
 
 app.post('*', async (req, res) => {
   // If event is "push"
-  if (req.path.match(/^\/git$/i)) {
-    let hmac = crypto.createHmac("sha1", process.env.GIT_TOKEN);
-    let sig  = "sha1=" + hmac.update(JSON.stringify(req.body)).digest("hex");
-    if (req.headers['x-github-event'] == "push" &&
-        sig == req.headers['x-hub-signature']) {
+  if (req.path.match(/^\/gitsecret871243197436529235ß4262452948525742562454352654$/i)) {
+    if (req.headers['x-github-event'] == "push") {
       cmd.run('chmod 777 git.sh'); /* :/ Fix no perms after updating */
       cmd.get('./git.sh', (err, data) => {  // Run our script
         if (data) console.log(data);
