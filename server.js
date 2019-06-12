@@ -24,7 +24,7 @@ app.get('*', async (req, res) => {
 
 app.post('*', async (req, res) => {
   // If event is "push"
-  if (req.path.match(/^\/gitsecret871243197436529235ß4262452948525742562454352654$/i)) {
+  if (req.path.match(/^\/gitsecret8712431974365292354262452948525742562454352654$/i)) {
     if (req.headers['x-github-event'] == "push") {
       cmd.run('chmod 777 git.sh'); /* :/ Fix no perms after updating */
       cmd.get('./git.sh', (err, data) => {  // Run our script
