@@ -41,7 +41,7 @@ app.post('*', async (req, res) => {
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
   console.log('Webserver started. Port: ' + listener.address().port);
-  
+
 });
 
 bot.on('ready', () => {
@@ -57,4 +57,4 @@ bot.on('message', msg => {
 });
 
 
-//bot.login(process.env.DISCORD_TOKEN);
+bot.login(process.env.DISCORD_TOKEN);
