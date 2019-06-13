@@ -9,3 +9,6 @@ package-lock.json
 /secrets.txt
 /test-server/
 .idea/jsLibraryMappings.xml
+secrets.txt
+test-server/
+.vscode/
