@@ -4,15 +4,58 @@ const request = require('request');
 const http = require("http");
 const https = require("https");
 const express = require('express');
-const app = express();
 const Discord = require('discord.js');
-const bot = new Discord.Client();
 const config = require("./config.json");
 const util = require('./util.js');
+const sql = require('better-sqlite3');
+const fs = require('fs');
 
+var _running = false;
+var _running_web = false;
+var _running_discord = false;
+var _running_discord_loggedin = false;
+var _running_db = false;
 
+var web;
+var web_fallback;
+var bot;
+var database;
 
-app.get('*', async (req, res) => {
+function boot() {
+    if (_running) return;
+    var _bootcrash = false;
+    bot = new Discord.Client();
+    var _discordlgin = bot.login(process.env.DISCORD_TOKEN);
+    _discordlgin.then(() => {
+        _running_discord = true;
+    }).catch(ex => {
+        _bootcrash = true;
+    });
+    if (!fs.existsSync(__dirname + '/dbcreated')) {
+        try {
+            if (fs.existsSync(__dirname + '/dbcreated')) fs.unlinkSync(__dirname + '/dbcreated');
+            if (fs.existsSync(__dirname + '/db.db')) fs.unlinkSync(__dirname + '/db.db');
+            fs.writeFileSync(__dirname + '/dbcreated');
+            _running_db = true;
+        } catch (ex) {
+            _bootcrash = true;
+        }
+    } else {
+        try {
+            database = new sql('db.db');
+            _running_db = true;
+        } catch (ex) {
+            _bootcrash = true;
+        }
+    }
+    _bootcrash = true;
+    if (_bootcrash) {
+        web_fallback = express();
+        web_fallback.listen(process.env.PORT);
+    }
+}
+
+web.get('*', async (req, res) => {
   if (req.path.match(/^\/cs\.gif$/i)) {
     res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FSNModding.gif');
   } else if (req.path.match(/^\/alterra\.png$/i)) {
@@ -24,11 +67,11 @@ app.get('*', async (req, res) => {
   }
 });
 
-app.post('*', async (req, res) => {
+web.post('*', async (req, res) => {
   res.sendStatus(200);
 });
 
-const listener = app.listen(process.env.PORT, function () {
+const listener = web.listen(process.env.PORT, function () {
   console.log('Webserver started. Port: ' + listener.address().port);
 });
 
@@ -45,7 +88,7 @@ async function getModInfo(game, id) {
   var response = await fetch("http://api.nexusmods.com/v1/games/" + game + "/mods/" + id + ".json", {
     method: "GET",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "weblication/json",
       "apikey": process.env.NEXUS_TOKEN
     }
   });
@@ -61,4 +104,8 @@ async function getModInfo(game, id) {
   return result;
 }
 
-//bot.login(process.env.DISCORD_TOKEN);
+web_fallback.all('*', async (req, res) => {
+    res.sendStatus(500);
+});
+
+boot();
