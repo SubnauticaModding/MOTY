@@ -1,1 +1,0 @@
-This project may not be used by any third parties.
