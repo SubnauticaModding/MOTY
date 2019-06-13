@@ -1,4 +1,5 @@
 const config = require("./config.json");
+const Discord = require("discord.js");
 
 // Adds a proxy to console methods to send messages in chat
 module.exports.enableLoggingProxy = (client) => {
