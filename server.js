@@ -57,4 +57,4 @@ bot.on('message', msg => {
 });
 
 
-bot.login(process.env.DISCORD_TOKEN);
+//bot.login(process.env.DISCORD_TOKEN);
