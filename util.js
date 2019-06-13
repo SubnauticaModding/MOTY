@@ -48,15 +48,15 @@ module.exports.enableLoggingProxy = (client) => {
 
   client.on('debug', (s) => {
     if (s.includes('[connection]')) return;
-    client.channels.get(config.consoleChannelID).send(new Discord.MessageEmbed().setAuthor('Debug').setDescription(s));
+    client.channels.get(config.consoleChannelID).sendMessage(new Discord.MessageEmbed().setAuthor('Debug').setDescription(s));
   });
   client.on('info', (s) => {
-    client.channels.get(config.consoleChannelID).send(new Discord.MessageEmbed().setAuthor('Log').setDescription(s).setColor('BLUE'));
+    client.channels.get(config.consoleChannelID).sendMessage(new Discord.MessageEmbed().setAuthor('Log').setDescription(s).setColor('BLUE'));
   });
   client.on('warn', (s) => {
-    client.channels.get(config.consoleChannelID).send(new Discord.MessageEmbed().setAuthor('Warn').setDescription(s).setColor('ORANGE'));
+    client.channels.get(config.consoleChannelID).sendMessage(new Discord.MessageEmbed().setAuthor('Warn').setDescription(s).setColor('ORANGE'));
   });
   client.on('error', (s) => {
-    client.channels.get(config.consoleChannelID).send(new Discord.MessageEmbed().setAuthor('Error').setDescription(s).setColor('RED'));
+    client.channels.get(config.consoleChannelID).sendMessage(new Discord.MessageEmbed().setAuthor('Error').setDescription(s).setColor('RED'));
   });
 };
