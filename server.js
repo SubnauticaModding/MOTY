@@ -6,12 +6,11 @@ const https = require("https");
 const express = require('express');
 const app = express();
 const Discord = require('discord.js');
-const util = require('./util.js');
-const config = require("./config.json");
-
 const bot = new Discord.Client();
+const config = require("./config.json");
+const util = require('./util.js');
 
-util.enableLoggingProxy(bot);
+
 
 app.get('*', async (req, res) => {
   if (req.path.match(/^\/cs\.gif$/i)) {
@@ -34,6 +33,7 @@ const listener = app.listen(process.env.PORT, function () {
 });
 
 bot.on('ready', () => {
+  util.enableLoggingProxy(bot);
   console.log(`Logged in as ${bot.user.tag}!`);
   setInterval(function () {
     bot.user.setStatus('dnd');
