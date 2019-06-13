@@ -11,7 +11,7 @@ const config = require("./config.json");
 
 const bot = new Discord.Client();
 
-await util.enableLoggingProxy(bot);
+util.enableLoggingProxy(bot);
 
 app.get('*', async (req, res) => {
   if (req.path.match(/^\/cs\.gif$/i)) {

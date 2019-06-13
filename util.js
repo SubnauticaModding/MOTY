@@ -1,7 +1,7 @@
 const config = require("./config.json");
 
 // Adds a proxy to console methods to send messages in chat
-module.exports.enableLoggingProxy = async (client) => {
+module.exports.enableLoggingProxy = (client) => {
   const debug = console.debug;
   const log = console.log;
   const info = console.info;
