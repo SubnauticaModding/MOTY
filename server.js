@@ -26,19 +26,7 @@ app.get('*', async (req, res) => {
 });
 
 app.post('*', async (req, res) => {
-  // If event is "push"
-  if (req.path.match(/^\/gitsecret8712431974365292354262452948525742562454352654$/i)) {
-    if (req.headers['x-github-event'] == "push") {
-      cmd.run('chmod 777 git.sh'); /* :/ Fix no perms after updating */
-      cmd.get('./git.sh', (err, data) => { // Run our script
-        if (data) console.log(data);
-        if (err) console.log(err);
-      });
-      cmd.run('refresh'); // Refresh project
-      console.log("> [GIT] Updated with origin/master");
-    }
-    return res.sendStatus(200);
-  }
+  res.sendStatus(200);
 });
 
 const listener = app.listen(process.env.PORT, function () {
@@ -48,7 +36,7 @@ const listener = app.listen(process.env.PORT, function () {
 bot.on('ready', () => {
   console.log(`Logged in as ${bot.user.tag}!`);
   setInterval(function () {
-    bot.user.setStatus('idle');
+    bot.user.setStatus('dnd');
     bot.user.setActivity('games until December 1st');
   }, 1000);
 });
