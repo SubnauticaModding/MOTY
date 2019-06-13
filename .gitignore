@@ -6,6 +6,5 @@
 .idea/vcs.xml
 node_modules/
 package-lock.json
-secrets.txt
-test-server/
-.vscode/
+/secrets.txt
+/test-server/
