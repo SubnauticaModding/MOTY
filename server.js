@@ -44,7 +44,6 @@ async function boot() {
         }
     } else {
         try {
-            throw new Error("THIS IS A TEST ERROR IN THE DB");
             database = new sql('db.db');
             _running_db = true;
         } catch (ex) {
