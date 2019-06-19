@@ -25,7 +25,9 @@
     "url": "^0.11.0",
     "ejs": "^2.6.1",
     "form-data": "^2.3.3",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "useragent": "^2.3.0",
+    "express-useragent": "^1.0.12"
   },
   "engines": {
     "node": "8.x"
