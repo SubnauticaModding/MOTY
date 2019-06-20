@@ -131,8 +131,6 @@ web.all('*', async (req, res) => {
   res.sendStatus(200);
 });
 
-
-
 async function getModInfo(game, id) {
   var response = await fetch("http://api.nexusmods.com/v1/games/" + game + "/mods/" + id + ".json", {
     method: "GET",
