@@ -9,13 +9,13 @@ const https = require("https");
 const express = require('express');
 const Discord = require('discord.js');
 const config = require("./config.json");
-const util = require('./util.js');
+const util = require('./logging_proxy.js');
 const sql = require('better-sqlite3');
 const fs = require('fs');
 const querystring = require('querystring');
 const browser_checker = require('./browser_checker.js');
 const dc_webhook = require('./discord_webhook.js');
-const dc_fallback = require('./discord_fallback');
+const dc_fallback = require('./discord_fallback.js');
 const ejs = require('ejs');
 const uap = require('express-useragent');
 
@@ -67,13 +67,17 @@ async function boot() {
       //bot_fallback.sendError(config.consoleChannelID, _error_db);
       dc_fallback.sendError(bot, config.consoleChannelID, _error_db);
     } else {
-      dc_webhook.initError(_error_discord,_error_db);
+      dc_webhook.initError(_error_discord, _error_db);
     }
-    web_fallback.listen(process.env.PORT, () => {console.debug(`Fallback server running on port ${process.env.PORT}`)});
+    web_fallback.listen(process.env.PORT, () => {
+      console.debug(`Fallback server running on port ${process.env.PORT}`)
+    });
     return;
   }
   boot_bot();
-  web.listen(process.env.PORT, () => {console.debug(`Web server running on port ${process.env.PORT}`)});
+  web.listen(process.env.PORT, () => {
+    console.debug(`Web server running on port ${process.env.PORT}`)
+  });
 }
 
 function boot_bot() {
@@ -91,7 +95,7 @@ function fallback_bot() {
     var _alarmOn = false;
     setInterval(function () {
       var _activity = "ERROR" + (_alarmOn ? " 🚨" : "");
-      _alarmOn =!_alarmOn;
+      _alarmOn = !_alarmOn;
       bot.user.setStatus('dnd');
       bot.user.setActivity(_activity);
     }, 5000);
