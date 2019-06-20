@@ -26,6 +26,7 @@ var _running_db = false;
 
 var web = express();
 var web_fallback = express();
+web.use(uap.express());
 const bot = new Discord.Client();
 //var bot_fallback = dc_fallback(bot);
 var database;
@@ -42,10 +43,10 @@ async function boot() {
     _bootcrash = true;
     _error_discord = ex;
   }
-  if (!fs.existsSync(__dirname + '/dbcreated')) {
+  if (!fs.existsSync(__dirname + '/data/dbcreated')) {
     try {
-      if (fs.existsSync(__dirname + '/db.db')) fs.unlinkSync(__dirname + '/db.db');
-      fs.writeFileSync(__dirname + '/dbcreated');
+      if (fs.existsSync(__dirname + '/data/db.db')) fs.unlinkSync(__dirname + '/db.db');
+      fs.writeFileSync(__dirname + '/data/dbcreated');
       _running_db = true;
     } catch (ex) {
       _bootcrash = true;
@@ -53,7 +54,7 @@ async function boot() {
     }
   } else {
     try {
-      database = new sql('db.db');
+      database = new sql('data/db.db');
       _running_db = true;
     } catch (ex) {
       _bootcrash = true;
@@ -104,7 +105,6 @@ function fallback_bot() {
   }
 }
 
-web.use(uap.express());
 web.get('*', async (req, res) => {
   let _p = req.path;
   let _ua = req.useragent;
@@ -125,10 +125,6 @@ web.get('*', async (req, res) => {
   } else {
     res.sendFile(__dirname + "/coming_soon.html");
   }
-});
-
-web.post('*', async (req, res) => {
-  res.sendStatus(200);
 });
 
 web.all('*', async (req, res) => {
