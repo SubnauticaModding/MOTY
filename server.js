@@ -43,6 +43,9 @@ async function boot() {
     _bootcrash = true;
     _error_discord = ex;
   }
+  if (!fs.existsSync(__dirname + '/data')) {
+    fs.mkdirSync(__dirname + '/data');
+  }
   if (!fs.existsSync(__dirname + '/data/dbcreated')) {
     try {
       if (fs.existsSync(__dirname + '/data/db.db')) fs.unlinkSync(__dirname + '/db.db');
