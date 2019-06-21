@@ -1,24 +1,27 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const cmd = require("node-cmd");
+const sql = require('better-sqlite3');
 const crypto = require("crypto");
-const request = require('request-promise');
+const Discord = require('discord.js');
+const ejs = require('ejs');
+const express = require('express');
+const uap = require('express-useragent');
+const fs = require('fs');
 const http = require("http");
 const https = require("https");
-const express = require('express');
-const Discord = require('discord.js');
-const config = require("../config.json");
-const util = require('./logging_proxy.js');
-const sql = require('better-sqlite3');
-const fs = require('fs');
-const querystring = require('querystring');
-const browser_checker = require('./browser_checker.js');
-const dc_webhook = require('./discord_webhook.js');
-const dc_fallback = require('./discord_fallback.js');
-const ejs = require('ejs');
-const uap = require('express-useragent');
+const cmd = require("node-cmd");
 const path = require('path');
+const querystring = require('querystring');
+const request = require('request-promise');
+
+const config = require("../config.json");
+
+const browser_checker = require('./browser_checker.js');
+const dc_fallback = require('./discord_fallback.js');
+const dc_webhook = require('./discord_webhook.js');
+const util = require('./logging_proxy.js');
+const nexus = require('./nexus.js');
 
 var _running = false;
 var _running_web = false;
@@ -159,26 +162,6 @@ web.get('*', async (req, res) => {
 web.all('*', async (req, res) => {
   res.sendStatus(200);
 });
-
-async function getModInfo(game, id) {
-  var response = await fetch("http://api.nexusmods.com/v1/games/" + game + "/mods/" + id + ".json", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": process.env.NEXUS_TOKEN
-    }
-  });
-  var object = await response.json();
-
-  if (Number.parseInt(response.headers["x-rl-daily-remaining"]) == 0)
-    console.error("API KEY HAS NO MORE REQUESTS AVAILABLE!");
-
-  var result = {};
-  result.name = object.name;
-  result.image = object.picture_url;
-
-  return result;
-}
 
 web_fallback.all('*', async (req, res) => {
   res.sendStatus(500);
