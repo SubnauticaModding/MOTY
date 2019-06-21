@@ -17,11 +17,12 @@ const request = require('request-promise');
 
 const config = require("../config.json");
 
-const browser_checker = require('./browser_checker.js');
-const dc_fallback = require('./discord_fallback.js');
-const dc_webhook = require('./discord_webhook.js');
-const util = require('./logging_proxy.js');
-const nexus = require('./nexus.js');
+const browser_checker = require('./browser_checker');
+const dc_fallback = require('./discord_fallback');
+const dc_webhook = require('./discord_webhook');
+const fsutil = require('./fs_util')
+const util = require('./logging_proxy');
+const nexus = require('./nexus');
 
 var _running = false;
 var _running_web = false;
@@ -152,7 +153,7 @@ web.get('*', async (req, res) => {
     }
   } else {
     if (fs.existsSync(__dirname + "/get" + path + ".js")) {
-      eval(bin2String(fs.readFileSync(__dirname + "/get" + path + ".js")));
+      eval(fsutil.bin2String(fs.readFileSync(__dirname + "/get" + path + ".js")));
     } else {
       res.redirect("/");
     }
