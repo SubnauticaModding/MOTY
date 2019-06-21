@@ -61,7 +61,7 @@ async function boot() {
     }
   } else {
     try {
-      database = new sql(__dirname + '/data/db.db');
+      database = new sql('data/db.db');
       _running_db = true;
     } catch (ex) {
       _bootcrash = true;
