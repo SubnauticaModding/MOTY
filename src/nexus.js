@@ -14,6 +14,7 @@ async function getModInfo(game, id) {
   var result = {};
   result.name = object.name;
   result.image = object.picture_url;
+  result.description = object.summary;
 
   return result;
 }

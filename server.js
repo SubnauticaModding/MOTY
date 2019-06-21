@@ -11,17 +11,17 @@ const fs = require('fs');
 const http = require("http");
 const https = require("https");
 const cmd = require("node-cmd");
-const path = require('path');
 const querystring = require('querystring');
 const request = require('request-promise');
 
-const config = require("../config.json");
+const config = require("./config.json");
 
-const browser_checker = require('./browser_checker.js');
-const dc_fallback = require('./discord_fallback.js');
-const dc_webhook = require('./discord_webhook.js');
-const util = require('./logging_proxy.js');
-const nexus = require('./nexus.js');
+const browser_checker = require('./src/browser_checker');
+const dc_fallback = require('./src/discord_fallback');
+const dc_webhook = require('./src/discord_webhook');
+const fsutil = require('./src/fs_util')
+const util = require('./src/logging_proxy');
+const nexus = require('./src/nexus');
 
 var _running = false;
 var _running_web = false;
@@ -47,13 +47,13 @@ async function boot() {
     _bootcrash = true;
     _error_discord = ex;
   }
-  if (!fs.existsSync(__dirname + '/../data')) {
-    fs.mkdirSync(__dirname + '/../data');
+  if (!fs.existsSync(__dirname + '/data')) {
+    fs.mkdirSync(__dirname + '/data');
   }
-  if (!fs.existsSync(__dirname + '/../data/dbcreated')) {
+  if (!fs.existsSync(__dirname + '/data/dbcreated')) {
     try {
-      if (fs.existsSync(__dirname + '/../data/db.db')) fs.unlinkSync(__dirname + '/../data/db.db');
-      fs.writeFileSync(__dirname + '/../data/dbcreated');
+      if (fs.existsSync(__dirname + '/data/db.db')) fs.unlinkSync(__dirname + '/data/db.db');
+      fs.writeFileSync(__dirname + '/data/dbcreated');
       _running_db = true;
     } catch (ex) {
       _bootcrash = true;
@@ -61,7 +61,7 @@ async function boot() {
     }
   } else {
     try {
-      database = new sql(__dirname + '/../data/db.db');
+      database = new sql('data/db.db');
       _running_db = true;
     } catch (ex) {
       _bootcrash = true;
@@ -129,43 +129,42 @@ web.get('*', async (req, res) => {
   let path = req.path;
   let agent = req.useragent;
   if (!browser_checker.check(agent.browser, agent.version)) {
-    res.render(path.resolve(__dirname + "/../www/html/browser_unsup.ejs"));
+    res.render(__dirname + "/www/html/browser_unsup.ejs");
     return;
   }
 
   if (path.match("^/$")) {
-    res.sendFile(path.resolve(__dirname + "/../www/html/loading_test.html"));
-  } else if (path.match("^/html/.*")) {
-    if (fs.existsSync(__dirname + "/../www/html" + path)) {
-      res.sendFile(path.resolve(__dirname + "/../www/html" + path));
-    } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/../www/html" + path + "`");
-      res.redirect("/");
-    }
+    res.sendFile(__dirname + "/www/html/coming_soon.html");
+  } else if (path.match(/^\/entrytest$/i)) {
+    res.render(__dirname + '/www/html/entrytest.ejs');
+  } else if (path.match(/^\/cs\.gif$/i)) {
+    res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FSNModding.gif');
+  } else if (path.match(/^\/alterra\.png$/i)) {
+    res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FAlterraLogo.png');
   } else if (path.match("^/css/.*")) {
-    if (fs.existsSync(__dirname + "/../www/css" + path)) {
-      res.sendFile(__dirname + "/../www/css" + path);
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
     } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/../www/css" + path + "`");
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
       res.redirect("/");
     }
   } else if (path.match("^/js/.*")) {
-    if (fs.existsSync(__dirname + "/../www/js" + path)) {
-      res.sendFile(__dirname + "/../www/js" + path);
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
     } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/../www/js" + path + "`");
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
       res.redirect("/");
     }
   } else if (path.match("^/fonts/.*")) {
-    if (fs.existsSync(__dirname + "/../www/fonts" + path)) {
-      res.sendFile(path.resolve(__dirname + "/../www/fonts" + path));
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
     } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/../www/fonts" + path + "`");
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
       res.redirect("/");
     }
   } else {
     if (fs.existsSync(__dirname + "/get" + path + ".js")) {
-      eval(bin2String(fs.readFileSync(__dirname + "/get" + path + ".js")));
+      eval(fsutil.bin2String(fs.readFileSync(__dirname + "/get" + path + ".js")));
     } else {
       res.redirect("/");
     }
