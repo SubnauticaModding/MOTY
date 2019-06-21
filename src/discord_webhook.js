@@ -3,7 +3,7 @@ const request = require('request-promise');
 
 module.exports.initError = (_error_discord, _error_db) => {
     var formdata = {
-        embeds:[{
+        embeds: [{
             title: 'The app could not be initialized!',
             type: 'rich',
             color: 14680064
@@ -11,7 +11,7 @@ module.exports.initError = (_error_discord, _error_db) => {
     };
     if (_error_discord) {
         var __error;
-        var __stack = _error_discord.stack.replace(/[ ]{2,}/ig,'');
+        var __stack = _error_discord.stack.replace(/[ ]{2,}/ig, '');
         //var __stack = 'This    is a test    \n     message with a lot of      whitespaces'.replace(/[ ]{2,}/ig,' ');
         if (__stack.length <= 1024) {
             __error = {
@@ -21,10 +21,10 @@ module.exports.initError = (_error_discord, _error_db) => {
                 fields: [{
                     name: 'Type',
                     value: '' + _error_discord.name
-                },{
+                }, {
                     name: 'Message',
                     value: '' + _error_discord.message
-                },{
+                }, {
                     name: 'Stacktrace',
                     value: '' + __stack
                 }]
@@ -38,7 +38,7 @@ module.exports.initError = (_error_discord, _error_db) => {
                 fields: [{
                     name: 'Type',
                     value: '' + _error_discord.name
-                },{
+                }, {
                     name: 'Message',
                     value: '' + _error_discord.message
                 }]
@@ -51,7 +51,7 @@ module.exports.initError = (_error_discord, _error_db) => {
     }
     if (_error_db) {
         var __error;
-        var __stack = _error_db.stack.replace(/[ ]{2,}/ig,'');
+        var __stack = _error_db.stack.replace(/[ ]{2,}/ig, '');
         if (__stack.length <= 1024) {
             __error = {
                 title: 'Error while initializing Database',
@@ -60,10 +60,10 @@ module.exports.initError = (_error_discord, _error_db) => {
                 fields: [{
                     name: 'Type',
                     value: '' + _error_db.name
-                },{
+                }, {
                     name: 'Message',
                     value: '' + _error_db.message
-                },{
+                }, {
                     name: 'Stacktrace',
                     value: '' + __stack
                 }]
@@ -77,7 +77,7 @@ module.exports.initError = (_error_discord, _error_db) => {
                 fields: [{
                     name: 'Type',
                     value: '' + _error_db.name
-                },{
+                }, {
                     name: 'Message',
                     value: '' + _error_db.message
                 }]

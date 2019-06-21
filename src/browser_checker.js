@@ -22,7 +22,7 @@ function checkBrowser(name, ver) {
     return _found;
 }
 
-function compareVersion (target, current) {
+function compareVersion(target, current) {
     let _t = target.split(".");
     let _c = current.split(".");
     var _v = true;
@@ -52,14 +52,4 @@ const browsers = [
     new browser('Safari', '6.1')
 ];
 
-module.exports = () => {
-    var object = {
-        isvalid: (name, ver) => {
-            return checkBrowser(name, ver);
-        },
-    };
-};
-
-module.exports.check = (name, ver) => {
-    return checkBrowser(name, ver);
-};
+module.exports.check = checkBrowser;

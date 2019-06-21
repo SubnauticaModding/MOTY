@@ -1,23 +1,27 @@
 const dotenv = require('dotenv');
 dotenv.config();
 
-const cmd = require("node-cmd");
+const sql = require('better-sqlite3');
 const crypto = require("crypto");
-const request = require('request-promise');
+const Discord = require('discord.js');
+const ejs = require('ejs');
+const express = require('express');
+const uap = require('express-useragent');
+const fs = require('fs');
 const http = require("http");
 const https = require("https");
-const express = require('express');
-const Discord = require('discord.js');
-const config = require("./config.json");
-const util = require('./logging_proxy.js');
-const sql = require('better-sqlite3');
-const fs = require('fs');
+const cmd = require("node-cmd");
 const querystring = require('querystring');
-const browser_checker = require('./browser_checker.js');
-const dc_webhook = require('./discord_webhook.js');
-const dc_fallback = require('./discord_fallback.js');
-const ejs = require('ejs');
-const uap = require('express-useragent');
+const request = require('request-promise');
+
+const config = require("./config.json");
+
+const browser_checker = require('./src/browser_checker');
+const dc_fallback = require('./src/discord_fallback');
+const dc_webhook = require('./src/discord_webhook');
+const fsutil = require('./src/fs_util')
+const util = require('./src/logging_proxy');
+const nexus = require('./src/nexus');
 
 var _running = false;
 var _running_web = false;
@@ -48,7 +52,7 @@ async function boot() {
   }
   if (!fs.existsSync(__dirname + '/data/dbcreated')) {
     try {
-      if (fs.existsSync(__dirname + '/data/db.db')) fs.unlinkSync(__dirname + '/db.db');
+      if (fs.existsSync(__dirname + '/data/db.db')) fs.unlinkSync(__dirname + '/data/db.db');
       fs.writeFileSync(__dirname + '/data/dbcreated');
       _running_db = true;
     } catch (ex) {
@@ -109,50 +113,54 @@ function fallback_bot() {
 }
 
 web.get('*', async (req, res) => {
-  let _p = req.path;
-  let _ua = req.useragent;
-  let _valid = browser_checker.check(_ua.browser, _ua.version);
-  if (!_valid) {
-    res.render(__dirname + "/browser_unsup.ejs");
+  let path = req.path;
+  let agent = req.useragent;
+  if (!browser_checker.check(agent.browser, agent.version)) {
+    res.render(__dirname + "/www/html/browser_unsup.ejs");
     return;
   }
-  //console.log(_ua);
-  if (_p.match(/^\/cs\.gif$/i)) {
+
+  if (path.match("^/$")) {
+    res.sendFile(__dirname + "/www/html/coming_soon.html");
+  } else if (path.match(/^\/entrytest$/i)) {
+    res.render(__dirname + '/www/html/entrytest.ejs');
+  } else if (path.match(/^\/cs\.gif$/i)) {
     res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FSNModding.gif');
-  } else if (_p.match(/^\/alterra\.png$/i)) {
+  } else if (path.match(/^\/alterra\.png$/i)) {
     res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FAlterraLogo.png');
-  } else if (_p.match(/^\/loadtest$/i)) {
-    res.sendFile(__dirname + '/loading_test.html');
-  } else if (_p.match(/^\/entrytest$/i)) {
-    res.render(__dirname + '/entrytest.ejs');
+  } else if (path.match("^/css/.*")) {
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
+    } else {
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
+      res.redirect("/");
+    }
+  } else if (path.match("^/js/.*")) {
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
+    } else {
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
+      res.redirect("/");
+    }
+  } else if (path.match("^/fonts/.*")) {
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
+    } else {
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
+      res.redirect("/");
+    }
   } else {
-    res.sendFile(__dirname + "/coming_soon.html");
+    if (fs.existsSync(__dirname + "/get" + path + ".js")) {
+      eval(fsutil.bin2String(fs.readFileSync(__dirname + "/get" + path + ".js")));
+    } else {
+      res.redirect("/");
+    }
   }
 });
 
 web.all('*', async (req, res) => {
   res.sendStatus(200);
 });
-
-async function getModInfo(game, id) {
-  var response = await fetch("http://api.nexusmods.com/v1/games/" + game + "/mods/" + id + ".json", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      "apikey": process.env.NEXUS_TOKEN
-    }
-  });
-  var object = await response.json();
-
-  if (Number.parseInt(response.headers["x-rl-daily-remaining"]) == 0)
-    console.error("API KEY HAS NO MORE REQUESTS AVAILABLE!");
-
-  var result = {};
-  result.name = object.name;
-  result.image = object.picture_url;
-
-  return result;
-}
 
 web_fallback.all('*', async (req, res) => {
   res.sendStatus(500);

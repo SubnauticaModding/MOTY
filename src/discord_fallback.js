@@ -59,9 +59,13 @@ module.exports.sendError = (bot,_channel, _error_db) => {
                     };
                 }
             }
-            let _c = bot.channels.get('588205756361342993');
-            _c.send({embed: _embed}).then((__m) => {
-                if (_db_e) _c.send({embed: _db_e});
+            let channel = bot.channels.get('588205756361342993');
+            channel.send({
+                embed: _embed
+            }).then((message) => {
+                if (_db_e) channel.send({
+                    embed: _db_e
+                });
             });
         }
     } catch (ex) {
