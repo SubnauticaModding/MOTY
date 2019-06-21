@@ -4,7 +4,7 @@
   "description": "Subnautica Modder of the Year",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node src/server.js"
   },
   "dependencies": {
     "better-sqlite3": "^5.4.0",

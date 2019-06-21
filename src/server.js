@@ -8,7 +8,7 @@ const http = require("http");
 const https = require("https");
 const express = require('express');
 const Discord = require('discord.js');
-const config = require("./config.json");
+const config = require("../config.json");
 const util = require('./logging_proxy.js');
 const sql = require('better-sqlite3');
 const fs = require('fs');
@@ -43,13 +43,13 @@ async function boot() {
     _bootcrash = true;
     _error_discord = ex;
   }
-  if (!fs.existsSync(__dirname + '/data')) {
-    fs.mkdirSync(__dirname + '/data');
+  if (!fs.existsSync(__dirname + '/../data')) {
+    fs.mkdirSync(__dirname + '/../data');
   }
-  if (!fs.existsSync(__dirname + '/data/dbcreated')) {
+  if (!fs.existsSync(__dirname + '/../data/dbcreated')) {
     try {
-      if (fs.existsSync(__dirname + '/data/db.db')) fs.unlinkSync(__dirname + '/db.db');
-      fs.writeFileSync(__dirname + '/data/dbcreated');
+      if (fs.existsSync(__dirname + '/../data/db.db')) fs.unlinkSync(__dirname + '/../data/db.db');
+      fs.writeFileSync(__dirname + '/../data/dbcreated');
       _running_db = true;
     } catch (ex) {
       _bootcrash = true;
@@ -57,7 +57,7 @@ async function boot() {
     }
   } else {
     try {
-      database = new sql('data/db.db');
+      database = new sql('/../data/db.db');
       _running_db = true;
     } catch (ex) {
       _bootcrash = true;
@@ -109,24 +109,28 @@ function fallback_bot() {
 }
 
 web.get('*', async (req, res) => {
-  let _p = req.path;
-  let _ua = req.useragent;
-  let _valid = browser_checker.check(_ua.browser, _ua.version);
-  if (!_valid) {
-    res.render(__dirname + "/browser_unsup.ejs");
+  let path = req.path;
+  let agent = req.useragent;
+  if (!browser_checker.check(agent.browser, agent.version)) {
+    res.render(__dirname + "/www/html/browser_unsup.ejs");
     return;
   }
-  //console.log(_ua);
-  if (_p.match(/^\/cs\.gif$/i)) {
-    res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FSNModding.gif');
-  } else if (_p.match(/^\/alterra\.png$/i)) {
-    res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FAlterraLogo.png');
-  } else if (_p.match(/^\/loadtest$/i)) {
-    res.sendFile(__dirname + '/loading_test.html');
-  } else if (_p.match(/^\/entrytest$/i)) {
-    res.render(__dirname + '/entrytest.ejs');
+
+  if (path.match("^/$")) {
+    res.sendFile(__dirname + "/../www/html/loading_test.html");
+  } else if (path.match("^/html/.*") || path.match("^/css/.*") || path.match("^/js/.*") || path.match("^/fonts/.*")) {
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
+    } else {
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
+      res.redirect("/");
+    }
   } else {
-    res.sendFile(__dirname + "/coming_soon.html");
+    if (fs.existsSync(__dirname + "/get" + path + ".js")) {
+      eval(bin2String(fs.readFileSync(__dirname + "/get" + path + ".js")));
+    } else {
+      res.redirect("/");
+    }
   }
 });
 
