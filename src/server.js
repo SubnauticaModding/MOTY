@@ -90,18 +90,31 @@ async function boot() {
 
 function boot_bot() {
   //util.enableLoggingProxy(bot);
-  setInterval(function () {
-    bot.user.setStatus('dnd');
-    bot.user.setActivity('games until December 1st');
-  }, 1000);
+  try {
+    bot.user.setStatus('idle');
+    bot.user.setActivity('games until December');
+    var watching = false;
+    setInterval(() => {
+      bot.user.setStatus('idle');
+      if (watching) {
+        bot.user.setActivity('movies until December', {
+          type: "WATCHING"
+        });
+      } else {
+        bot.user.setActivity('games until December');
+      }
+    }, 5000)
+  } catch (ex) {
+
+  }
 }
 
 function fallback_bot() {
   try {
     bot.user.setStatus('dnd');
     bot.user.setActivity('ERROR');
-    var _alarmOn = false;
-    setInterval(function () {
+    var _alarmOn = true;
+    setInterval(() => {
       var _activity = "ERROR" + (_alarmOn ? " 🚨" : "");
       _alarmOn = !_alarmOn;
       bot.user.setStatus('dnd');
