@@ -122,32 +122,25 @@ web.get('*', async (req, res) => {
 
   if (path.match("^/$")) {
     res.sendFile(__dirname + "/www/html/coming_soon.html");
-  } else if (path.match("^/html/.*")) {
-    if (fs.existsSync(__dirname + "/www/html" + path)) {
-      res.sendFile(p__dirname + "/www/html" + path);
-    } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/www/html" + path + "`");
-      res.redirect("/");
-    }
   } else if (path.match("^/css/.*")) {
-    if (fs.existsSync(__dirname + "/www/css" + path)) {
-      res.sendFile(__dirname + "/www/css" + path);
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
     } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/www/css" + path + "`");
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
       res.redirect("/");
     }
   } else if (path.match("^/js/.*")) {
-    if (fs.existsSync(__dirname + "/www/js" + path)) {
-      res.sendFile(__dirname + "/www/js" + path);
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
     } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/www/js" + path + "`");
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
       res.redirect("/");
     }
   } else if (path.match("^/fonts/.*")) {
-    if (fs.existsSync(__dirname + "/www/fonts" + path)) {
-      res.sendFile(__dirname + "/www/fonts" + path);
+    if (fs.existsSync(__dirname + "/www" + path)) {
+      res.sendFile(__dirname + "/www" + path);
     } else {
-      console.warn("Attempted to access an invalid file at `" + __dirname + "/www/fonts" + path + "`");
+      console.warn("Attempted to access an invalid file at `" + __dirname + "/www" + path + "`");
       res.redirect("/");
     }
   } else {
