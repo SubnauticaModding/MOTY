@@ -122,6 +122,12 @@ web.get('*', async (req, res) => {
 
   if (path.match("^/$")) {
     res.sendFile(__dirname + "/www/html/coming_soon.html");
+  } else if (path.match(/^\/entrytest$/i)) {
+    res.render(__dirname + '/www/html/entrytest.ejs');
+  } else if (path.match(/^\/cs\.gif$/i)) {
+    res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FSNModding.gif');
+  } else if (path.match(/^\/alterra\.png$/i)) {
+    res.redirect('https://cdn.glitch.com/578b3caa-2796-42d7-9bcb-bf1b681e8670%2FAlterraLogo.png');
   } else if (path.match("^/css/.*")) {
     if (fs.existsSync(__dirname + "/www" + path)) {
       res.sendFile(__dirname + "/www" + path);
