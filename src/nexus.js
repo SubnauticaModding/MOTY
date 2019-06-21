@@ -1,9 +1,3 @@
-/**
- * Gets information about a mod from nexusmods.com
- * @param {string} game The domain name of the game
- * @param {string|number} id The id of the mod
- * @returns {{name:string,image:string,description:string}}
- */
 async function getModInfo(game, id) {
   var response = await fetch("http://api.nexusmods.com/v1/games/" + game + "/mods/" + id + ".json", {
     method: "GET",

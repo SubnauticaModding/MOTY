@@ -1,13 +1,8 @@
-const request = require('request-promise');
 
 const url = "https://discordapp.com/api/webhooks/588780191384600579/E7o8fgiFoKsg7VU27JqsklcRvtUR89LqtoOylV6QnS56VHZLwY4dgvR982SDZqfvqclF";
+const request = require('request-promise');
 
-/**
- * Sends an error in the log channel using a webhook
- * @param {Error} _error_discord The discord error, if applicable
- * @param {Error} _error_db The database error, if applicable
- */
-function initError(_error_discord, _error_db) {
+module.exports.initError = (_error_discord, _error_db) => {
     var formdata = {
         embeds: [{
             title: 'The app could not be initialized!',
@@ -109,5 +104,3 @@ function initError(_error_discord, _error_db) {
         console.error(ex);
     });
 };
-
-module.exports.initError = initError;

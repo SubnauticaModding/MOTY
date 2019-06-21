@@ -1,11 +1,6 @@
 const Discord = require('discord.js');
 
-/**
- * Sends an error in the log channel using the fallback bot
- * @param {Discord.Client} bot The bot client to use to send the error
- * @param {Error} _error_db The database error, if applicable
- */
-function sendError(bot, _error_db) {
+module.exports.sendError = (bot,_channel, _error_db) => {
     try {
         if (bot) {
             var _embed = {
@@ -77,8 +72,6 @@ function sendError(bot, _error_db) {
         console.error(ex);
     }
 };
-
-module.exports.sendError = sendError;
 
 /*
 module.exports = (_bot) => {

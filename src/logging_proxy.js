@@ -1,11 +1,8 @@
 const config = require("../config.json");
 const Discord = require("discord.js");
 
-/**
- * Adds a proxy to console methods to also send log messages in chat
- * @param {Discord.Client} client The bot client for which to enable the logging proxy
- */
-function enableLoggingProxy(client) {
+// Adds a proxy to console methods to send messages in chat
+module.exports.enableLoggingProxy = (client) => {
   const debug = console.debug;
   const log = console.log;
   const info = console.info;
@@ -64,5 +61,3 @@ function enableLoggingProxy(client) {
     client.channels.get(config.consoleChannelID).send(new Discord.RichEmbed().setAuthor('Error').setDescription(s).setColor('RED'));
   });
 };
-
-module.exports.enableLoggingProxy = enableLoggingProxy;
