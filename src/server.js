@@ -122,7 +122,7 @@ web.get('*', async (req, res) => {
   }
 
   if (path.match("^/$")) {
-    res.sendFile(path.resolve(__dirname + "/../www/html/loading_test.html"));
+    res.sendFile(path.resolve(__dirname + "/../www/html/coming_soon.html"));
   } else if (path.match("^/html/.*")) {
     if (fs.existsSync(__dirname + "/../www/html" + path)) {
       res.sendFile(path.resolve(__dirname + "/../www/html" + path));
