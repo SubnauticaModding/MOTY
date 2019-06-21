@@ -1,4 +1,3 @@
-
 const url = "https://discordapp.com/api/webhooks/588780191384600579/E7o8fgiFoKsg7VU27JqsklcRvtUR89LqtoOylV6QnS56VHZLwY4dgvR982SDZqfvqclF";
 const request = require('request-promise');
 
