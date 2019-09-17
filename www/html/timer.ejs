@@ -1,0 +1,81 @@
+<% include partials/head %>
+
+<style>
+  html, body {
+    background-color: black;
+  }
+  div:not(.container) {
+    display: inline-block;
+    font-size: 200px;
+    color: white;
+  }
+  div.container {
+    width: 1000px;
+    height: auto;
+    margin: 0 auto;
+  }
+</style>
+
+<script>
+  window.onload = () => {
+    var days = document.getElementsByClassName("daysNumber")[0];
+    var hours = document.getElementsByClassName("hoursNumber")[0];
+    var minutes = document.getElementsByClassName("minutesNumber")[0];
+    var seconds = document.getElementsByClassName("secondsNumber")[0];
+    
+    setInterval(() => {
+      var ms = new Date("<%= timer %>") - new Date();
+      var s = Math.floor(ms / 1000);
+      var m = Math.floor(s / 60);
+      s = s - m * 60;
+      var h = Math.floor(m / 60);
+      m = m - h * 60;
+      var d = Math.floor(h / 24);
+      h = h - d *24;
+
+      if (d == 0) {
+        days.style.display = "none";
+        document.getElementsByClassName("days")[0].style.display = "none";
+        if (h == 0) {
+          hours.style.display = "none";
+          document.getElementsByClassName("hours")[0].style.display = "none";
+          if (m == 0) {
+            minutes.style.display = "none";
+            document.getElementsByClassName("minutes")[0].style.display = "none";
+            if (s == 0) {
+              window.location = window.location;
+            }
+          }
+        }
+      }
+      
+      days.innerText = d.toString().length == 1 ? "0" + d : d;
+      hours.innerText = h.toString().length == 1 ? "0" + h : h;
+      minutes.innerText = m.toString().length == 1 ? "0" + m : m;
+      seconds.innerText = s.toString().length == 1 ? "0" + s : s;
+    }, 100);
+  };
+</script>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+  <div class="daysNumber">D</div>
+  <div class="days">:</div>
+  <div class="hoursNumber">H</div>
+  <div class="hours">:</div>
+  <div class="minutesNumber">M</div>
+  <div class="minutes">:</div>
+  <div class="secondsNumber">S</div>
+</div>
