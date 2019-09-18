@@ -17,7 +17,7 @@ web.listen(process.env.PORT);
 const bot = new Discord.Client({
   fetchAllMembers: true,
 });
-const db = require('better-sqlite3')('data.db');
+//const db = require('better-sqlite3')('data.db');
 
 bot.login(process.env.DISCORD_TOKEN);
 
