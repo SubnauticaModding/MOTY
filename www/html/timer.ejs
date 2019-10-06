@@ -1,29 +1,50 @@
 <% include partials/head %>
-
 <style>
   html, body {
     background-color: black;
   }
-  div:not(.container) {
+  .timerOly {
+    text-align: center;
+    margin: 0 auto;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    display: inline-flex;
+  }
+  .timerCont {
+    display: inline-flex;
+    vertical-align: middle;
+    position: relative;
+    margin: auto;
+  }
+  .timerCont div {
     display: inline-block;
     font-size: 200px;
     color: white;
+    user-select: none;
+    vertical-align: middle;
   }
-  div.container {
-    width: 1000px;
-    height: auto;
-    margin: 0 auto;
+  .timerN {
+    
+  }
+  .timerCont .timerSep {
+    
   }
 </style>
 
 <script>
-  window.onload = () => {
+  odometerOptions = { auto: true, duration: 500 };
+  window.addEventListener('load', () => {
     var days = document.getElementsByClassName("daysNumber")[0];
     var hours = document.getElementsByClassName("hoursNumber")[0];
     var minutes = document.getElementsByClassName("minutesNumber")[0];
     var seconds = document.getElementsByClassName("secondsNumber")[0];
     
-    setInterval(() => {
+    setInterval(updateTimer, 250);
+    function updateTimer() {
       var ms = new Date("<%= timer %>") - new Date();
       var s = Math.floor(ms / 1000);
       var m = Math.floor(s / 60);
@@ -53,29 +74,19 @@
       hours.innerText = h.toString().length == 1 ? "0" + h : h;
       minutes.innerText = m.toString().length == 1 ? "0" + m : m;
       seconds.innerText = s.toString().length == 1 ? "0" + s : s;
-    }, 100);
-  };
+    }
+    updateTimer();
+  });
 </script>
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<div class="container">
-  <div class="daysNumber">D</div>
-  <div class="days">:</div>
-  <div class="hoursNumber">H</div>
-  <div class="hours">:</div>
-  <div class="minutesNumber">M</div>
-  <div class="minutes">:</div>
-  <div class="secondsNumber">S</div>
+<script src="/js/odometer.js"></script><link rel="stylesheet" href="/css/odometer.css">
+<div class="timerOly">
+  <div class="timerCont">
+    <div class="timerN daysNumber odometer"></div>
+    <div class="timerSep">:</div>
+    <div class="timerN hoursNumber odometer"></div>
+    <div class="timerSep">:</div>
+    <div class="timerN minutesNumber odometer"></div>
+    <div class="timerSep">:</div>
+    <div class="timerN secondsNumber odometer"></div>
+  </div>
 </div>
