@@ -16,7 +16,8 @@
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.26",
     "better-sqlite3": "^5.4.3",
-    "ejs": "^2.7.1"
+    "ejs": "^2.7.1",
+    "querystring": "^0.2.0"
   },
   "engines": {
     "node": "8.x"
