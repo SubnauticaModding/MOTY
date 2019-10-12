@@ -1,1 +1,9 @@
-data
+data/*
+!/**/.gitkeep
+package-lock.json
+node_modules
+.vscode
+.idea
+.env
+.glitch-assets
+shrinkwrap.yaml

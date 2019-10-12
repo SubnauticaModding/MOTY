@@ -4,7 +4,9 @@
   "description": "Subnautica Modding - Modder of the Year",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "push": "git add . && git commit -m \"Glitch Update\" && npm run pull && GIT_SSH_COMMAND=\"ssh -i .githubsync/id_rsa\" git push && refresh",
+    "pull": "GIT_SSH_COMMAND=\"ssh -i .githubsync/id_rsa\" git fetch origin master && GIT_SSH_COMMAND=\"ssh -i .githubsync/id_rsa\" git pull origin master && refresh"
   },
   "dependencies": {
     "express": "^4.16.4",
