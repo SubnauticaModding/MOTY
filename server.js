@@ -45,14 +45,14 @@ web.all('*', async (req, res) => {
     return res.sendFile(path.join(__dirname, req.path));
   }
   
-  if (new Date(Date.now()) > moment("2019-12-01T00:00:00Z").tz("UTC")._d) {
+  if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d) {
     return res.render("www/html/timer.ejs", {
       timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
       message: false,
     });
   }
   
-  if (new Date(Date.now()) < moment("2020-01-01T00:00:00Z").tz("UTC")._d) {
+  if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d) {
     return res.render("www/html/timer.ejs", {
       message: "The event has ended",
     });
