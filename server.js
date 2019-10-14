@@ -25,6 +25,10 @@ module.exports.db = betterSqlite3('data/login.db');
 
 this.bot.login(process.env.DISCORD_TOKEN);
 
+this.bot.on("ready", () => {
+  console.log("Logged in as " + this.bot.user.tag);  
+});
+
 web.all('*', async (req, res) => {
   var {
     authUserID,
