@@ -4,18 +4,32 @@ const read = require("fs-readdir-recursive");
 const server = require("../server");
 
 module.exports.getAuthors = function () {
-  return this.getData("authors");
-}
+  return getObjects("authors");
+};
 
 module.exports.getMods = function () {
-  return this.getData("mods");
-}
+  return getObjects("mods");
+};
 
 module.exports.getUsers = function () {
-  return this.getData("users");
+  return getObjects("users");
+};
+
+module.exports.setAuthor = function (name, data) {
+  setObject("authors", name, data);
 }
 
-module.exports.getData = function (folder) {
+module.exports.setMod = function (name, data) {
+  setObject("mods", name, data);
+}
+
+module.exports.setUser = function (name, data) {
+  setObject("users", name, data);
+}
+
+function getObject(folder, file)
+
+function getObjects(folder) {
   var objs = [];
   
   var p = path.join(__dirname, "../data/", folder);
@@ -27,4 +41,8 @@ module.exports.getData = function (folder) {
   }
   
   return objs;
+};
+
+function setObject(folder, file, data) {
+  fs.writeFileSync(path.join(__dirname, "../data/", folder, file + ".json"), JSON.stringify(data, 2));
 }
