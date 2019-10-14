@@ -1,20 +1,12 @@
 const path = require("path");
 const read = require("fs-readdir-recursive");
 
-module.exports.getAuthor = function (name) {
-  return getObject("authors", name);
-}
-
 module.exports.getMod = function (name) {
   return getObject("mods", name);
-}
+};
 
 module.exports.getUser = function (name) {
   return getObject("users", name);
-}
-
-module.exports.getAuthors = function () {
-  return getObjects("authors");
 };
 
 module.exports.getMods = function () {
@@ -25,35 +17,31 @@ module.exports.getUsers = function () {
   return getObjects("users");
 };
 
-module.exports.setAuthor = function (name, data) {
-  setObject("authors", name, data);
-}
-
 module.exports.setMod = function (name, data) {
   setObject("mods", name, data);
-}
+};
 
 module.exports.setUser = function (name, data) {
   setObject("users", name, data);
-}
+};
 
-module.exports.removeAuthor = function (name, data) {
-  setObject("authors", name, data);
-}
+module.exports.removeAuthor = function (name) {
+  
+};
 
-module.exports.removeMod = function (name, data) {
-  setObject("mods", name, data);
-}
+module.exports.removeMod = function (name) {
+  removeObject("mods", name);
+};
 
-module.exports.setUser = function (name, data) {
-  setObject("users", name, data);
-}
+module.exports.removeUser = function (name) {
+  removeObject("users", name);
+};
 
-function getObject(folder, file) {
+module.exports.getObject = function (folder, file) {
   return fs.readFileSync(path.join(__dirname, "../data/", folder, file + ".json"), 'utf-8');
-}
+};
 
-function getObjects(folder) {
+module.exports.getObjects = function (folder) {
   var objs = [];
   
   var p = path.join(__dirname, "../data/", folder);
@@ -67,10 +55,10 @@ function getObjects(folder) {
   return objs;
 };
 
-function setObject(folder, file, data) {
+module.exports.setObject function (folder, file, data) {
   fs.writeFileSync(path.join(__dirname, "../data/", folder, file + ".json"), JSON.stringify(data, 2));
-}
+};
 
-function removeObject(folder, file) {
+module.exports.removeObject = function (folder, file) {
   fs.unlinkSync(path.join(__dirname, "../data/", folder, file + ".json"));
-}
+};
