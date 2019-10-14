@@ -8,3 +8,5 @@ node_modules
 .glitch-assets
 shrinkwrap.yaml
 .githubsync
+pull.sh
+push.sh

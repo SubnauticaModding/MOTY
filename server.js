@@ -1,3 +1,4 @@
+const betterSqlite3 = require('better-sqlite3');
 const Discord = require('discord.js');
 const express = require('express');
 const fs = require('fs');
@@ -20,7 +21,7 @@ web.listen(process.env.PORT);
 module.exports.bot = new Discord.Client({
   fetchAllMembers: true,
 });
-module.exports.db = require('better-sqlite3')('data/login.db');
+module.exports.db = betterSqlite3('data/login.db');
 
 this.bot.login(process.env.DISCORD_TOKEN);
 
@@ -54,7 +55,7 @@ web.all('*', async (req, res) => {
   
   if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d) {
     return res.render("www/html/timer.ejs", {
-      message: "The event has ended",
+      message: "The event has ended.",
     });
   }
   
