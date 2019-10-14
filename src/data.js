@@ -1,7 +1,17 @@
 const path = require("path");
 const read = require("fs-readdir-recursive");
 
-const server = require("../server");
+module.exports.getAuthor = function (name) {
+  return getObject("authors", name);
+}
+
+module.exports.getMod = function (name) {
+  return getObject("mods", name);
+}
+
+module.exports.getUser = function (name) {
+  return getObject("users", name);
+}
 
 module.exports.getAuthors = function () {
   return getObjects("authors");
@@ -27,7 +37,9 @@ module.exports.setUser = function (name, data) {
   setObject("users", name, data);
 }
 
-function getObject(folder, file)
+function getObject(folder, file) {
+  return fs.readFileSync(path.join(__dirname, "../data/", folder, file + ".json"), 'utf-8');
+}
 
 function getObjects(folder) {
   var objs = [];
