@@ -37,6 +37,18 @@ module.exports.setUser = function (name, data) {
   setObject("users", name, data);
 }
 
+module.exports.removeAuthor = function (name, data) {
+  setObject("authors", name, data);
+}
+
+module.exports.removeMod = function (name, data) {
+  setObject("mods", name, data);
+}
+
+module.exports.setUser = function (name, data) {
+  setObject("users", name, data);
+}
+
 function getObject(folder, file) {
   return fs.readFileSync(path.join(__dirname, "../data/", folder, file + ".json"), 'utf-8');
 }
@@ -57,4 +69,8 @@ function getObjects(folder) {
 
 function setObject(folder, file, data) {
   fs.writeFileSync(path.join(__dirname, "../data/", folder, file + ".json"), JSON.stringify(data, 2));
+}
+
+function removeObject(folder, file) {
+  fs.unlinkSync(path.join(__dirname, "../data/", folder, file + ".json"));
 }
