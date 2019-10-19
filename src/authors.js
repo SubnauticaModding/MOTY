@@ -13,10 +13,14 @@ module.exports.removeAuthor = function (id) {
 };
 
 module.exports.setAuthor = function (id, discordIDs, name, icon) {
-  data.setObject("authors", id, {
+  this.setAuthorObject({
     id: id,
     discordids: discordIDs,
     name: name,
     icon: icon,
   });
 };
+
+module.exports.setAuthorObject = function (object) {
+  data.setObject("authors", object.id, object);
+}

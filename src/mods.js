@@ -13,10 +13,14 @@ module.exports.removeMod = function (id) {
 };
 
 module.exports.setMod = function (id, domain, nexusID, authors) {
-  data.setObject("mods", id, {
+  this.setModObject({
     id: id,
     domain: domain,
     nexusid: nexusID,
     authors: authors,
   });
 };
+
+module.exports.setModObject = function (object) {
+  data.setObject("mods", object.id, object);
+}

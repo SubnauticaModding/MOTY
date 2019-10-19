@@ -13,8 +13,12 @@ module.exports.removeUser = function (id) {
 };
 
 module.exports.setUser = function (id, votes) {
-  data.setObject("users", id, {
+  this.setUserObject({
     id: id,
     votes: votes,
   });
 };
+
+module.exports.setUserObject = function (object) {
+  data.setObject("users", object.id, object);
+}
