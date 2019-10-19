@@ -4,7 +4,9 @@
   "description": "Subnautica Modding - Modder of the Year",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "push": "bash push.sh",
+    "pull": "bash pull.sh"
   },
   "dependencies": {
     "express": "^4.16.4",
