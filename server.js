@@ -7,6 +7,7 @@ const moment = require('moment-timezone');
 const path = require('path');
 
 const auth = require('./src/auth');
+const commands = require("./src/commands");
 const discord = require('./src/discord');
 
 const web = express();
@@ -27,16 +28,19 @@ this.bot.login(process.env.DISCORD_TOKEN);
 
 this.bot.on("ready", () => {
   console.log("Logged in as " + this.bot.user.tag);  
+  commands();
 });
 
-this.bot.on("message", message => {
+this.bot.on('message', (message) => {
+  if (!message.guild) return;
+  if (!message.content.toLowerCase().startsWith("moty/")) return;
   if (![...message.member.roles.keys()].includes("587309677096861717")) return;
-  
-  if (!message.content.startsWith("moty/eval ")) return;
-  
-  var content = message.content.substring(10);
-  
-  eval(content);
+
+  var args = message.content.slice(5).trim().split(/ +/g);
+  var command = args.shift().toLowerCase();
+
+  var com = this.bot.commands.get(command);
+  if (com) com(message, command, args);
 });
 
 web.all('*', async (req, res) => {
