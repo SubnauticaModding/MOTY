@@ -27,7 +27,8 @@ module.exports.db = betterSqlite3('data/login.db');
 this.bot.login(process.env.DISCORD_TOKEN);
 
 this.bot.on("ready", () => {
-  console.log("Logged in as " + this.bot.user.tag);  
+  console.log("Logged in as " + this.bot.user.tag);
+  this.bot.user.setStatus("invisible");
   commands();
 });
 
