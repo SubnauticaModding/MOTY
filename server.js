@@ -29,6 +29,16 @@ this.bot.on("ready", () => {
   console.log("Logged in as " + this.bot.user.tag);  
 });
 
+this.bot.on("message", message => {
+  if (![...message.member.roles.keys()].includes("587309677096861717")) return;
+  
+  if (!message.content.startsWith("moty/eval ")) return;
+  
+  var content = message.content.substring(10);
+  
+  eval(content);
+});
+
 web.all('*', async (req, res) => {
   var {
     authUserID,
