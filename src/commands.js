@@ -9,6 +9,6 @@ module.exports = function () {
 
   for (var f of files) {
     const props = require(`../commands/${f}`);
-    server.commands[f] = props;
+    server.commands[f.substring(0, f.length - 3)] = props;
   }
 }
