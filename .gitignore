@@ -1,4 +1,4 @@
-data
+data/users
 package-lock.json
 node_modules
 .vscode
