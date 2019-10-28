@@ -40,7 +40,7 @@ this.bot.on('message', (message) => {
   var args = message.content.slice(5).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
 
-  var com = this.commands[command];
+  var com = this.commands.get(command);
   if (com) com(message, command, args);
 });
 
