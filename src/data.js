@@ -3,7 +3,10 @@ const path = require("path");
 const read = require("fs-readdir-recursive");
 
 module.exports.getObject = function (folder, file) {
-  return fs.readFileSync(path.join(__dirname, "../data/", folder, file + ".json"), 'utf-8');
+  try {
+    return fs.readFileSync(path.join(__dirname, "../data/", folder, file + ".json"), 'utf-8');
+  }
+    
 };
 
 module.exports.getObjects = function (folder) {
