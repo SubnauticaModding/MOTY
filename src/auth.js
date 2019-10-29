@@ -1,12 +1,12 @@
-const request = require('request-promise');
+const request = require("request-promise");
 
-const server = require('../server');
+const server = require("../server");
 
 module.exports.getUserData = async function (token, tokentype = "Bearer") {
   var response = await request.get({
     uri: "https://discordapp.com/api/users/@me",
     headers: {
-      'Authorization': tokentype + " " + token
+      "Authorization": tokentype + " " + token
     },
   });
   return JSON.parse(response);
@@ -47,17 +47,17 @@ module.exports.getCookies = function (req) {
 }
 
 module.exports.setCookies = function (res, userid, session) {
-  res.cookie('auth_userid', userid, {
+  res.cookie("auth_userid", userid, {
     maxAge: 1000 * 60 * 60 * 24 * 365
   });
-  res.cookie('auth_session', session, {
+  res.cookie("auth_session", session, {
     maxAge: 1000 * 60 * 60 * 24 * 365
   });
 }
 
 module.exports.clearCookies = function (res) {
-  res.clearCookie('auth_userid');
-  res.clearCookie('auth_session');
+  res.clearCookie("auth_userid");
+  res.clearCookie("auth_session");
 }
 
 module.exports.generateToken = function (length = 18) {
