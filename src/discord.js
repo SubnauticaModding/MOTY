@@ -1,4 +1,4 @@
-const server = require('../server');
+const server = require("../server");
 
 module.exports.getUser = async function (id) {
   return (await this.getUsers())[id];

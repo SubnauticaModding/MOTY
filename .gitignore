@@ -1,5 +1,6 @@
-data/users
+data/users/*
 data/login.db
+!/**/.gitkeep
 package-lock.json
 node_modules
 .vscode
@@ -10,3 +11,4 @@ shrinkwrap.yaml
 .githubsync
 pull.sh
 push.sh
+pnpm-lock.yaml

@@ -5,8 +5,8 @@ const server = require("../server");
 
 module.exports = function () {
   server.commands = new Discord.Collection();
-  
-  var files = read('./commands/').filter(f => f.endsWith(".js"));
+
+  var files = read("./commands/").filter(f => f.endsWith(".js"));
 
   for (var f of files) {
     const props = require(`../commands/${f}`);
