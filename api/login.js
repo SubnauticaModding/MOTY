@@ -6,6 +6,6 @@ module.exports = function (data) {
     else data.res.redirect(`https://discordapp.com/api/oauth2/authorize?client_id=577052606694948885&redirect_uri=https%3A%2F%2Fsn-moty.glitch.me%2Fauth&response_type=code&scope=identify`);
   } catch (e) {
     console.error(e);
-    data.res.redirect("..", 500);
+    data.res.redirect("/");
   }
 }

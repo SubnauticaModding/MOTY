@@ -93,6 +93,13 @@ web.all("*", async (req, res) => {
   var m = mods.getMods();
   var v = JSON.parse(users.getUser(authUserID)) && JSON.parse(users.getUser(authUserID)).votes ? JSON.parse(users.getUser(authUserID)).votes : [];
 
+  if (req.path == "/raw") return res.render("www/html/raw.ejs", {
+    authors: a,
+    mods: m,
+    votes: v,
+    user,
+  });
+
   res.render("www/html/main.ejs", {
     authors: a,
     mods: m,
