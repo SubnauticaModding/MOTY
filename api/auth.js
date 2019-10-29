@@ -5,7 +5,6 @@ const auth = require('../src/auth');
 const server = require('../server');
 
 module.exports = function (data) {
-  return data.res.sendStatus(403);
   try {
     if (auth.sessionValid(data.authUserID, data.authSession)) {
       data.res.redirect("/#sessionValid");
