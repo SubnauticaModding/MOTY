@@ -91,7 +91,7 @@ function saveInCache(domain, modid, moddata) {
 function needsRecache(domain, modid, updatedate) {
   var mod = getFromCache(domain, modid);
   if (!mod) return true;
-  if (updatedate > mod.savedate) return true;
+  if (updatedate * 1000 > mod.savedate) return true;
   return false;
 }
 

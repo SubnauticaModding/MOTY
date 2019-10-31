@@ -138,15 +138,15 @@ function sort(a, b) {
   return a.name.localeCompare(b.name);
 }
 
-process.on('unhandledRejection', (reason, p) => {
-  console.error('Unhandled Rejection at: ', p, 'reason:', reason);
+process.on("unhandledRejection", (reason, p) => {
+  console.error("Unhandled Rejection at: ", p, "reason:", reason);
 });
 
-this.bot.on('error', (e) => {
+this.bot.on("error", (e) => {
   console.error(e);
 });
 
-this.bot.on('warn', (w) => {
+this.bot.on("warn", (w) => {
   console.warn(w);
 });
 
