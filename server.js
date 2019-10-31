@@ -38,7 +38,6 @@ this.bot.on("ready", () => {
   this.bot.user.setStatus("invisible");
   commands();
   this.db.prepare("CREATE TABLE if not exists logindata (userid TEXT PRIMARY KEY, sessionkey TEXT, authkey TEXT);").run();
-  // modcache.cacheAll();
 });
 
 this.bot.on("message", (message) => {
@@ -122,6 +121,7 @@ web.all("*", async (req, res) => {
   }
 
   authorData.sort(sort);
+  modData.sort(sort);
 
   var p = "/main";
   if (req.path == "/raw" || req.path == "/privacy") p = req.path;

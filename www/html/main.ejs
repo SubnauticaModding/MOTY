@@ -4,19 +4,34 @@
 <style>
   .authorentry {
     background-color: black;
-    border-radius: 25%;
     font-size: 20px;
     color: white;
     width: 310px;
-  }
-
-  .authorentry::after, .authorentry::before {
-  background-color: initial;
-  content: "";
-  display: block;
-  height: 25px;
-  position: absolute;
-  width: 25px;
+    height: auto;
+    margin: 6.9px;
+    bottom: 0px;
+    box-sizing: border-box;
+    left: 0px;
+    letter-spacing: 0.3px;
+    overflow-wrap: break-word;
+    position: relative;
+    right: 0px;
+    text-align: left;
+    text-decoration: none solid rgb(0, 0, 0);
+    text-rendering: optimizelegibility;
+    text-size-adjust: 100%;
+    top: 0px;
+    width: 224px;
+    column-rule-color: rgb(0, 0, 0);
+    perspective-origin: 112px 200.188px;
+    transform-origin: 112px 200.188px;
+    caret-color: rgb(0, 0, 0);
+    background: #252525 none repeat scroll 0% 0%/auto padding-box border-box;
+    border: 0px none rgb(0, 0, 0);
+    font-size: 16px;
+    list-style: none outside none;
+    outline: rgb(255, 255, 255) none 0px;
+    min-height: 220px;
   }
 
   img {
@@ -43,6 +58,10 @@
     cursor: no-drop;
   }
 
+  .authorentry[disabled] {
+    filter: opacity(50%);
+  }
+
   .unvote {
     background: green;
   }
@@ -50,10 +69,21 @@
   .authorname {
     vertical-align: middle;
   }
+
+  .wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+  }
 </style>
 
 <script>
-  var votes = <%= votes.length %>;
+  var votes = [
+    <% for (var vote of votes) { %>
+      "<%= vote %>",
+    <% } %>
+  ];
 
   function vote(author) {
     $.ajax({
@@ -87,7 +117,7 @@
         200: () => {
           $(".votefor" + author).css("display", "none");
           $(".unvotefor" + author).css("display", "inherit");
-          votes++;
+          votes.push(author);
         },
         500: () => {
           console.log("Server error");
@@ -120,7 +150,7 @@
         200: () => {
           $(".unvotefor" + author).css("display", "none");
           $(".votefor" + author).css("display", "inherit");
-          votes--;
+          votes = votes.filter(x => x != author);
         },
         500: () => {
           console.log("Server error");
@@ -131,10 +161,22 @@
   }
 
   function refreshButtons() {
-    if (votes == 3) $(".vote").attr("disabled", true);
-    else $(".vote").attr("disabled", false);
+    if (votes.length == 3) { 
+      $(".vote").attr("disabled", true);
+      $(".authorentry").attr("disabled", true);
+      for (var vote of votes) {
+        $(".authorentry" + vote).attr("disabled", false);
+      }
+    }
+    else { 
+      $(".vote").attr("disabled", false);
+      $(".authorentry").attr("disabled", false);      
+    }
 
-    if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) $(".votefor<%= user.id %>").attr("disabled", true);
+    if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
+      $(".votefor<%= user.id %>").attr("disabled", true);
+      $(".authorentry<%= user.id %>").attr("disabled", true);
+    }
   }
 
   $.when($.ready).then(() => {
@@ -147,14 +189,25 @@
 
 </script>
 
-<% for (var author of authors) { %>
-  <div class="authorentry">
-    <img src="<%= author.icon %>">
-    <a class="authorname notalink"><%= author.name %></a>
-    <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
-    <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
-  </div>
-<% } %>
+<ul class="wrapper">
+  <% for (var author of authors) { %>
+    <div class="authorentry authorentry<%= author.id %> authorentry<%= author.discordids.split(',').join(' votefor') %>">
+      <img src="<%= author.icon %>">
+      <a class="authorname notalink"><%= author.name %></a>
+      <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
+      <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
+      <br><br>
+      <ul>
+        <% for (var mod of mods) { %>
+          <% if (mod.authors.includes(author.id)) { %>
+            <li><a href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>"><%= mod.name %></a></li>
+          <% } %>
+        <% } %>
+      </ul>
+      <br>
+    </div>
+  <% } %>
+</ul>
 
 <form name="dirty_check">
   <input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0" />
