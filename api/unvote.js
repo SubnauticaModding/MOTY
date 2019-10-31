@@ -7,7 +7,7 @@ module.exports = function (data) {
     if (!auth.sessionValid(data.authUserID, data.authSession)) return data.res.sendStatus(401);
     if (!data.req.query.id) return data.res.sendStatus(400);
 
-    var user = JSON.parse(users.getUser(data.user.user.id));
+    var user = users.getUser(data.user.user.id);
     if (!user.votes.includes(data.req.query.id)) return data.res.sendStatus(304);
 
     user.votes = user.votes.filter(v => v != data.req.query.id);

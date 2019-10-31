@@ -1,5 +1,11 @@
-html, body {
-  background-color: black;
+html,
+body {
+  background-color: #181a1b;
   color: white;
   font-family: "Helvetica Neue", sans-serif;
+  margin: 0;
+}
+
+a:not(.notalink) {
+  color: #3391ff;
 }

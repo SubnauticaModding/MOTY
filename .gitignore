@@ -1,5 +1,6 @@
 data/users/*
 data/login.db
+data/cache/*
 !/**/.gitkeep
 package-lock.json
 node_modules

@@ -1,3 +1,25 @@
-<% for (var mod of mods) { %><%= mod.id %> - <%= mod.domain %>/<%= mod.nexusid %><br><% } %><br><br>
-<% for (var author of authors) { %><%= author.id %> - <%= author.discordids %><br><% } %><br><br>
-<% for (var vote of votes) { %><%= vote %><br><% } %>
+<% include partials/head %>
+<%- include("partials/header", { user: !!locals.user ? user : undefined }) %>
+
+<style>
+  .authorentry {
+    background-color: black;
+    border-radius: 25%;
+    font-size: 20px;
+    color: white;
+    width: 250px;
+  }
+
+  img {
+    width: 50px;
+    border-radius: 50%;
+    vertical-align: middle;
+  }
+</style>
+
+<% for (var author of authors) { %>
+  <div class="authorentry">
+    <img src="<%= author.icon %>">
+    <a class="notalink"><%= author.name %></a>
+  </div>
+<% } %>

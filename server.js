@@ -12,6 +12,7 @@ const auth = require("./src/auth");
 const authors = require("./src/authors");
 const commands = require("./src/commands");
 const discord = require("./src/discord");
+const modcache = require("./src/modcache");
 const mods = require("./src/mods");
 const perms = require("./src/perms");
 const users = require("./src/users");
@@ -37,6 +38,7 @@ this.bot.on("ready", () => {
   this.bot.user.setStatus("invisible");
   commands();
   this.db.prepare("CREATE TABLE if not exists logindata (userid TEXT PRIMARY KEY, sessionkey TEXT, authkey TEXT);").run();
+  // modcache.cacheAll();
 });
 
 this.bot.on("message", (message) => {
@@ -89,24 +91,52 @@ web.all("*", async (req, res) => {
     });
   }
 
-  var a = authors.getAuthors();
-  var m = mods.getMods();
-  var v = JSON.parse(users.getUser(authUserID)) && JSON.parse(users.getUser(authUserID)).votes ? JSON.parse(users.getUser(authUserID)).votes : [];
+  var authorData = authors.getAuthors();
+  var modData = mods.getMods();
+  var voteData = users.getUser(authUserID) && users.getUser(authUserID).votes ? users.getUser(authUserID).votes : [];
 
-  if (req.path == "/raw") return res.render("www/html/raw.ejs", {
-    authors: a,
-    mods: m,
-    votes: v,
-    user,
-  });
+  for (var author of authorData) {
+    var ids = author.discordids.split(",");
+    if (ids.length == 1) {
+      var discordUser = await discord.getUser(ids[0]);
+      author.name = discordUser.user.username;
+      author.icon = discordUser.user.displayAvatarURL;
+    }
+  }
 
-  res.render("www/html/main.ejs", {
-    authors: a,
-    mods: m,
-    votes: v,
+  await modcache.update();
+  var cache = modcache.getAllCached();
+  mainloop: for (var mod of modData) {
+    mod.authors = mod.authors.split(",");
+
+    for (var cacheElement of cache) {
+      if (mod.domain == cacheElement.domain && mod.nexusid == cacheElement.id) {
+        for (var prop in cacheElement) {
+          if (cacheElement.hasOwnProperty(prop)) {
+            mod[prop] = cacheElement[prop];
+          }
+        }
+        continue mainloop;
+      }
+    }
+  }
+
+  authorData.sort(sort);
+
+  var p = "/main";
+  if (req.path == "/raw" || req.path == "/privacy") p = req.path;
+
+  res.render(`www/html${p}.ejs`, {
+    authors: authorData,
+    mods: modData,
+    votes: voteData,
     user,
   });
 });
+
+function sort(a, b) {
+  return a.name.localeCompare(b.name);
+}
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at: ', p, 'reason:', reason);
