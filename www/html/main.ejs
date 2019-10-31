@@ -17,7 +17,7 @@
   height: 25px;
   position: absolute;
   width: 25px;
-}
+  }
 
   img {
     width: 50px;
@@ -71,7 +71,7 @@
           console.log("Invalid author!");
           alert("Invalid author!");
         },
-        304: () => {
+        409: () => {
           console.log("Author already voted!");
           alert("Author already voted!");
         },
@@ -87,6 +87,7 @@
         200: () => {
           $(".votefor" + author).css("display", "none");
           $(".unvotefor" + author).css("display", "inherit");
+          votes++;
         },
         500: () => {
           console.log("Server error");
@@ -94,7 +95,6 @@
         }
       },
     });
-    votes++;
   }
 
   function unvote(author) {
@@ -113,13 +113,14 @@
           console.log("Invalid author!");
           alert("Invalid author!");
         },
-        304: () => {
+        409: () => {
           console.log("Author not voted!");
           alert("Author not voted!");
         },
         200: () => {
           $(".unvotefor" + author).css("display", "none");
           $(".votefor" + author).css("display", "inherit");
+          votes--;
         },
         500: () => {
           console.log("Server error");
@@ -127,7 +128,6 @@
         }
       },
     });
-    votes--;
   }
 
   function refreshButtons() {

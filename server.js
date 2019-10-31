@@ -62,7 +62,7 @@ web.all("*", async (req, res) => {
     authUserID,
     authSession
   } = auth.getCookies(req);
-  var user = await discord.getUser(authUserID);
+  var user = auth.sessionValid(authUserID, authSession) ? await discord.getUser(authUserID) : undefined;
 
   if (fs.existsSync(path.join(__dirname, "/api/", req.path + ".js"))) {
     return require("./" + path.join("api/", req.path))({

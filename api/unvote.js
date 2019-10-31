@@ -8,7 +8,7 @@ module.exports = function (data) {
     if (!data.req.query.id) return data.res.sendStatus(400);
 
     var user = users.getUser(data.user.user.id);
-    if (!user.votes.includes(data.req.query.id)) return data.res.sendStatus(304);
+    if (!user.votes.includes(data.req.query.id)) return data.res.sendStatus(409);
 
     user.votes = user.votes.filter(v => v != data.req.query.id);
     users.setUserObject(user);
