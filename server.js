@@ -106,6 +106,8 @@ web.all("*", async (req, res) => {
     mod.authors = mod.authors.split(",");
   }
 
+  authorData.sort(sort);
+
   var p = "/main";
   if (req.path == "/raw" || req.path == "/privacy") p = req.path;
 
@@ -116,6 +118,10 @@ web.all("*", async (req, res) => {
     user,
   });
 });
+
+function sort(a, b) {
+  return a.name.localeCompare(b.name);
+}
 
 process.on('unhandledRejection', (reason, p) => {
   console.error('Unhandled Rejection at: ', p, 'reason:', reason);

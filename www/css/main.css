@@ -6,6 +6,6 @@ body {
   margin: 0;
 }
 
-a {
+a:not(.notalink) {
   color: #3391ff;
 }
