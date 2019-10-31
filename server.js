@@ -12,6 +12,7 @@ const auth = require("./src/auth");
 const authors = require("./src/authors");
 const commands = require("./src/commands");
 const discord = require("./src/discord");
+const modcache = require("./src/modcache");
 const mods = require("./src/mods");
 const perms = require("./src/perms");
 const users = require("./src/users");
@@ -37,6 +38,7 @@ this.bot.on("ready", () => {
   this.bot.user.setStatus("invisible");
   commands();
   this.db.prepare("CREATE TABLE if not exists logindata (userid TEXT PRIMARY KEY, sessionkey TEXT, authkey TEXT);").run();
+  // modcache.cacheAll();
 });
 
 this.bot.on("message", (message) => {
@@ -91,7 +93,7 @@ web.all("*", async (req, res) => {
 
   var authorData = authors.getAuthors();
   var modData = mods.getMods();
-  var voteData = JSON.parse(users.getUser(authUserID)) && JSON.parse(users.getUser(authUserID)).votes ? JSON.parse(users.getUser(authUserID)).votes : [];
+  var voteData = users.getUser(authUserID) && users.getUser(authUserID).votes ? users.getUser(authUserID).votes : [];
 
   for (var author of authorData) {
     var ids = author.discordids.split(",");
@@ -102,8 +104,21 @@ web.all("*", async (req, res) => {
     }
   }
 
-  for (var mod of modData) {
+  await modcache.update();
+  var cache = modcache.getAllCached();
+  mainloop: for (var mod of modData) {
     mod.authors = mod.authors.split(",");
+
+    for (var cacheElement of cache) {
+      if (mod.domain == cacheElement.domain && mod.nexusid == cacheElement.id) {
+        for (var prop in cacheElement) {
+          if (cacheElement.hasOwnProperty(prop)) {
+            mod[prop] = cacheElement[prop];
+          }
+        }
+        continue mainloop;
+      }
+    }
   }
 
   authorData.sort(sort);
