@@ -36,6 +36,9 @@ this.bot.login(process.env.DISCORD_TOKEN);
 this.bot.on("ready", () => {
   console.log("Logged in as " + this.bot.user.tag);
   this.bot.user.setStatus("invisible");
+  setInterval(() => {
+    this.bot.user.setStatus("invisible");
+  }, 20000);
   commands();
   this.db.prepare("CREATE TABLE if not exists logindata (userid TEXT PRIMARY KEY, sessionkey TEXT, authkey TEXT);").run();
 });
