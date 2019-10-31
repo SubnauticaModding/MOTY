@@ -7,19 +7,155 @@
     border-radius: 25%;
     font-size: 20px;
     color: white;
-    width: 250px;
+    width: 310px;
   }
+
+  .authorentry::after, .authorentry::before {
+  background-color: initial;
+  content: "";
+  display: block;
+  height: 25px;
+  position: absolute;
+  width: 25px;
+}
 
   img {
     width: 50px;
     border-radius: 50%;
     vertical-align: middle;
   }
+
+  .votebutton {
+    border-radius: 20%;
+    border: none;
+    background-color: rgb(60, 64, 67);
+    cursor: pointer;
+    float: right;
+    right: 5px;
+    top: 15px;
+    position: relative;
+    color: white
+  }
+
+  .votebutton[disabled] {
+    background-color: rgb(30, 32, 34);
+    color: darkgray;
+    cursor: no-drop;
+  }
+
+  .unvote {
+    background: green;
+  }
+
+  .authorname {
+    vertical-align: middle;
+  }
 </style>
+
+<script>
+  var votes = <%= votes.length %>;
+
+  function vote(author) {
+    $.ajax({
+      url: "/vote?id=" + author,
+      statusCode: {
+        401: () => {
+          console.log("Not logged in!");
+          alert("Not logged in!");
+        },
+        400: () => {
+          console.log("Invalid author!");
+          alert("Invalid author!");
+        },
+        404: () => {
+          console.log("Invalid author!");
+          alert("Invalid author!");
+        },
+        304: () => {
+          console.log("Author already voted!");
+          alert("Author already voted!");
+        },
+        406: () => {
+          console.log("Too many votes!");
+          alert("Too many votes!");
+        },
+        418: () => {
+          document.cookie = "rolled=true; expires=Fri, 31 Dec 9999 23:59:59 GMT"
+          alert("Bruh, did you really try to vote for yourself?");
+          window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+        },
+        200: () => {
+          $(".votefor" + author).css("display", "none");
+          $(".unvotefor" + author).css("display", "inherit");
+        },
+        500: () => {
+          console.log("Server error");
+          alert("Server error");
+        }
+      },
+    });
+    votes++;
+  }
+
+  function unvote(author) {
+    $.ajax({
+      url: "/unvote?id=" + author,
+      statusCode: {
+        401: () => {
+          console.log("Not logged in!");
+          alert("Not logged in!");
+        },
+        400: () => {
+          console.log("Invalid author!");
+          alert("Invalid author!");
+        },
+        404: () => {
+          console.log("Invalid author!");
+          alert("Invalid author!");
+        },
+        304: () => {
+          console.log("Author not voted!");
+          alert("Author not voted!");
+        },
+        200: () => {
+          $(".unvotefor" + author).css("display", "none");
+          $(".votefor" + author).css("display", "inherit");
+        },
+        500: () => {
+          console.log("Server error");
+          alert("Server error");
+        }
+      },
+    });
+    votes--;
+  }
+
+  function refreshButtons() {
+    if (votes == 3) $(".vote").attr("disabled", true);
+    else $(".vote").attr("disabled", false);
+
+    if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) $(".votefor<%= user.id %>").attr("disabled", true);
+  }
+
+  $.when($.ready).then(() => {
+    setInterval(refreshButtons, 100);
+
+    if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
+      window.location.reload();
+    }
+  });
+
+</script>
 
 <% for (var author of authors) { %>
   <div class="authorentry">
     <img src="<%= author.icon %>">
-    <a class="notalink"><%= author.name %></a>
+    <a class="authorname notalink"><%= author.name %></a>
+    <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
+    <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
   </div>
 <% } %>
+
+<form name="dirty_check">
+  <input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0" />
+</form>
