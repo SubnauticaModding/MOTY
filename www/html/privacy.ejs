@@ -1,0 +1,42 @@
+<% include partials/head %>
+<%- include("partials/header", { user: !!locals.user ? user : undefined }) %>
+
+<div
+  style="font-family: 'Days One', sans-serif; font-size:16px; color:white; text-align: left;padding-left: 10px;padding-right:10px;">
+  <span style="font-size: 48px">How is my data being used?</span><br>
+  <br>
+  <b>Short answer:</b><br>
+  Your data is not being sent to any third-parties and will only be used by the website.<br>
+  No person will never read the data stored on your local device or on the server.<br>
+  Please see <a href="https://discordapp.com/privacy">Discord</a>'s and <a
+    href="https://glitch.com/about/legal/">Glitch</a>'s privacy policy for details on how they use
+  user-data.<br>
+  <br>
+  <br>
+  <b>Long answer:</b><br>
+  We collect and store the following data of our users upon the first login:<br>
+  - The Discord user-id.<br>
+  - A session-key to validate logins.<br>
+  - An auth-token provided by Discord for the use of their API.<br>
+  <br>
+  The following data is stored on and read from the users local device as Cookies:<br>
+  - The Discord user-id associated with the logged in user.<br>
+  - The session-key associated with the currently logged in user. This is used for validation purposes.<br>
+  <br>
+  We access/retrieve but do not store the following informations:<br>
+  - Your email-address associated with your Discord account. The email-address itself will not be read, but
+  instead the value provided by the Discord API whether the email-address is verified or not.<br>
+  - Your username, -tag and -avatar associated with your Discord account.<br>
+  <br>
+  We do not send your data to any third-parties, nor let any person read them manually. They are just used for
+  processing purposes and are neccessary to make the service work.<br>
+  We currently do not offer the deletion of user-specific data, neither automatically nor manually. This will
+  be added in the future.<br>
+  <br>
+  Please read the privacy policy of the following services:<br>
+  - <a href="https://discordapp.com/privacy">Discord (discordapp.com)</a> : Used for authenticating the
+  user.<br>
+  - <a href="https://glitch.com/about/legal/">Glitch (glitch.com)</a> : The site hosting this application<br>
+  <br>
+  <span style="font-size: 36px">Any questions? Contact me on Discord: AlexejheroYTB#1636</span><br>
+</div>

@@ -89,21 +89,30 @@ web.all("*", async (req, res) => {
     });
   }
 
-  var a = authors.getAuthors();
-  var m = mods.getMods();
-  var v = JSON.parse(users.getUser(authUserID)) && JSON.parse(users.getUser(authUserID)).votes ? JSON.parse(users.getUser(authUserID)).votes : [];
+  var authorData = authors.getAuthors();
+  var modData = mods.getMods();
+  var voteData = JSON.parse(users.getUser(authUserID)) && JSON.parse(users.getUser(authUserID)).votes ? JSON.parse(users.getUser(authUserID)).votes : [];
 
-  if (req.path == "/raw") return res.render("www/html/raw.ejs", {
-    authors: a,
-    mods: m,
-    votes: v,
-    user,
-  });
+  for (var author of authorData) {
+    var ids = author.discordids.split(",");
+    if (ids.length == 1) {
+      var discordUser = await discord.getUser(ids[0]);
+      author.name = discordUser.user.username;
+      author.icon = discordUser.user.displayAvatarURL;
+    }
+  }
 
-  res.render("www/html/main.ejs", {
-    authors: a,
-    mods: m,
-    votes: v,
+  for (var mod of modData) {
+    mod.authors = mod.authors.split(",");
+  }
+
+  var p = "/main";
+  if (req.path == "/raw" || req.path == "/privacy") p = req.path;
+
+  res.render(`www/html${p}.ejs`, {
+    authors: authorData,
+    mods: modData,
+    votes: voteData,
     user,
   });
 });
