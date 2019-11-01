@@ -202,7 +202,7 @@
   <% for (var author of authors) { %>
     <div class="authorentry authorentry<%= author.id %> authorentry<%= author.discordids.split(',').join(' votefor') %>">
       <img src="<%= author.icon %>">
-      <a class="authorname notalink"><%= author.name %></a>
+      <a class="authorname notalink">&nbsp; <%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
       <br><br>
