@@ -10,17 +10,17 @@ module.exports.update = async function () {
     },
     resolveWithFullResponse: true,
   });
-  console.log(snupdates.headers["x-rl-daily-remaining"] + " requests remaining");
-  if (snupdates.headers["x-rl-daily-remaining"] % 100 == 0) sendUpdate("daily", snupdates.headers["x-rl-daily-remaining"]);
+  rateLimitUpdate(snupdates);
   snupdates = JSON.parse(snupdates.body);
+  
   var bzupdates = await request("https://api.nexusmods.com/v1/games/subnauticabelowzero/mods/updated.json?period=1d", {
     headers: {
       "apikey": process.env.NEXUS_TOKEN,
     },
     resolveWithFullResponse: true,
   });
-  console.log(bzupdates.headers["x-rl-daily-remaining"] + " requests remaining");
-  if (bzupdates.headers["x-rl-daily-remaining"] % 100 == 0) sendUpdate("daily", bzupdates.headers["x-rl-daily-remaining"]);
+  rateLimitUpdate(bzupdates);
+  
   bzupdates = JSON.parse(bzupdates.body);
   await updateGame(snupdates, "subnautica");
   await updateGame(bzupdates, "subnauticabelowzero");
@@ -38,8 +38,7 @@ module.exports.cacheAll = async function () {
       },
       resolveWithFullResponse: true,
     });
-    console.log(modinfo.headers["x-rl-daily-remaining"] + " requests remaining");
-    if (modinfo.headers["x-rl-daily-remaining"] % 100 == 0) sendUpdate("daily", modinfo.headers["x-rl-daily-remaining"]);
+    rateLimitUpdate(modinfo);
     modinfo = JSON.parse(modinfo.body);
 
     saveInCache(mod.domain, mod.nexusid, {
@@ -68,8 +67,7 @@ async function updateGame(updates, domain) {
         },
         resolveWithFullResponse: true,
       });
-      console.log(mod.headers["x-rl-daily-remaining"] + " requests remaining");
-      if (mod.headers["x-rl-daily-remaining"] % 100 == 0) sendUpdate("daily", mod.headers["x-rl-daily-remaining"]);
+      rateLimitUpdate(mod);
       mod = JSON.parse(mod.body);
 
       saveInCache(domain, update.mod_id, {
@@ -95,7 +93,12 @@ function needsRecache(domain, modid, updatedate) {
   return false;
 }
 
-function sendUpdate(type, number) {
+function rateLimitUpdate(req) {
+  console.log(req.headers["x-rl-daily-remaining"] + " requests remaining");
+  if (req.headers["x-rl-daily-remaining"] % 100 == 0 || req.headers["x-rl-daily-remaining"] == 2499) sendRateLimitUpdate("daily", req.headers["x-rl-daily-remaining"]);
+}
+
+function sendRateLimitUpdate(type, number) {
   var extra = "";
   if (number <= 500) extra = "<@183249892712513536> ";
   server.bot.channels.get("567009737422536903").send(extra + "API key has " + number + " " + type + " requests remaining.");

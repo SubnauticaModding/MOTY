@@ -7,5 +7,5 @@ module.exports = function (message, command, args) {
     return;
   }
   authors.removeAuthor(args[0]);
-  message.channel.send(`**Removed author**\nID: \`${args[0]}\`\nOld values: \`${existingAuthor}\``);
+  message.channel.send(`**Removed author**\nID: \`${args[0]}\`\nOld values: \`${JSON.stringify(existingAuthor)}\``);
 }

@@ -7,5 +7,5 @@ module.exports = function (message, command, args) {
     return;
   }
   mods.removeMod(args[0]);
-  message.channel.send(`**Removed mod**\nID: \`${args[0]}\`\nOld values: \`${existingMod}\``);
+  message.channel.send(`**Removed mod**\nID: \`${args[0]}\`\nOld values: \`${JSON.stringify(existingMod)}\``);
 }
