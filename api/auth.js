@@ -5,57 +5,48 @@ const auth = require("../src/auth");
 const server = require("../server");
 const users = require("../src/users");
 
-module.exports = function (data) {
+module.exports = async function (data) {
   try {
     if (auth.sessionValid(data.authUserID, data.authSession)) {
-      data.res.redirect("/#sessionValid");
-    } else {
-      if (!data.req.query.code) {
-        data.res.redirect("/login#invalidCode");
-      } else {
-        var bodyObj = {
-          "client_id": server.bot.user.id,
-          "client_secret": process.env.DISCORD_SECRET,
-          "grant_type": "authorization_code",
-          "redirect_uri": `https://sn-moty.glitch.me/auth`,
-          "scope": "identify",
-          "code": data.req.query.code,
-        };
-        var body = querystring.stringify(bodyObj);
-
-        request.post({
-          uri: "https://discordapp.com/api/oauth2/token",
-          body: body,
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          }
-        }).then(async response => {
-          var reqObj = JSON.parse(response);
-
-          var tokenType = reqObj.token_type;
-          var accessToken = reqObj.access_token;
-
-          var userData = await auth.getUserData(accessToken, tokenType);
-          var userID = userData.id;
-          var sessionToken = auth.generateToken();
-
-          auth.setToken(userID, sessionToken, accessToken);
-          auth.setCookies(data.res, userID, sessionToken);
-
-          if (!users.getUser(userID)) users.setUser(userID, []);
-
-          data.res.redirect("/#loggedIn");
-        }).catch(e => {
-          console.error(e);
-          if (e.response && e.response.body)
-            data.res.send(e.response.body);
-          else
-            data.res.redirect("/login#promiseRejected");
-        });
-      }
+      if (!data.user) return res.redirect("https://discord.gg/UpWuWwq");
+      return data.res.redirect("/#sessionValid");
     }
+    if (!data.req.query.code) return data.res.redirect("/#invalidCode");
+
+    var response = await request.post({
+      uri: "https://discordapp.com/api/oauth2/token",
+      body: querystring.stringify({
+        "client_id": server.bot.user.id,
+        "client_secret": process.env.DISCORD_SECRET,
+        "grant_type": "authorization_code",
+        "redirect_uri": `https://sn-moty.glitch.me/auth`,
+        "scope": "email identify",
+        "code": data.req.query.code,
+      }),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+    });
+    response = JSON.parse(response);
+
+    var userData = await auth.getUserData(response.access_token, response.token_type);
+
+    if (!userData.verified) {
+      return data.res.redirect("/notverified");
+    }
+
+    var sessionToken = auth.generateToken();
+
+    auth.setToken(userData.id, sessionToken, response.access_token);
+    auth.setCookies(data.res, userData.id, sessionToken);
+
+    if (!users.getUser(userID)) users.setUser(userID, []);
+
+    if (!data.user) return res.redirect("https://discord.gg/UpWuWwq");
+
+    data.res.redirect("/#loggedIn");
   } catch (e) {
     console.error(e);
-    data.res.redirect("/login#caughtError");
+    data.res.redirect("/#caughtError");
   }
 }
