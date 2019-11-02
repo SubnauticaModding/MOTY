@@ -2,7 +2,7 @@
 <%- include("partials/header", { user: !!locals.user ? user : undefined }) %>
 
 <style>
-  .authorentry, .modentry {
+  .entry {
     background-color: black;
     font-size: 20px;
     color: white;
@@ -34,14 +34,14 @@
     min-height: 220px;
   }
 
-  .authorwrapper img {
+  .authoricon {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     vertical-align: middle;
   }
 
-  .modentry img {
+  .modentry > img:first-child {
     width: 100%;
     min-height: 126px;
     max-height: 126px;
@@ -55,7 +55,7 @@
     background-color: rgb(60, 64, 67);
     cursor: pointer;
     float: right;
-    right: 5px;
+    right: 10px;
     top: 15px;
     position: absolute;
     color: white;
@@ -70,6 +70,15 @@
     background-color: rgb(30, 32, 34);
     color: darkgray;
     cursor: no-drop;
+  }
+
+  .modvotebutton {
+    left: 156px;
+    top: 5px;
+  }
+
+  .modauthors li:nth-child(2) .modvotebutton {
+    top: 40px;
   }
 
   .authorentry[disabled] {
@@ -88,11 +97,36 @@
     vertical-align: middle;
   }
 
-  .authorwrapper, .modwrapper {
+  .modname {
+    font-size: 20px;
+  }
+
+  br.shrink {
+    line-height: 13px;
+  }
+
+  .wrapper {
     display: flex;
     flex-wrap: wrap;
     list-style: none;
     padding: 0;
+  }
+
+  .modauthors {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    bottom: 0px;
+  }
+
+  .modauthors li {
+    padding-left: 5px;
+    padding-bottom: 5px;
+  }
+
+  .modauthors img {
+    width: 30px;
+    height: 30px;
   }
 
   .hidden {
@@ -217,10 +251,10 @@
   });
 </script>
 
-<ul class="authorwrapper hidden">
+<ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
-    <div class="authorentry authorentry<%= author.id %> authorentry<%= author.discordids.split(',').join(' votefor') %>">
-      <img src="<%= author.icon %>">
+    <div class="entry authorentry authorentry<%= author.id %> authorentry<%= author.discordids.split(',').join(' votefor') %>">
+      <img class="authoricon" src="<%= author.icon %>">
       <a class="authorname notalink"><%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
@@ -237,11 +271,34 @@
   <% } %>
 </ul>
 
-<ul class="modwrapper hidden">
+<ul class="modwrapper wrapper hidden">
   <% for (var mod of mods) { %>
-    <div class="modentry">
-      <img src="<%= mod.image %>">
-      <a class="modname notalink"><%= mod.name %></a>
+    <div class="entry modentry">
+      <img src="<%= mod.image %>"><br><br class="shrink">
+      <a class="modname notalink"><%= mod.name %></a><br><br>
+      <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n") %></div><br><br class="shrink">
+      <ul class="modauthors">
+        <% var lines = 0; %>
+        <% for (var author of mod.authors) { %>
+          <% for (var author2 of authors) { %>
+            <% if (author == author2.id) { %>
+              <li>
+                <img class="authoricon" src="<%= author2.icon %>">
+                <a class="notalink"><%= author2.name %></a>
+                <button class="votebutton modvotebutton vote votefor<%= author2.id %> votefor<%= author2.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author2.id %>')" <% if (votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTE</button>
+                <button class="votebutton modvotebutton unvote unvotefor<%= author2.id %> unvotefor<%= author2.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author2.id %>')" <% if (!votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTED</button>
+                <br>
+              </li>
+              <% lines++; %>
+              <% continue; %>
+            <% } %>
+          <% } %>
+        <% } %>
+      </ul>
+      <br><br>
+      <% for (var i = 0; i < lines; i++) { %>
+        <br><br>
+      <% } %>
     </div>
   <% } %>
 </ul>
