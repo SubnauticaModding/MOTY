@@ -7,6 +7,7 @@ const server = require("../server");
 const users = require("../src/users");
 
 module.exports = async function (data) {
+  return data.res.sendStatus(403);
   try {
     if (auth.sessionValid(data.authUserID, data.authSession)) {
       if (!data.user) return data.res.redirect("https://discord.gg/UpWuWwq");
