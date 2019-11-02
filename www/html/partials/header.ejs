@@ -8,6 +8,12 @@
   background-color: #f1f1f1;
   padding: 20px 10px;
   background-color: rgb(28, 30, 31);
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-left img {
+  float: left;
 }
 
 .header a, .header div.header-left {
@@ -75,11 +81,34 @@ svg {
 }
 </style>
 
+<script>
+  $.when($.ready).then(() => {
+    if (window.location.pathname == "/") {
+      $(".header-authors").click(() => {
+        $(".authorwrapper").removeClass("hidden");
+        $(".modwrapper").addClass("hidden");
+        $(".header-authors").addClass("active");
+        $(".header-mods").removeClass("active");
+      });
+      $(".header-mods").click(() => {
+        $(".modwrapper").removeClass("hidden");
+        $(".authorwrapper").addClass("hidden");
+        $(".header-mods").addClass("active");
+        $(".header-authors").removeClass("active");
+      });
+    }
+  });
+</script>
+
 <div class="header">
   <div class="header-left">
     <img src="https://github.com/SubnauticaModding/Assets/blob/master/Winter.gif?raw=true" onclick="window.location.href='/'">
+    <a href="/">Modder of the Year 2019</a>
   </div>
-  <a href="/">Modder of the Year 2019</a>
+  <div class="header-center">
+    <a href="/#authors" class="header-authors">Authors</a>
+    <a href="/#mods" class="header-mods">Mods</a>
+  </div>
   <div class="header-right">
     <% if (!locals.user) { %>
       <a class="navbar-editor" href="/login" target="_top">Login with <svg id="navbar-discord-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 272.1">

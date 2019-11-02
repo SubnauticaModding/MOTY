@@ -79,11 +79,15 @@
     vertical-align: middle;
   }
 
-  .wrapper {
+  .authorwrapper {
     display: flex;
     flex-wrap: wrap;
     list-style: none;
     padding: 0;
+  }
+
+  .hidden {
+    display: none !important;
   }
 </style>
 
@@ -184,7 +188,6 @@
 
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
       $(".votefor<%= user.id %>").attr("disabled", true);
-      //$(".authorentry<%= user.id %>").attr("disabled", true);
     }
   }
 
@@ -194,11 +197,18 @@
     if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
       window.location.reload();
     }
-  });
 
+    if (window.location.hash == "#mods") {
+      $(".modwrapper").removeClass("hidden");
+      $(".header-mods").addClass("active");
+    } else {
+      $(".authorwrapper").removeClass("hidden");
+      $(".header-authors").addClass("active");
+    }
+  });
 </script>
 
-<ul class="wrapper">
+<ul class="authorwrapper hidden">
   <% for (var author of authors) { %>
     <div class="authorentry authorentry<%= author.id %> authorentry<%= author.discordids.split(',').join(' votefor') %>">
       <img src="<%= author.icon %>">
