@@ -59,15 +59,15 @@
 
   <script>
     $.when($.ready).then(() => {
-      if (window.md.mobile) {
-        $("*").css("font-size", $(window).width()/6);
-      }
+      
     });
-
+    if (window.md.mobile) {
+      $("*").css("font-size", $(window).width()/6);
+    }
       
     console.log($("body.mobile")[0]);
     
-    odometerOptions = { auto: window.md.mobile() ? false : true, duration: 250 };
+    odometerOptions = { auto: md.mobile() ? false : true, duration: 250 };
     window.addEventListener("load", () => {
       var days = document.getElementsByClassName("daysNumber")[0];
       var hours = document.getElementsByClassName("hoursNumber")[0];
