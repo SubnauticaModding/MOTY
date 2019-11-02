@@ -81,11 +81,11 @@
     top: 40px;
   }
 
-  .authorentry[disabled] {
+  .entry[disabled] {
     filter: opacity(50%);
   }
   
-  .authorentry[disabled] > * {
+  .entry[disabled] > * {
     filter: blur(1px);
   }
 
@@ -219,14 +219,14 @@
   function refreshButtons() {
     if (votes.length == 3) { 
       $(".vote").attr("disabled", true);
-      $(".authorentry").attr("disabled", true);
+      $(".entry").attr("disabled", true);
       for (var vote of votes) {
-        $(".authorentry" + vote).attr("disabled", false);
+        $(".entry" + vote).attr("disabled", false);
       }
     }
     else { 
       $(".vote").attr("disabled", false);
-      $(".authorentry").attr("disabled", false);      
+      $(".entry").attr("disabled", false);      
     }
 
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
@@ -253,7 +253,7 @@
 
 <ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
-    <div class="entry authorentry authorentry<%= author.id %> authorentry<%= author.discordids.split(',').join(' votefor') %>">
+    <div class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
       <img class="authoricon" src="<%= author.icon %>">
       <a class="authorname notalink"><%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
@@ -273,7 +273,7 @@
 
 <ul class="modwrapper wrapper hidden">
   <% for (var mod of mods) { %>
-    <div class="entry modentry">
+    <div class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
       <img src="<%= mod.image %>"><br><br class="shrink">
       <a class="modname notalink"><%= mod.name %></a><br><br>
       <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n") %></div><br><br class="shrink">
