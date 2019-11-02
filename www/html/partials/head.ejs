@@ -9,6 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mobile-detect@1.4.4/mobile-detect.min.js"></script>
 
   <link rel="shortcut icon" href="https://cdn.glitch.com/5be36e4f-adab-416b-b36b-fde2683e34cb%2Ficon.ico?v=1567675560993">
   <link rel="icon" href="https://cdn.glitch.com/5be36e4f-adab-416b-b36b-fde2683e34cb%2Ficon.ico?v=1567675560993">
@@ -46,5 +47,10 @@
       alert("You need to be in our Discord server in order to vote.");
       window.location.href = "https://discord.gg/UpWuWwq";  
     }
+
+    $.when($.ready).then(() => {
+      var md = new MobileDetect(window.navigator.userAgent);
+      if (md.mobile()) $("body").addClass("mobile");
+    });
   </script>
 </head>
