@@ -48,8 +48,8 @@
       window.location.href = "https://discord.gg/UpWuWwq";  
     }
 
+    window.md = new MobileDetect(window.navigator.userAgent);
     $.when($.ready).then(() => {
-      window.md = new MobileDetect(window.navigator.userAgent);
       if (md.mobile()) $("body").addClass("mobile");
     });
   </script>
