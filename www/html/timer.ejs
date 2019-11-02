@@ -58,11 +58,11 @@
   <link rel="stylesheet" href="/www/css/odometer.css">
 
   <script>
-    if ($("body.mobile")) {
-      $.when($.ready).then(() => {
+    $.when($.ready).then(() => {
+      setInterval(() => {
         $("*").css("font-size", $(window).width()/6);
-      });
-    }
+      }, 100);
+    });
 
     odometerOptions = { auto: false, duration: 250 };
     window.addEventListener("load", () => {
