@@ -54,20 +54,18 @@
       user-select: none;
       vertical-align: middle;
     }
-    body.mobile * {
-      font-size: 120px;
-    }
-    @media screen and (max-width: 700px) {
-      body.mobile * {
-        font-size: 60px !important;
-      }
-    }
 </style>
   <link rel="stylesheet" href="/www/css/odometer.css">
 
   <script>
-    odometerOptions = { auto: true, duration: 500 };
-    window.addEventListener('load', () => {
+    if ($("body.mobile")) {
+      $.when($.ready).then(() => {
+        $("*").css("font-size", $(window).width()/6);
+      });
+    }
+
+    odometerOptions = { auto: false, duration: 250 };
+    window.addEventListener("load", () => {
       var days = document.getElementsByClassName("daysNumber")[0];
       var hours = document.getElementsByClassName("hoursNumber")[0];
       var minutes = document.getElementsByClassName("minutesNumber")[0];
@@ -108,7 +106,7 @@
       updateTimer();
     });
 </script>
-  <script src="/www/js/odometer.js"></script>
+  <script class="odometerlink" src="/www/js/odometer.js"></script>
   
   <div class="timerOly">
     <div class="timerCont">
