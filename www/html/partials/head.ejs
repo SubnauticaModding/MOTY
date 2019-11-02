@@ -49,7 +49,7 @@
     }
 
     $.when($.ready).then(() => {
-      window.md = new MobileDetect(window.navigator.userAgent);
+      var md = new MobileDetect(window.navigator.userAgent);
       if (md.mobile()) $("body").addClass("mobile");
     });
   </script>
