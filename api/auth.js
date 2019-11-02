@@ -32,8 +32,10 @@ module.exports = async function (data) {
     response = JSON.parse(response);
 
     var userData = await auth.getUserData(response.access_token, response.token_type);
+    var user = discord.getUser(userData.id);
     if (!userData.verified) return data.res.redirect("/?alert=You need to have a verified email on your account in order to vote.");
-    if (!discord.getUser(userData.id)) return data.res.redirect("/?server=true");
+    if (!user) return data.res.redirect("/?server=true");
+    if (user.user.createdTimestamp > 1575158400000) return data.res.redirect("/?alert=Your account was created after December 1st 2019, which means you cannot vote."); 
 
     var sessionToken = auth.generateToken();
     auth.setToken(userData.id, sessionToken, response.access_token);
