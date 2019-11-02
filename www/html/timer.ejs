@@ -58,13 +58,16 @@
   <link rel="stylesheet" href="/www/css/odometer.css">
 
   <script>
-    if ($("body.mobile")) {
-      $.when($.ready).then(() => {
-        $("*").css("font-size", $(window).width()/6);
-      });
+    $.when($.ready).then(() => {
+      
+    });
+    if (window.md.mobile) {
+      $("*").css("font-size", $(window).width()/6);
     }
-
-    odometerOptions = { auto: false, duration: 250 };
+      
+    console.log($("body.mobile")[0]);
+    
+    odometerOptions = { auto: md.mobile() ? false : true, duration: 250 };
     window.addEventListener("load", () => {
       var days = document.getElementsByClassName("daysNumber")[0];
       var hours = document.getElementsByClassName("hoursNumber")[0];
@@ -106,7 +109,7 @@
       updateTimer();
     });
 </script>
-  <script class="odometerlink" src="/www/js/odometer.js"></script>
+  <script src="/www/js/odometer.js"></script>
   
   <div class="timerOly">
     <div class="timerCont">
