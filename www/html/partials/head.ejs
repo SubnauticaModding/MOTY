@@ -49,8 +49,10 @@
     }
 
     $.when($.ready).then(() => {
-      var md = new MobileDetect(window.navigator.userAgent);
-      if (md.mobile()) $("body").addClass("mobile");
+      setInterval(() => {
+        if ($(window).width() < 1040) $("body").addClass("mobile");
+        else $("body").removeClass("mobile");
+      })
     });
   </script>
 </head>
