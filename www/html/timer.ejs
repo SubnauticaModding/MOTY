@@ -21,6 +21,9 @@
       margin: auto;
       font-size: 75px;
     }
+    body.mobile * {
+      font-size: 80px;
+    }
   </style>
 
   <div class="container"><div class="text"><%= message %></div></div>
@@ -50,6 +53,14 @@
       font-size: 200px;
       user-select: none;
       vertical-align: middle;
+    }
+    body.mobile * {
+      font-size: 120px;
+    }
+    @media screen and (max-width: 700px) {
+      body.mobile * {
+        font-size: 60px !important;
+      }
     }
 </style>
   <link rel="stylesheet" href="/www/css/odometer.css">
