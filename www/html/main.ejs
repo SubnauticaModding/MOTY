@@ -148,12 +148,6 @@
       width: 45% !important;
     }
   }
-
-  @media screen and (min-width: 600px) {
-    body.mobile .entry {
-      width: 30% !important;
-    }
-  }
 </style>
 
 <script>
@@ -251,26 +245,12 @@
       $(".entry").attr("disabled", false);      
     }
 
-    if ($(window).width() < 200) {
-      $(".wrapper").css("display", "none");
-      $(".reswarning").css("display", "block");
+        if ($(window).width() < 200) {
+    
     } else if ($(window).width() < 400) {
-      $(".wrapper").css("display", "");
-      $(".reswarning").css("display", "none");
-      $(".modvotebutton").css("left", `${120 + 0.954773869 * ($(window).width() - 200)}px`);
-    } else if ($(window).width() < 600) {
-      $(".wrapper").css("display", "");
-      $(".reswarning").css("display", "none");
-      $(".modvotebutton").css("left", `${115 + 0.702386935 * ($(window).width() - 300)}px`);
-    } else if ($(window).width() < 1040) {
-      $(".wrapper").css("display", "");
-      $(".reswarning").css("display", "none");
-      $(".modvotebutton").css("left", `${110 + 0.45 * ($(window).width() - 400)}px`);
-    } else {
-      $(".wrapper").css("display", "");
-      $(".reswarning").css("display", "none");
-      $(".modvotebutton").css("left", "");
-    }
+      
+    } else if 
+    
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
       $(".votefor<%= user.id %>").attr("disabled", true);
     }
