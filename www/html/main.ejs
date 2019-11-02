@@ -313,7 +313,7 @@
     <div class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
       <img src="<%= mod.image %>"><br><br class="shrink">
       <a class="modname notalink"><%= mod.name %></a><br><br>
-      <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n") %></div><br><br class="shrink">
+      <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
       <ul class="modauthors">
         <% var lines = 0; %>
         <% for (var author of mod.authors) { %>

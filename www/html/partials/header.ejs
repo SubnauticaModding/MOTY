@@ -76,6 +76,10 @@
     border-radius: 4px;
   }
 
+  .header.mobile .header-authors:not(.active), .header.mobile .header-mods:not(.active), .header.mobile .privacyheader:not(.active) {
+    color: dodgerblue;
+  }
+
   .header-center.onotherpage {
     border: 1px solid dodgerblue;
     border-radius: 4px;
@@ -95,7 +99,7 @@
     border-bottom-left-radius: 0;
   }
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 570px) {
     .header a {
       float: none;
       display: block;
@@ -105,10 +109,6 @@
     .header-right {
       float: none;
     }
-  }
-
-  .header-authors.hidden + .header-mods {
-    border: 4px white;
   }
 
   .navbar-sep {
@@ -184,7 +184,7 @@
       <img src="<%= user.user.displayAvatarURL %>" onclick="window.location.href='/'">
     <% } %>
     <a class="notalink navbar-sep"></a>
-    <a id="navbar-editor" class="privacyheader" href="/privacy">Privacy</a>
+    <a class="privacyheader" href="/privacy">Privacy</a>
   </div>
 </div>
 
@@ -205,8 +205,8 @@
       <a class="user" href="javascript:if(confirm('Are you sure you want to log out?')) window.location.href='/logout'">Logout</a>
       <img src="<%= user.user.displayAvatarURL %>" onclick="window.location.href='/'">
     <% } %>
-    <a id="navbar-editor" class="privacyheader" href="/privacy">Privacy</a>
+    <a class="privacyheader" href="/privacy">Privacy</a>
   </div>
 </div>
 
-<noscript>You need to enable javascript in order to display this website</noscript>
+<noscript>You need to enable javascript in order to display this website!</noscript>
