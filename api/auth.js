@@ -10,10 +10,10 @@ module.exports = async function (data) {
   try {
     if (auth.sessionValid(data.authUserID, data.authSession)) {
       if (!data.user) return data.res.redirect("https://discord.gg/UpWuWwq");
-      return data.res.redirect("/#sessionValid");
+      return data.res.redirect("/");
     }
-    
-    if (!data.req.query.code) return data.res.redirect("/#invalidCode");
+
+    if (!data.req.query.code) return data.res.redirect("/?alert=Invalid authentication code. Ping @AlexejheroYTB#1636 about this.");
 
     var response = await request.post({
       uri: "https://discordapp.com/api/oauth2/token",
@@ -32,8 +32,10 @@ module.exports = async function (data) {
     response = JSON.parse(response);
 
     var userData = await auth.getUserData(response.access_token, response.token_type);
-    if (!userData.verified) return data.res.redirect("/notverified");
-    if (!discord.getUser(userData.id)) return data.res.redirect("https://discord.gg/UpWuWwq");
+    var user = discord.getUser(userData.id);
+    if (!userData.verified) return data.res.redirect("/?alert=You need to have a verified email on your account in order to vote.");
+    if (!user) return data.res.redirect("/?server=true");
+    if (user.user.createdTimestamp > 1575158400000) return data.res.redirect("/?alert=Your account was created after December 1st 2019, which means you cannot vote."); 
 
     var sessionToken = auth.generateToken();
     auth.setToken(userData.id, sessionToken, response.access_token);
@@ -41,9 +43,9 @@ module.exports = async function (data) {
 
     if (!users.getUser(userData.id)) users.setUser(userData.id, []);
 
-    data.res.redirect("/#loggedIn");
+    data.res.redirect("/");
   } catch (e) {
     console.error(e);
-    data.res.redirect("/logout#caughtError");
+    data.res.redirect("/logout?alert=Caught an unknown error while trying to login. Ping @AlexejheroYTB#1636 about this.");
   }
 }

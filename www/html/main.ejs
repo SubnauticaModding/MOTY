@@ -2,7 +2,7 @@
 <%- include("partials/header", { user: !!locals.user ? user : undefined }) %>
 
 <style>
-  .authorentry {
+  .entry {
     background-color: black;
     font-size: 20px;
     color: white;
@@ -34,11 +34,19 @@
     min-height: 220px;
   }
 
-  img {
+  .authoricon {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     vertical-align: middle;
+  }
+
+  .modentry > img:first-child {
+    width: 100%;
+    min-height: 126px;
+    max-height: 126px;
+    vertical-align: middle;
+    object-fit: contain;
   }
 
   .votebutton {
@@ -47,10 +55,11 @@
     background-color: rgb(60, 64, 67);
     cursor: pointer;
     float: right;
-    right: 5px;
+    right: 10px;
     top: 15px;
     position: absolute;
     color: white;
+    width: 58px;
   }
   
   .votebutton:focus, .votebutton:active {
@@ -63,11 +72,20 @@
     cursor: no-drop;
   }
 
-  .authorentry[disabled] {
+  .modvotebutton {
+    left: 156px;
+    top: 5px;
+  }
+
+  .modauthors li:nth-child(2) .modvotebutton {
+    top: 40px;
+  }
+
+  .entry[disabled] {
     filter: opacity(50%);
   }
   
-  .authorentry[disabled] > * {
+  .entry[disabled] > * {
     filter: blur(1px);
   }
 
@@ -75,8 +93,23 @@
     background: green;
   }
 
-  .authorname {
+  .authorname, .modname {
     vertical-align: middle;
+  }
+
+  .modname, .moddescription {
+    display: block;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-align: justify;
+  }
+
+  .modname {
+    font-size: 16px;
+  }
+
+  br.shrink {
+    line-height: 13px;
   }
 
   .wrapper {
@@ -84,6 +117,37 @@
     flex-wrap: wrap;
     list-style: none;
     padding: 0;
+  }
+
+  .modauthors {
+    list-style: none;
+    padding: 0;
+    position: absolute;
+    bottom: 0px;
+  }
+
+  .modauthors li {
+    padding-left: 5px;
+    padding-bottom: 5px;
+  }
+
+  .modauthors img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  body.mobile .entry {
+    width: 100% !important;
+  }
+
+  @media screen and (min-width: 400px) {
+    body.mobile .entry {
+      width: 45% !important;
+    }
   }
 </style>
 
@@ -172,19 +236,18 @@
   function refreshButtons() {
     if (votes.length == 3) { 
       $(".vote").attr("disabled", true);
-      $(".authorentry").attr("disabled", true);
+      $(".entry").attr("disabled", true);
       for (var vote of votes) {
-        $(".authorentry" + vote).attr("disabled", false);
+        $(".entry" + vote).attr("disabled", false);
       }
     }
     else { 
       $(".vote").attr("disabled", false);
-      $(".authorentry").attr("disabled", false);      
+      $(".entry").attr("disabled", false);      
     }
 
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
       $(".votefor<%= user.id %>").attr("disabled", true);
-      //$(".authorentry<%= user.id %>").attr("disabled", true);
     }
   }
 
@@ -194,15 +257,24 @@
     if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
       window.location.reload();
     }
-  });
 
+    $(".header-center").removeClass("onotherpage").addClass("onmainpage");
+
+    if (window.location.hash == "#mods") {
+      $(".modwrapper").removeClass("hidden");
+      $(".header-mods").addClass("active");
+    } else {
+      $(".authorwrapper").removeClass("hidden");
+      $(".header-authors").addClass("active");
+    }
+  });
 </script>
 
-<ul class="wrapper">
+<ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
-    <div class="authorentry authorentry<%= author.id %> authorentry<%= author.discordids.split(',').join(' votefor') %>">
-      <img src="<%= author.icon %>">
-      <a class="authorname notalink">&nbsp; <%= author.name %></a>
+    <div class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
+      <img class="authoricon" src="<%= author.icon %>">
+      <a class="authorname notalink"><%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
       <br><br>
@@ -214,6 +286,38 @@
         <% } %>
       </ul>
       <br>
+    </div>
+  <% } %>
+</ul>
+
+<ul class="modwrapper wrapper hidden">
+  <% for (var mod of mods) { %>
+    <div class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
+      <img src="<%= mod.image %>"><br><br class="shrink">
+      <a class="modname notalink"><%= mod.name %></a><br><br>
+      <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n") %></div><br><br class="shrink">
+      <ul class="modauthors">
+        <% var lines = 0; %>
+        <% for (var author of mod.authors) { %>
+          <% for (var author2 of authors) { %>
+            <% if (author == author2.id) { %>
+              <li>
+                <img class="authoricon" src="<%= author2.icon %>">
+                <a class="notalink"><%= author2.name %></a>
+                <button class="votebutton modvotebutton vote votefor<%= author2.id %> votefor<%= author2.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author2.id %>')" <% if (votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTE</button>
+                <button class="votebutton modvotebutton unvote unvotefor<%= author2.id %> unvotefor<%= author2.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author2.id %>')" <% if (!votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTED</button>
+                <br>
+              </li>
+              <% lines++; %>
+              <% continue; %>
+            <% } %>
+          <% } %>
+        <% } %>
+      </ul>
+      <br><br>
+      <% for (var i = 0; i < lines; i++) { %>
+        <br><br>
+      <% } %>
     </div>
   <% } %>
 </ul>
