@@ -76,7 +76,7 @@
     border-radius: 4px;
   }
 
-  .header.mobile .header-link:not(.active), .header.mobile .privacyheader:not(.active) {
+  .header.mobile .header-authors:not(.active), .header.mobile .header-mods:not(.active), .header.mobile .privacyheader:not(.active) {
     color: dodgerblue;
   }
 
@@ -87,6 +87,9 @@
 
   .header-center .header-authors {
     border-right: 1px solid dodgerblue;
+  }
+
+  .header-center .header-authors {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -167,8 +170,8 @@
     <a class="notalink">Modder of the Year 2019</a>
   </div>
   <div class="header-center onotherpage">
-    <a href="#" onclick="javascript: if (window.location.pathname == '/privacy') window.location = '/?authors'; history.replaceState(null, 'Modder of the Year', '/?authors')" class="header-link header-authors">Authors</a>
-    <a href="#" onclick="javascript: if (window.location.pathname == '/privacy') window.location = '/?mods'; history.replaceState(null, 'Modder of the Year', '/?mods')" class="header-link header-mods">Mods</a>
+    <a href="/#authors" class="header-authors">Authors</a>
+    <a href="/#mods" class="header-mods">Mods</a>
   </div>
   <div class="header-right">
     <% if (!locals.user) { %>
@@ -190,8 +193,8 @@
     <img src="https://github.com/SubnauticaModding/Assets/blob/master/Winter.gif?raw=true" onclick="window.location.href='/'">
   </div>
   <a href="/">Modder of the Year 2019</a>
-  <a href="/?authors" class="header-authors">Authors</a>
-  <a href="/?mods" class="header-mods">Mods</a>
+  <a href="/#authors" class="header-authors">Authors</a>
+  <a href="/#mods" class="header-mods">Mods</a>
   <div class="header-right">
     <% if (!locals.user) { %>
       <a class="navbar-editor" href="/login" target="_top">Login with <svg id="navbar-discord-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 272.1">

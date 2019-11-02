@@ -232,14 +232,15 @@
     });
   }
 
-  function refresh() {
+  function refreshButtons() {
     if (votes.length == 3) { 
       $(".vote").attr("disabled", true);
       $(".entry").attr("disabled", true);
       for (var vote of votes) {
         $(".entry" + vote).attr("disabled", false);
       }
-    } else { 
+    }
+    else { 
       $(".vote").attr("disabled", false);
       $(".entry").attr("disabled", false);      
     }
@@ -261,38 +262,27 @@
       $(".modvotebutton").css("left", "");
     }
 
-    if (parseQueryString().mods) {
-      $(".authorwrapper").addClass("hidden");
-      $(".header-authors").removeClass("active");
-      $(".modwrapper").removeClass("hidden");
-      $(".header-mods").addClass("active");
-    } else {
-      $(".authorwrapper").removeClass("hidden");
-      $(".header-authors").addClass("active");
-      $(".modwrapper").addClass("hidden");
-      $(".header-mods").removeClass("active");
-    }
-
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
       $(".votefor<%= user.id %>").attr("disabled", true);
     }
   }
 
   $.when($.ready).then(() => {
-    setInterval(refresh, 100);
-
-    if (parseQueryString().scrollto) {
-      console.log(parseQueryString().scrollto);
-      $([document.documentElement, document.body]).animate({
-        scrollTop: $(`#${parseQueryString().scrollto}`).offset().top,
-      }, 5000);
-    }
+    setInterval(refreshButtons, 100);
 
     if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
       window.location.reload();
     }
 
     $(".header-center").removeClass("onotherpage").addClass("onmainpage");
+
+    if (window.location.hash == "#mods") {
+      $(".modwrapper").removeClass("hidden");
+      $(".header-mods").addClass("active");
+    } else {
+      $(".authorwrapper").removeClass("hidden");
+      $(".header-authors").addClass("active");
+    }
   });
 </script>
 
@@ -300,7 +290,7 @@
 
 <ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
-    <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
+    <div class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
       <img class="authoricon" src="<%= author.icon %>">
       <a class="authorname notalink"><%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
@@ -309,7 +299,7 @@
       <ul>
         <% for (var mod of mods) { %>
           <% if (mod.authors.includes(author.id)) { %>
-            <li><a href="#" onclick="javascript: history.replaceState(null, 'Modder of the Year', '/?mods&scrollto=<%= mod.id %>'"><%= mod.name %></a></li>
+            <li><a href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>"><%= mod.name %></a></li>
           <% } %>
         <% } %>
       </ul>
@@ -320,11 +310,10 @@
 
 <ul class="modwrapper wrapper hidden">
   <% for (var mod of mods) { %>
-    <div id="<%= mod.id %>" class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
+    <div class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
       <img src="<%= mod.image %>"><br><br class="shrink">
       <a class="modname notalink"><%= mod.name %></a><br><br>
       <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
-      <a class="moddescription" href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>">View on NexusMods</a>
       <ul class="modauthors">
         <% var lines = 0; %>
         <% for (var author of mod.authors) { %>
