@@ -1,84 +1,84 @@
 <style>
-* {
-  box-sizing: border-box;
-}
-
-.header {
-  overflow: hidden;
-  background-color: #f1f1f1;
-  padding: 20px 10px;
-  background-color: rgb(28, 30, 31);
-  display: flex;
-  justify-content: space-between;
-}
-
-.header-left img {
-  float: left;
-}
-
-.header a, .header div.header-left {
-  float: left;
-  color: white;
-  text-align: center;
-  padding: 5px;
-  padding-left: 12px;
-  padding-right: 13px;
-  text-decoration: none;
-  font-size: 25px; 
-  line-height: 40px;
-  border-radius: 4px;
-}
-
-.header a:hover:not(.notalink) {
-  background-color: rgb(34, 36, 37);
-  color: rgb(232, 230, 227);
-}
-
-.header a.active:not(.notalink) {
-  background-color: dodgerblue;
-  color: white;
-}
-
-.header-right {
-  float: right;
-  display: flex;
-  justify-content: flex-end;
-}
-
-.header div.header-left {
-  padding: 0;
-}
-
-.header img {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-}
-
-svg {
-  vertical-align: middle;
-  width: 135px;
-  padding: 0px;
-  margin: 0px;
-  filter: invert(53%) sepia(94%) saturate(341%) hue-rotate(193deg) brightness(86%) contrast(98%);
-}
-
-.navbar-editor {
-  padding-bottom: 0px;
-}
-
-@media screen and (max-width: 500px) {
-  .header a {
-    float: none;
-    display: block;
-    text-align: left;
+  * {
+    box-sizing: border-box;
   }
-  
+
+  .header {
+    overflow: hidden;
+    background-color: #f1f1f1;
+    padding: 20px 10px;
+    background-color: rgb(28, 30, 31);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .header-left img {
+    float: left;
+  }
+
+  .header a, .header div.header-left {
+    float: left;
+    color: white;
+    text-align: center;
+    padding: 5px;
+    padding-left: 12px;
+    padding-right: 13px;
+    text-decoration: none;
+    font-size: 25px; 
+    line-height: 40px;
+    border-radius: 4px;
+  }
+
+  .header a:hover:not(.notalink) {
+    background-color: rgb(34, 36, 37);
+    color: rgb(232, 230, 227);
+  }
+
+  .header a.active:not(.notalink) {
+    background-color: dodgerblue;
+    color: white;
+  }
+
   .header-right {
-    float: none;
+    float: right;
+    display: flex;
+    justify-content: flex-end;
   }
-}
+
+  .header div.header-left {
+    padding: 0;
+  }
+
+  .header img {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+  }
+
+  .header svg {
+    vertical-align: middle;
+    width: 135px;
+    padding: 0px;
+    margin: 0px;
+    filter: invert(53%) sepia(94%) saturate(341%) hue-rotate(193deg) brightness(86%) contrast(98%);
+  }
+
+  .navbar-editor {
+    padding-bottom: 0px;
+  }
+
+  @media screen and (max-width: 500px) {
+    .header a {
+      float: none;
+      display: block;
+      text-align: left;
+    }
+    
+    .header-right {
+      float: none;
+    }
+  }
 </style>
 
 <script>
@@ -96,6 +96,8 @@ svg {
         $(".header-mods").addClass("active");
         $(".header-authors").removeClass("active");
       });
+    } else if (window.location.pathname == "/privacy") {
+      $(".privacyheader").addClass("active");
     }
   });
 </script>
@@ -120,6 +122,6 @@ svg {
       <img src="<%= user.user.displayAvatarURL %>" onclick="window.location.href='/'">
     <% } %>
     <a class="notalink navbar-sep"></a>
-    <a id="navbar-editor" href="/privacy" target="_top">Privacy</a>
+    <a id="navbar-editor" class="privacyheader" href="/privacy" target="_top">Privacy</a>
   </div>
 </div>
