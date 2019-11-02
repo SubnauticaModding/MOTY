@@ -13,7 +13,7 @@ module.exports = async function (data) {
       return data.res.redirect("/");
     }
 
-    if (!data.req.query.code) return data.res.redirect("/?alert=Invalid authentication code. Ping @AlexejheroYTB#1636 about this.");
+    if (!data.req.query.code) return data.res.redirect("/?alert=Invalid authentication code. Ping @AlexejheroYTB%231636 about this.");
 
     var response = await request.post({
       uri: "https://discordapp.com/api/oauth2/token",
@@ -32,7 +32,7 @@ module.exports = async function (data) {
     response = JSON.parse(response);
 
     var userData = await auth.getUserData(response.access_token, response.token_type);
-    var user = discord.getUser(userData.id);
+    var user = await discord.getUser(userData.id);
     if (!userData.verified) return data.res.redirect("/?alert=You need to have a verified email on your account in order to vote.");
     if (!user) return data.res.redirect("/?server=true");
     if (user.user.createdTimestamp > 1575158400000) return data.res.redirect("/?alert=Your account was created after December 1st 2019, which means you cannot vote."); 
@@ -46,6 +46,6 @@ module.exports = async function (data) {
     data.res.redirect("/");
   } catch (e) {
     console.error(e);
-    data.res.redirect("/logout?alert=Caught an unknown error while trying to login. Ping @AlexejheroYTB#1636 about this.");
+    data.res.redirect("/logout?alert=An unknown error occurred while trying to login. Ping @AlexejheroYTB%231636 about this.");
   }
 }
