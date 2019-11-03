@@ -77,25 +77,17 @@
     padding-bottom: 0px;
   }
 
-  .header-center.onmainpage {
-    border: 1px solid dodgerblue;
-    border-radius: 4px;
-  }
-
-  .header.mobile .header-authors:not(.active), .header.mobile .header-mods:not(.active), .header.mobile .privacyheader:not(.active) {
+  .header.mobile .header-link:not(.active), .header.mobile .privacyheader:not(.active) {
     color: dodgerblue;
   }
 
-  .header-center.onotherpage {
+  .header-center {
     border: 1px solid dodgerblue;
     border-radius: 4px;
   }
 
   .header-center .header-authors {
     border-right: 1px solid dodgerblue;
-  }
-
-  .header-center .header-authors {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
@@ -103,7 +95,18 @@
   .header-center .header-mods {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
+    <% if (locals.admin) { %>
+      border-radius: 0;
+    <% } %>
   }
+
+  <% if (locals.admin) %>
+    .header-center .header-votes {
+      border-left: 1px solid dodgerblue;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  <% } %>
 
   @media screen and (max-width: 570px) {
     .header a {
@@ -155,15 +158,32 @@
       $(".header-authors").click(() => {
         $(".authorwrapper").removeClass("hidden");
         $(".modwrapper").addClass("hidden");
+        $(".votewrapper").addClass("hidden");
+
         $(".header-authors").addClass("active");
         $(".header-mods").removeClass("active");
+        $(".header-votes").removeClass("active");
       });
       $(".header-mods").click(() => {
-        $(".modwrapper").removeClass("hidden");
         $(".authorwrapper").addClass("hidden");
-        $(".header-mods").addClass("active");
+        $(".modwrapper").removeClass("hidden");
+        $(".votewrapper").addClass("hidden");
+
         $(".header-authors").removeClass("active");
+        $(".header-mods").addClass("active");
+        $(".header-votes").removeClass("active");
       });
+      <% if (locals.admin) { %>
+        $(".header-votes").click(() => {
+          $(".authorwrapper").addClass("hidden");
+          $(".modwrapper").addClass("hidden");
+          $(".votewrapper").removeClass("hidden");
+
+          $(".header-authors").removeClass("active");
+          $(".header-mods").removeClass("active");
+          $(".header-votes").addClass("active");
+        });
+      <% } %>
     } else if (window.location.pathname == "/privacy") {
       $(".privacyheader").addClass("active");
     }
@@ -176,8 +196,11 @@
     <a class="notalink">Modder of the Year 2019</a>
   </div>
   <div class="header-center onotherpage">
-    <a href="/#authors" class="header-authors">Authors</a>
-    <a href="/#mods" class="header-mods">Mods</a>
+    <a href="/#authors" class="header-link header-authors">Authors</a>
+    <a href="/#mods" class="header-link header-mods">Mods</a>
+    <% if (locals.admin) { %>
+      <a href="/#votes" class="header-link header-votes">Votes</a>
+    <% } %>
   </div>
   <div class="header-right">
     <% if (!locals.user) { %>
@@ -199,8 +222,11 @@
     <img src="https://github.com/SubnauticaModding/Assets/blob/master/Winter.gif?raw=true" onclick="window.location.href='/'">
   </div>
   <a href="/">Modder of the Year 2019</a>
-  <a href="/#authors" class="header-authors">Authors</a>
-  <a href="/#mods" class="header-mods">Mods</a>
+  <a href="/#authors" class="header-link header-authors">Authors</a>
+  <a href="/#mods" class="header-link header-mods">Mods</a>
+  <% if (locals.admin) { %>
+    <a href="/#votes" class="header-link header-votes">Votes</a>
+  <% } %>
   <div class="header-right">
     <% if (!locals.user) { %>
       <a class="navbar-editor" href="/login" target="_top">Login with <svg id="navbar-discord-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 272.1">
