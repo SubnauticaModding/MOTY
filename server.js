@@ -126,7 +126,7 @@ web.all("*", async (req, res) => {
   if (req.path == "/raw" || req.path == "/privacy") p = req.path;
 
   res.render(`www/html${p}.ejs`, {
-    admin: perms.isAdmin(authUserID),
+    admin: perms.isAdmin(user),
     authors: authorData,
     mods: modData,
     user,
