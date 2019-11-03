@@ -2,6 +2,10 @@
 <%- include("partials/header", { user: !!locals.user ? user : undefined, admin: admin }) %>
 
 <style>
+  body:not(.mobile) {
+    overflow-y: scroll;
+  }
+
   .entry {
     background-color: #252525;
     font-size: 20px;
@@ -241,6 +245,9 @@
         },
         200: () => {
           console.log("Removed all votes");
+          $(".unvote").css("display", "none");
+          $(".vote").css("display", "inherit");
+          votes = [];
         },
         500: () => {
           console.log("Server error");
@@ -347,7 +354,7 @@
   }
 
   $.when($.ready).then(() => {
-    setInterval(refresh, 1000);
+    setInterval(refresh, 100);
 
     if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
       window.location.reload();
@@ -463,31 +470,33 @@
 </ul>
 
 <% if (locals.admin) { %>
-  <ul class="votewrapper wrapper hidden">
-    <% for (var author of authors) { %>
-      <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %> voteentry">
-        <img class="authoricon" src="<%= author.icon %>">
-        <a class="authorname notalink"><%= author.name %></a>
-        <br><br>
-        <div class="votes<%= author.id %>" style="text-align:center;">...</div>
-        <script>
-          $(window).on("load", () => { 
-            setInterval(() => {
-              try {
-                $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
-                $(".votes<%= author.id %>").fitText(0.2);
-              } catch (e) {
-                $(".votes<%= author.id %>").text("...");
-                $(".votes<%= author.id %>").fitText(0.2);
-              }
-            }, 100)
-          });
-        </script>
-        <br>
-      </div>
-    <% } %>
-  </ul>
-  <button onclick="if(window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
+  <div class="votewrapper wrapper hidden">
+    <ul class="votewrapper wrapper hidden">
+      <% for (var author of authors) { %>
+        <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %> voteentry">
+          <img class="authoricon" src="<%= author.icon %>">
+          <a class="authorname notalink"><%= author.name %></a>
+          <br><br>
+          <div class="votes<%= author.id %>" style="text-align:center;font-size:112px;">...</div>
+          <script>
+            $(window).on("load", () => { 
+              setInterval(() => {
+                try {
+                  $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
+                  $(".votes<%= author.id %>").fitText(0.2);
+                } catch (e) {
+                  $(".votes<%= author.id %>").text("...");
+                  $(".votes<%= author.id %>").fitText(0.2);
+                }
+              }, 100)
+            });
+          </script>
+          <br>
+        </div>
+      <% } %>
+    </ul>
+    <button onclick="if(window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
+  </div>
 <% } %>
 
 <form name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>

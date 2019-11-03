@@ -3,7 +3,12 @@ const mods = require("./mods");
 const request = require("request-promise");
 const server = require("../server");
 
+var lastUpdate;
+
 module.exports.update = async function () {
+  if (lastUpdate && lastUpdate + 120000 > Date.now()) return;
+  lastUpdate = Date.now();
+
   var snupdates = await request("https://api.nexusmods.com/v1/games/subnautica/mods/updated.json?period=1d", {
     headers: {
       "apikey": process.env.NEXUS_TOKEN,
