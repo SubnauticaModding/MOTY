@@ -232,7 +232,7 @@
     });
   }
 
-  function refreshButtons() {
+  function refresh() {
     if (votes.length == 3) { 
       $(".vote").attr("disabled", true);
       $(".entry").attr("disabled", true);
@@ -262,35 +262,76 @@
       $(".modvotebutton").css("left", "");
     }
 
+    if (parseSearchString().includes("mods")) {
+      if (!$(".header-mods").hasClass("active")) {
+        $(".authorwrapper").addClass("hidden");
+        $(".header-authors").removeClass("active");
+        $(".modwrapper").removeClass("hidden");
+        $(".header-mods").addClass("active");
+
+        if (window.readyForAnim) scrollAnimation();
+      }
+    } else {
+      $(".authorwrapper").removeClass("hidden");
+      $(".header-authors").addClass("active");
+      $(".modwrapper").addClass("hidden");
+      $(".header-mods").removeClass("active");
+    }
+
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
       $(".votefor<%= user.id %>").attr("disabled", true);
     }
+
+    if ($(".authorwrapper:visible").exists()) window.authorsloaded = true;
   }
 
   $.when($.ready).then(() => {
-    setInterval(refreshButtons, 100);
+    setInterval(refresh, 100);
 
     if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
       window.location.reload();
     }
 
     $(".header-center").removeClass("onotherpage").addClass("onmainpage");
+  });
 
-    if (window.location.hash == "#mods") {
-      $(".modwrapper").removeClass("hidden");
-      $(".header-mods").addClass("active");
-    } else {
-      $(".authorwrapper").removeClass("hidden");
-      $(".header-authors").addClass("active");
+  $(window).on("load", () => {
+    window.readyForAnim = true;
+    if (parseSearchString().includes("mods")) {
+      if ($(".header-mods").hasClass("active")) {
+        setTimeout(() => scrollAnimation(), 1000);
+      }
     }
   });
+
+  function scrollAnimation() {
+    if (parseSearchString()[1]) {
+      $([document.documentElement, document.body]).animate({
+        scrollTop: $(`#${parseSearchString()[1]}`).offset().top - $(`#${parseSearchString()[1]}`).height() + window.innerHeight / 4,
+      }, 500);
+      setTimeout(() => {
+        $({contrast: 1}).animate({contrast: 0.5}, {
+          step: function () {
+            $(`#${parseSearchString()[1]}`).css("filter", `contrast(${this.contrast})`);
+          },
+        }, 500);
+      }, 600);
+      setTimeout(() => {
+        $({contrast: 0.5}).animate({contrast: 1}, {
+          step: function () {
+            $(`#${parseSearchString()[1]}`).css("filter", `contrast(${this.contrast})`);
+          },
+        }, 500);
+      }, 1800);
+    }
+  }
 </script>
 
 <div class="reswarning" style="font-size:40px;display:none;color:red;">Your resolution is too low to view this website.</div>
 
 <ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
-    <div class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
+    <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
       <img class="authoricon" src="<%= author.icon %>">
       <a class="authorname notalink"><%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
@@ -299,7 +340,7 @@
       <ul>
         <% for (var mod of mods) { %>
           <% if (mod.authors.includes(author.id)) { %>
-            <li><a href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>"><%= mod.name %></a></li>
+            <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
           <% } %>
         <% } %>
       </ul>
@@ -310,10 +351,11 @@
 
 <ul class="modwrapper wrapper hidden">
   <% for (var mod of mods) { %>
-    <div class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
+    <div id="<%= mod.id %>" class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
       <img src="<%= mod.image %>"><br><br class="shrink">
       <a class="modname notalink"><%= mod.name %></a><br><br>
       <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
+      <a class="moddescription" href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>">View on NexusMods</a>
       <ul class="modauthors">
         <% var lines = 0; %>
         <% for (var author of mod.authors) { %>

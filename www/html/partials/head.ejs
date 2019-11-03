@@ -9,7 +9,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mobile-detect@1.4.4/mobile-detect.min.js"></script>
+  <script src="http://code.jquery.com/color/jquery.color.plus-names-2.1.2.min.js"></script>
 
   <link rel="shortcut icon" href="https://cdn.glitch.com/5be36e4f-adab-416b-b36b-fde2683e34cb%2Ficon.ico?v=1567675560993">
   <link rel="icon" href="https://cdn.glitch.com/5be36e4f-adab-416b-b36b-fde2683e34cb%2Ficon.ico?v=1567675560993">
@@ -39,6 +39,17 @@
       return objURL;
     };
 
+    function parseSearchString() {
+      var objURL = [];
+      window.location.hash.replace(
+        new RegExp("([^#]+)", "g"),
+        function($0, $1){
+          objURL.push($1);
+        },
+      );
+      return objURL;
+    };
+
     if (parseQueryString().alert) {
       alert(unescape(parseQueryString().alert));
     }
@@ -54,5 +65,9 @@
         else $("body").removeClass("mobile");
       })
     });
+
+    $.fn.exists = function () {
+      return this.length !== 0;
+    }
   </script>
 </head>

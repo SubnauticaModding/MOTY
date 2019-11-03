@@ -110,7 +110,7 @@ web.all("*", async (req, res) => {
     for (var cacheElement of cache) {
       if (mod.domain == cacheElement.domain && mod.nexusid == cacheElement.id) {
         for (var prop in cacheElement) {
-          if (cacheElement.hasOwnProperty(prop)) {
+          if (cacheElement.hasOwnProperty(prop) && prop != "id") {
             mod[prop] = cacheElement[prop];
           }
         }

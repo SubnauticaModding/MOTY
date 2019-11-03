@@ -12,7 +12,7 @@ module.exports.update = async function () {
   });
   rateLimitUpdate(snupdates);
   snupdates = JSON.parse(snupdates.body);
-  
+
   var bzupdates = await request("https://api.nexusmods.com/v1/games/subnauticabelowzero/mods/updated.json?period=1d", {
     headers: {
       "apikey": process.env.NEXUS_TOKEN,
@@ -20,7 +20,7 @@ module.exports.update = async function () {
     resolveWithFullResponse: true,
   });
   rateLimitUpdate(bzupdates);
-  
+
   bzupdates = JSON.parse(bzupdates.body);
   await updateGame(snupdates, "subnautica");
   await updateGame(bzupdates, "subnauticabelowzero");
@@ -95,7 +95,7 @@ function needsRecache(domain, modid, updatedate) {
 
 function rateLimitUpdate(req) {
   console.log(req.headers["x-rl-daily-remaining"] + " requests remaining");
-  if (req.headers["x-rl-daily-remaining"] % 100 == 0 || req.headers["x-rl-daily-remaining"] == 2499) sendRateLimitUpdate("daily", req.headers["x-rl-daily-remaining"]);
+  if (req.headers["x-rl-daily-remaining"] % 100 == 0) sendRateLimitUpdate("daily", req.headers["x-rl-daily-remaining"]);
 }
 
 function sendRateLimitUpdate(type, number) {
