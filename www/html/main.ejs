@@ -238,8 +238,7 @@
       for (var vote of votes) {
         $(".entry" + vote).attr("disabled", false);
       }
-    }
-    else { 
+    } else { 
       $(".vote").attr("disabled", false);
       $(".entry").attr("disabled", false);      
     }
@@ -262,34 +261,46 @@
     }
 
     if (parseSearchString().includes("mods")) {
-      if (!$(".header-mods").hasClass("active")) {
+      window.ranAuthorAnim = false;
+      if (!window.ranModAnim) {
+        window.ranModAnim = true;
         $(".authorwrapper").addClass("hidden");
         $(".header-authors").removeClass("active");
         $(".modwrapper").removeClass("hidden");
         $(".header-mods").addClass("active");
 
+
+        $(".authorentry").css("background-color", "#252525");
+        $(".authorentry").css("filter", "");
+        $(".authorentry *").css("filter", "");
+
         if (window.readyForAnim) scrollAnimation();
       }
     } else {
-      $(".authorwrapper").removeClass("hidden");
-      $(".header-authors").addClass("active");
-      $(".modwrapper").addClass("hidden");
-      $(".header-mods").removeClass("active");
+      window.ranModAnim = false;
+      if (!window.ranAuthorAnim) {
+        window.ranAuthorAnim = true;
+        $(".authorwrapper").removeClass("hidden");
+        $(".header-authors").addClass("active");
+        $(".modwrapper").addClass("hidden");
+        $(".header-mods").removeClass("active");
 
-      $(".modentry").css("background-color", "#252525");
-      $(".modentry").css("filter", "");
-      $(".modentry *").css("filter", "");
+        $(".modentry").css("background-color", "#252525");
+        $(".modentry").css("filter", "");
+        $(".modentry *").css("filter", "");
+        $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
+
+        if (window.readyForAnim) scrollAnimation();
+      }
     }
 
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
       $(".votefor<%= user.id %>").attr("disabled", true);
     }
-
-    if ($(".authorwrapper:visible").exists()) window.authorsloaded = true;
   }
 
   $.when($.ready).then(() => {
-    setInterval(refresh, 100);
+    setInterval(refresh, 1000);
 
     if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
       window.location.reload();
@@ -304,6 +315,10 @@
       if ($(".header-mods").hasClass("active")) {
         setTimeout(() => scrollAnimation(), 1000);
       }
+    } else {
+      if ($(".header-authors").hasClass("active")) {
+        setTimeout(() => scrollAnimation(), 1000);
+      }
     }
   });
 
@@ -314,12 +329,13 @@
       }, 500);
       setTimeout(() => {
         $(`#${parseSearchString()[1]}`).animate({
-          backgroundColor: "#00799c",
+          backgroundColor: "#00496c",
         }, 500);
         $({_:0}).animate({_:1}, {
           step: function () {
             $(`#${parseSearchString()[1]}`).css("filter", `contrast(1)`);
             $(`#${parseSearchString()[1]} *`).css("filter", "contrast(1)");
+            $(`#${parseSearchString()[1]} .modauthors li:nth-child(2) .modvotebutton`).css("top", "5px");
           },
         })
       }, 600);
@@ -363,7 +379,7 @@
             <% if (author == author2.id) { %>
               <li>
                 <img class="authoricon" src="<%= author2.icon %>">
-                <a class="notalink"><%= author2.name %></a>
+                <a href="#authors#<%= author2.id %>"><%= author2.name %></a>
                 <button class="votebutton modvotebutton vote votefor<%= author2.id %> votefor<%= author2.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author2.id %>')" <% if (votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTE</button>
                 <button class="votebutton modvotebutton unvote unvotefor<%= author2.id %> unvotefor<%= author2.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author2.id %>')" <% if (!votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTED</button>
                 <br>
@@ -382,6 +398,4 @@
   <% } %>
 </ul>
 
-<form name="dirty_check">
-  <input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0" />
-</form>
+<form name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>
