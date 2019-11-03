@@ -231,6 +231,25 @@
     });
   }
 
+  function removeAllVotes() {
+    $.ajax({
+      url: "/removeallvotes",
+      statusCode: {
+        403: () => {
+          console.log("Unauthorized");
+          alert("Unauthorized");
+        },
+        200: () => {
+          console.log("Removed all votes");
+        },
+        500: () => {
+          console.log("Server error");
+          alert("Server error");
+        }
+      },
+    });
+  }
+
   function refresh() {
     if (votes.length == 3) { 
       $(".vote").attr("disabled", true);
@@ -468,6 +487,7 @@
       </div>
     <% } %>
   </ul>
+  <button onclick="if(window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
 <% } %>
 
 <form name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>
