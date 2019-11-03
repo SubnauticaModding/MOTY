@@ -126,10 +126,11 @@ web.all("*", async (req, res) => {
   if (req.path == "/raw" || req.path == "/privacy") p = req.path;
 
   res.render(`www/html${p}.ejs`, {
+    admin: perms.isAdmin(authUserID),
     authors: authorData,
     mods: modData,
-    votes: voteData,
     user,
+    votes: voteData,
   });
 });
 

@@ -307,6 +307,29 @@
     }
 
     $(".header-center").removeClass("onotherpage").addClass("onmainpage");
+
+    <% if (admin) { %>
+      setInterval(() => {
+        $.ajax({
+          url: "/getvotes",
+          statusCode: {
+            403: () => {
+              $(".votecheckbox").css("display", "none");
+              $(".votetext").css("display", "none");
+              console.log("Can't show votes, unauthorized.");
+            },
+            200: (data) => {
+              window.totalvotes = data;
+            },
+            500: () => {
+              $(".votecheckbox").css("display", "none");
+              $(".votetext").css("display", "none");
+              console.log("Error getting votes!");
+            },
+          },
+        });
+      }, 1000);
+    <% } %>
   });
 
   $(window).on("load", () => {
@@ -352,6 +375,12 @@
       <a class="authorname notalink"><%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
+      <% if (admin) { %>
+        <div class="votecounter<%= author.id %>"></div>
+        <script>
+          $(window).on("load", () => setInterval(() => $(".votecounter<%= author.id %>").text(`Votes: ${window.totalvotes.<%= author.id %>.length}`), 1000));
+        </script>
+      <% } %>
       <br><br>
       <ul>
         <% for (var mod of mods) { %>
@@ -397,5 +426,11 @@
     </div>
   <% } %>
 </ul>
+
+<% if (admin) { %>
+
+  <input class="votecheckbox" type="checkbox"><a class="notalink votetext">Show Votes</a>
+
+<% } %>
 
 <form name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>
