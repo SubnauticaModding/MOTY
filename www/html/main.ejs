@@ -242,6 +242,7 @@
       $(".vote").attr("disabled", false);
       $(".entry").attr("disabled", false);      
     }
+    $(".voteentry").attr("disabled", false);
 
     if ($(window).width() < 200) {
       $(".wrapper").css("display", "none");
@@ -448,6 +449,23 @@
 
 <% if (locals.admin) { %>
   <ul class="votewrapper wrapper hidden">
+    <% for (var author of authors) { %>
+      <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %> voteentry">
+        <img class="authoricon" src="<%= author.icon %>">
+        <a class="authorname notalink"><%= author.name %></a>
+        <br><br>
+        <div class="votes<%= author.id %>" style="text-align:center;"></div>
+        <script>
+          $(window).on("load", () => { 
+            setInterval(() => {
+              $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
+              $(".votes<%= author.id %>").fitText(0.2);
+            }, 100)
+          });
+        </script>
+        <br>
+      </div>
+    <% } %>
   </ul>
 <% } %>
 
