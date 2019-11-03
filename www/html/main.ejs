@@ -3,7 +3,7 @@
 
 <style>
   .entry {
-    background-color: black;
+    background-color: #252525;
     font-size: 20px;
     color: white;
     width: 310px;
@@ -26,7 +26,6 @@
     perspective-origin: 112px 200.188px;
     transform-origin: 112px 200.188px;
     caret-color: rgb(0, 0, 0);
-    background: #252525 none repeat scroll 0% 0%/auto padding-box border-box;
     border: 0px none rgb(0, 0, 0);
     font-size: 15px;
     list-style: none outside none;
@@ -46,7 +45,7 @@
     min-height: 126px;
     max-height: 126px;
     vertical-align: middle;
-    object-fit: contain;
+    object-fit: cover;
   }
 
   .votebutton {
@@ -276,6 +275,10 @@
       $(".header-authors").addClass("active");
       $(".modwrapper").addClass("hidden");
       $(".header-mods").removeClass("active");
+
+      $(".modentry").css("background-color", "#252525");
+      $(".modentry").css("filter", "");
+      $(".modentry *").css("filter", "");
     }
 
     if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
@@ -310,19 +313,16 @@
         scrollTop: $(`#${parseSearchString()[1]}`).offset().top - $(`#${parseSearchString()[1]}`).height() + window.innerHeight / 4,
       }, 500);
       setTimeout(() => {
-        $({contrast: 1}).animate({contrast: 0.5}, {
-          step: function () {
-            $(`#${parseSearchString()[1]}`).css("filter", `contrast(${this.contrast})`);
-          },
+        $(`#${parseSearchString()[1]}`).animate({
+          backgroundColor: "#00799c",
         }, 500);
+        $({_:0}).animate({_:1}, {
+          step: function () {
+            $(`#${parseSearchString()[1]}`).css("filter", `contrast(1)`);
+            $(`#${parseSearchString()[1]} *`).css("filter", "contrast(1)");
+          },
+        })
       }, 600);
-      setTimeout(() => {
-        $({contrast: 0.5}).animate({contrast: 1}, {
-          step: function () {
-            $(`#${parseSearchString()[1]}`).css("filter", `contrast(${this.contrast})`);
-          },
-        }, 500);
-      }, 1800);
     }
   }
 </script>
