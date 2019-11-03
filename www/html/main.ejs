@@ -1,5 +1,5 @@
 <% include partials/head %>
-<%- include("partials/header", { user: !!locals.user ? user : undefined }) %>
+<%- include("partials/header", { user: !!locals.user ? user : undefined, admin: locals.admin }) %>
 
 <style>
   .entry {
@@ -260,15 +260,17 @@
       $(".modvotebutton").css("left", "");
     }
 
-    if (parseSearchString().includes("mods")) {
+    if (parseSearchString()[0] == "mods") {
       window.ranAuthorAnim = false;
       if (!window.ranModAnim) {
         window.ranModAnim = true;
         $(".authorwrapper").addClass("hidden");
-        $(".header-authors").removeClass("active");
         $(".modwrapper").removeClass("hidden");
-        $(".header-mods").addClass("active");
+        $(".votewrapper").addClass("hidden");
 
+        $(".header-authors").removeClass("active");
+        $(".header-mods").addClass("active");
+        $(".header-votes").removeClass("active");
 
         $(".authorentry").css("background-color", "#252525");
         $(".authorentry").css("filter", "");
@@ -276,14 +278,39 @@
 
         if (window.readyForAnim) scrollAnimation();
       }
+    <% if (locals.admin) { %>
+      } else if (parseSearchString()[0] == "votes") {
+        window.ranAuthorAnim = false;
+        window.ranModAnim = false;
+
+        $(".authorwrapper").addClass("hidden");
+        $(".modwrapper").addClass("hidden");
+        $(".votewrapper").removeClass("hidden");
+
+        $(".header-authors").removeClass("active");
+        $(".header-mods").removeClass("active");
+        $(".header-votes").addClass("active");
+
+        $(".authorentry").css("background-color", "#252525");
+        $(".authorentry").css("filter", "");
+        $(".authorentry *").css("filter", "");
+
+        $(".modentry").css("background-color", "#252525");
+        $(".modentry").css("filter", "");
+        $(".modentry *").css("filter", "");
+        $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
+    <% } %>
     } else {
       window.ranModAnim = false;
       if (!window.ranAuthorAnim) {
         window.ranAuthorAnim = true;
         $(".authorwrapper").removeClass("hidden");
-        $(".header-authors").addClass("active");
         $(".modwrapper").addClass("hidden");
+        $(".votewrapper").addClass("hidden");
+
+        $(".header-authors").addClass("active");
         $(".header-mods").removeClass("active");
+        $(".header-votes").removeClass("active");
 
         $(".modentry").css("background-color", "#252525");
         $(".modentry").css("filter", "");
@@ -305,8 +332,6 @@
     if (window.performance && window.performance.navigation.type == window.performance.navigation.TYPE_BACK_FORWARD) {
       window.location.reload();
     }
-
-    $(".header-center").removeClass("onotherpage").addClass("onmainpage");
 
     <% if (admin) { %>
       setInterval(() => {
@@ -334,11 +359,11 @@
 
   $(window).on("load", () => {
     window.readyForAnim = true;
-    if (parseSearchString().includes("mods")) {
+    if (parseSearchString()[0] == "mods") {
       if ($(".header-mods").hasClass("active")) {
         setTimeout(() => scrollAnimation(), 1000);
       }
-    } else {
+    } else if (parseSearchString()[0] != "votes") {
       if ($(".header-authors").hasClass("active")) {
         setTimeout(() => scrollAnimation(), 1000);
       }
@@ -375,12 +400,6 @@
       <a class="authorname notalink"><%= author.name %></a>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
-      <% if (admin) { %>
-        <div class="votecounter<%= author.id %>"></div>
-        <script>
-          $(window).on("load", () => setInterval(() => $(".votecounter<%= author.id %>").text(`Votes: ${window.totalvotes.<%= author.id %>.length}`), 1000));
-        </script>
-      <% } %>
       <br><br>
       <ul>
         <% for (var mod of mods) { %>
@@ -427,10 +446,9 @@
   <% } %>
 </ul>
 
-<% if (admin) { %>
-
-  <input class="votecheckbox" type="checkbox"><a class="notalink votetext">Show Votes</a>
-
+<% if (locals.admin) { %>
+  <ul class="votewrapper wrapper hidden">
+  </ul>
 <% } %>
 
 <form name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>
