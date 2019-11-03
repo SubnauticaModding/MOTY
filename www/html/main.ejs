@@ -334,22 +334,18 @@
       window.location.reload();
     }
 
-    <% if (admin) { %>
+    <% if (locals.admin) { %>
       setInterval(() => {
         $.ajax({
           url: "/getvotes",
           statusCode: {
             403: () => {
-              $(".votecheckbox").css("display", "none");
-              $(".votetext").css("display", "none");
               console.log("Can't show votes, unauthorized.");
             },
             200: (data) => {
               window.totalvotes = data;
             },
             500: () => {
-              $(".votecheckbox").css("display", "none");
-              $(".votetext").css("display", "none");
               console.log("Error getting votes!");
             },
           },
@@ -454,12 +450,17 @@
         <img class="authoricon" src="<%= author.icon %>">
         <a class="authorname notalink"><%= author.name %></a>
         <br><br>
-        <div class="votes<%= author.id %>" style="text-align:center;"></div>
+        <div class="votes<%= author.id %>" style="text-align:center;">...</div>
         <script>
           $(window).on("load", () => { 
             setInterval(() => {
-              $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
-              $(".votes<%= author.id %>").fitText(0.2);
+              try {
+                $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
+                $(".votes<%= author.id %>").fitText(0.2);
+              } catch (e) {
+                $(".votes<%= author.id %>").text("...");
+                $(".votes<%= author.id %>").fitText(0.2);
+              }
             }, 100)
           });
         </script>
