@@ -1,4 +1,4 @@
-const data = require("./data");
+ const data = require("./data");
 
 module.exports.getMod = function (id) {
   return data.getObject("mods", id);

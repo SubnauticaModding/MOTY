@@ -11,7 +11,7 @@ module.exports = function (data) {
     if (!auth.sessionValid(data.authUserID, data.authSession)) return data.res.sendStatus(401);
     if (!data.req.query.id) return data.res.sendStatus(400);
 
-    //if (new Date(Date.now()) > moment("2019-12-31T00:00:00Z").tz("UTC")._d && !perms.isAdmin(data.user)) return data.res.sendStatus(410);
+    if (new Date(Date.now()) > moment("2019-12-31T00:00:00Z").tz("UTC")._d && !perms.isAdmin(data.user)) return data.res.sendStatus(410);
     
     var modautors = authors.getAuthors().map(a => a.id);
     if (!modautors.includes(data.req.query.id)) return data.res.sendStatus(404);

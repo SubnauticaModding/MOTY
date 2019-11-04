@@ -84,7 +84,7 @@ web.all("*", async (req, res) => {
   }
 
   if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d) {
-    return res.render("www/html/timer.ejs", {
+    return res.render("www/html/winners.ejs", {
       message: "The event has ended",
     });
   }
