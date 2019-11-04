@@ -2,6 +2,7 @@ const moment = require("moment-timezone");
 
 const auth = require("../src/auth");
 const authors = require("../src/authors");
+const perms = require("../src/perms");
 const server = require("../server");
 const users = require("../src/users");
 

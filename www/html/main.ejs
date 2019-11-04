@@ -172,6 +172,10 @@
           console.log("Invalid author!");
           alert("Invalid author!");
         },
+        410: () => {
+          console.log("Voting has ended");
+          alert("Voting has ended");
+        },
         404: () => {
           console.log("Invalid author!");
           alert("Invalid author!");
@@ -213,6 +217,10 @@
         400: () => {
           console.log("Invalid author!");
           alert("Invalid author!");
+        },
+        410: () => {
+          console.log("Voting has ended");
+          alert("Voting has ended");
         },
         404: () => {
           console.log("Invalid author!");
@@ -264,9 +272,12 @@
       for (var vote of votes) {
         $(".entry" + vote).attr("disabled", false);
       }
+      $(".votenotice").css("display", "none");
     } else { 
       $(".vote").attr("disabled", false);
-      $(".entry").attr("disabled", false);      
+      $(".entry").attr("disabled", false);
+      $(".votenotice").css("display", "");
+      $(".votenotice").text(`You can vote for ${} more modders.`);
     }
     $(".voteentry").attr("disabled", false);
 
@@ -413,6 +424,8 @@
     }
   }
 </script>
+
+<div class="votenotice" style="font-size:30px;">You can vote for ... more modders.</div>
 
 <div class="reswarning" style="font-size:40px;display:none;color:red;">Your resolution is too low to view this website.</div>
 
