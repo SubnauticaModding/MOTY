@@ -173,8 +173,8 @@
           alert("Invalid author!");
         },
         410: () => {
-          console.log("Voting has ended");
-          alert("Voting has ended");
+          console.log("Voting has ended.");
+          alert("Voting has ended.");
         },
         404: () => {
           console.log("Invalid author!");
@@ -277,7 +277,7 @@
       $(".vote").attr("disabled", false);
       $(".entry").attr("disabled", false);
       $(".votenotice").css("display", "");
-      $(".votenotice").text(`You can vote for ${} more modders.`);
+      $(".votenotice").text(`You can vote for ${3 - votes.length} more modders.`);
     }
     $(".voteentry").attr("disabled", false);
 
