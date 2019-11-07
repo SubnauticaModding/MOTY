@@ -31,7 +31,9 @@ module.exports.bot = new Discord.Client({
 });
 module.exports.db = betterSqlite3("data/login.db");
 
-this.bot.login(process.env.DISCORD_TOKEN);
+function boot() {
+  this.bot.login(process.env.DISCORD_TOKEN);
+}
 
 this.bot.on("ready", () => {
   console.log("Logged in as " + this.bot.user.tag);
@@ -150,6 +152,4 @@ this.bot.on("warn", (w) => {
   console.warn(w);
 });
 
-setInterval(() => {
-  http.get(`http://sn-moty.glitch.me/`);
-}, 260000);
+this.boot();
