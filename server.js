@@ -152,4 +152,4 @@ this.bot.on("warn", (w) => {
   console.warn(w);
 });
 
-this.boot();
+boot();
