@@ -79,6 +79,8 @@ web.all("*", async (req, res) => {
     return res.render("www/html/timer.ejs", {
       timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
       message: false,
+      metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
+      metaImage: process.env.WEBSITE_META_IMAGE,
     });
   }
 
