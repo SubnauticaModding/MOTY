@@ -10,26 +10,27 @@ module.exports.update = async function () {
   if (lastUpdate && lastUpdate + 120000 > Date.now()) return;
   lastUpdate = Date.now();
 
-  var snupdates = await request("https://api.nexusmods.com/v1/games/subnautica/mods/updated.json?period=1d", {
+  var updates1 = await request(`https://api.nexusmods.com/v1/games/${process.env.NEXUS_DOMAIN_1}/mods/updated.json?period=1d`, {
     headers: {
       "apikey": process.env.NEXUS_TOKEN,
     },
     resolveWithFullResponse: true,
   });
-  rateLimitUpdate(snupdates);
-  snupdates = JSON.parse(snupdates.body);
+  rateLimitUpdate(updates1);
+  updates1 = JSON.parse(updates1.body);
+  await updateGame(updates1, process.env.NEXUS_DOMAIN_1);
 
-  var bzupdates = await request("https://api.nexusmods.com/v1/games/subnauticabelowzero/mods/updated.json?period=1d", {
-    headers: {
-      "apikey": process.env.NEXUS_TOKEN,
-    },
-    resolveWithFullResponse: true,
-  });
-  rateLimitUpdate(bzupdates);
-
-  bzupdates = JSON.parse(bzupdates.body);
-  await updateGame(snupdates, "subnautica");
-  await updateGame(bzupdates, "subnauticabelowzero");
+  if (process.env.NEXUS_DOMAIN_2) {
+    var updates2 = await request(`https://api.nexusmods.com/v1/games/${process.env.NEXUS_DOMAIN_2}/mods/updated.json?period=1d`, {
+      headers: {
+        "apikey": process.env.NEXUS_TOKEN,
+      },
+      resolveWithFullResponse: true,
+    });
+    rateLimitUpdate(updates2);
+    updates2 = JSON.parse(updates2.body);
+    await updateGame(updates2, process.env.NEXUS_DOMAIN_2);
+  }
 }
 
 module.exports.getAllCached = function () {
@@ -107,5 +108,5 @@ function rateLimitUpdate(req) {
 function sendRateLimitUpdate(type, number) {
   var extra = "";
   if (number <= 500) extra = "<@183249892712513536> ";
-  server.bot.channels.get("567009737422536903").send(extra + "API key has " + number + " " + type + " requests remaining.");
+  server.bot.channels.get(process.env.DISCORD_LOG_CHANNEL).send(extra + "API key has " + number + " " + type + " requests remaining.");
 }

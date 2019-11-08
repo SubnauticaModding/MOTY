@@ -4,7 +4,6 @@ const betterSqlite3 = require("better-sqlite3");
 const Discord = require("discord.js");
 const express = require("express");
 const fs = require("fs");
-const http = require("http");
 const moment = require("moment-timezone");
 const path = require("path");
 
@@ -123,11 +122,15 @@ web.all("*", async (req, res) => {
   modData.sort(sort);
 
   var p = "/main";
-  if (req.path == "/raw" || req.path == "/privacy") p = req.path;
+  if (req.path == "/privacy") p = req.path;
 
   res.render(`www/html${p}.ejs`, {
     admin: perms.isAdmin(user),
     authors: authorData,
+    headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
+    roll: process.env.RICK_ROLL_ON_SELF_VOTE,
+    metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
+    metaImage: process.env.WEBSITE_META_IMAGE,
     mods: modData,
     user,
     votes: voteData,
