@@ -1,5 +1,5 @@
-<% include partials/head %>
-<%- include("partials/header", { user: !!locals.user ? user : undefined, admin: admin }) %>
+<%- include("partials/head", { metaGameName, metaImage }) %>
+<%- include("partials/header", { user: !!locals.user ? user : undefined, admin, headerImage }) %>
 
 <style>
   body:not(.mobile) {
@@ -277,7 +277,7 @@
       $(".vote").attr("disabled", false);
       $(".entry").attr("disabled", false);
       $(".votenotice").css("display", "");
-      $(".votenotice").text(`${3 - votes.length} votes remaining`);
+      $(".votenotice").text(`You can vote for ${3 - votes.length} more modder${3 - votes.length == 1 ? "" : "s"}.`);
     }
     $(".voteentry").attr("disabled", false);
 
@@ -318,6 +318,8 @@
       }
     <% if (locals.admin) { %>
       } else if (parseSearchString()[0] == "votes") {
+        $(".votenotice").css("display", "none");
+
         window.ranAuthorAnim = false;
         window.ranModAnim = false;
 
@@ -359,9 +361,9 @@
       }
     }
 
-    if (document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/)) { 
-      $(".votefor<%= user.id %>").attr("disabled", true);
-    }
+    <% if (locals.roll) { %>
+      $(".votefor<%= user.id %>").attr("disabled", document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/));
+    <% } %>
   }
 
   $.when($.ready).then(() => {
@@ -373,20 +375,22 @@
 
     <% if (locals.admin) { %>
       setInterval(() => {
-        $.ajax({
-          url: "/getvotes",
-          statusCode: {
-            403: () => {
-              console.log("Can't show votes, unauthorized.");
+        if (parseSearchString()[0] == "votes") {
+          $.ajax({
+            url: "/getvotes",
+            statusCode: {
+              403: () => {
+                console.log("Can't show votes, unauthorized.");
+              },
+              200: (data) => {
+                window.totalvotes = data;
+              },
+              500: () => {
+                console.log("Error getting votes!");
+              },
             },
-            200: (data) => {
-              window.totalvotes = data;
-            },
-            500: () => {
-              console.log("Error getting votes!");
-            },
-          },
-        });
+          });
+        }
       }, 1000);
     <% } %>
   });
@@ -425,7 +429,7 @@
   }
 </script>
 
-<div class="votenotice" style="font-size:30px;">You can vote for ... more modders.</div>
+<div class="votenotice" style="font-size:30px;padding-top:10px;margin-bottom:-10px;">You can vote for ... more modders.</div>
 
 <div class="reswarning" style="font-size:40px;display:none;color:red;">Your resolution is too low to view this website.</div>
 
