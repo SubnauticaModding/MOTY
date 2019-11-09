@@ -1,7 +1,7 @@
 {
-  "name": "sn-moty",
+  "name": "moty",
   "version": "1.0.0",
-  "description": "Subnautica Modding - Modder of the Year",
+  "description": "Modder of the Year",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
