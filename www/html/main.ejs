@@ -1,5 +1,5 @@
 <%- include("partials/head", { metaGameName, metaImage }) %>
-<%- include("partials/header", { user: !!locals.user ? user : undefined, admin, headerImage }) %>
+<%- include("partials/header", { user: !!locals.user ? user : undefined, manager, staff, headerImage }) %>
 
 <style>
   body:not(.mobile) {
@@ -316,7 +316,7 @@
 
         if (window.readyForAnim) scrollAnimation();
       }
-    <% if (locals.admin) { %>
+    <% if (locals.manager) { %>
       } else if (parseSearchString()[0] == "votes") {
         $(".votenotice").css("display", "none");
 
@@ -373,7 +373,7 @@
       window.location.reload();
     }
 
-    <% if (locals.admin) { %>
+    <% if (locals.manager) { %>
       setInterval(() => {
         if (parseSearchString()[0] == "votes") {
           $.ajax({
@@ -486,7 +486,7 @@
   <% } %>
 </ul>
 
-<% if (locals.admin) { %>
+<% if (locals.manager) { %>
   <div class="votewrapper wrapper hidden">
     <ul class="votewrapper wrapper hidden">
       <% for (var author of authors) { %>
