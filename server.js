@@ -41,7 +41,7 @@ this.bot.on("ready", () => {
 this.bot.on("message", (message) => {
   if (!message.guild) return;
   if (!message.content.toLowerCase().startsWith("moty/")) return;
-  if (!perms.isAdmin(message.author)) return;
+  if (!perms.isManager(message.author)) return;
 
   var args = message.content.slice(5).trim().split(/ +/g);
   var command = args.shift().toLowerCase();
@@ -75,7 +75,7 @@ web.all("*", async (req, res) => {
     return res.sendFile(path.join(__dirname, req.path));
   }
 
-  if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isAdmin(user)) {
+  if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isManager(user)) {
     return res.render("www/html/timer.ejs", {
       timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
       message: false,
@@ -127,7 +127,7 @@ web.all("*", async (req, res) => {
   if (req.path == "/privacy") p = req.path;
 
   res.render(`www/html${p}.ejs`, {
-    admin: perms.isAdmin(user),
+    manager: perms.isManager(user),
     authors: authorData,
     headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
     roll: process.env.RICK_ROLL_ON_SELF_VOTE,

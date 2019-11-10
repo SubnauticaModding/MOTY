@@ -4,7 +4,7 @@ const users = require("../src/users");
 
 module.exports = function (data) {
   try {
-    if (!auth.sessionValid(data.authUserID, data.authSession) || !perms.isAdmin(data.user)) return data.res.sendStatus(403);
+    if (!auth.sessionValid(data.authUserID, data.authSession) || !perms.isManager(data.user)) return data.res.sendStatus(403);
 
     var u = users.getUsers();
 
