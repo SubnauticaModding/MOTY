@@ -18,7 +18,7 @@ module.exports.update = async function () {
   });
   rateLimitUpdate(updates1);
   updates1 = JSON.parse(updates1.body);
-  await updateGame(updates1, process.env.NEXUS_DOMAIN_1);
+  await this.updateGame(updates1, process.env.NEXUS_DOMAIN_1);
 
   if (process.env.NEXUS_DOMAIN_2) {
     var updates2 = await request(`https://api.nexusmods.com/v1/games/${process.env.NEXUS_DOMAIN_2}/mods/updated.json?period=1d`, {
@@ -29,7 +29,7 @@ module.exports.update = async function () {
     });
     rateLimitUpdate(updates2);
     updates2 = JSON.parse(updates2.body);
-    await updateGame(updates2, process.env.NEXUS_DOMAIN_2);
+    await this.updateGame(updates2, process.env.NEXUS_DOMAIN_2);
   }
 }
 
@@ -58,34 +58,36 @@ module.exports.cacheAll = async function () {
   }
 }
 
-function getFromCache(domain, modid) {
-  return data.getObject("cache", domain + "_" + modid);
+module.exports.cache = async function (domain, modid) {
+  var mod = await request(`https://api.nexusmods.com/v1/games/${domain}/mods/${modid}.json`, {
+    headers: {
+      "apikey": process.env.NEXUS_TOKEN,
+    },
+    resolveWithFullResponse: true,
+  });
+  rateLimitUpdate(mod);
+  mod = JSON.parse(mod.body);
+
+  saveInCache(domain, modid, {
+    domain: domain,
+    id: modid,
+    name: mod.name,
+    description: mod.summary,
+    image: mod.picture_url,
+  });
 }
 
-async function updateGame(updates, domain) {
+module.exports.updateGame = async function (updates, domain) {
   var mappedmods = mods.getMods().map(mod => mod.domain + "_" + mod.nexusid);
   for (var update of updates) {
     if (!mappedmods.includes(domain + "_" + update.mod_id)) continue;
 
-    if (needsRecache(domain, update.mod_id, update.latest_mod_activity)) {
-      var mod = await request(`https://api.nexusmods.com/v1/games/${domain}/mods/${update.mod_id}.json`, {
-        headers: {
-          "apikey": process.env.NEXUS_TOKEN,
-        },
-        resolveWithFullResponse: true,
-      });
-      rateLimitUpdate(mod);
-      mod = JSON.parse(mod.body);
-
-      saveInCache(domain, update.mod_id, {
-        domain: domain,
-        id: update.mod_id,
-        name: mod.name,
-        description: mod.summary,
-        image: mod.picture_url
-      });
-    }
+    if (needsRecache(domain, update.mod_id, update.latest_mod_activity)) this.cache(domain, update.mod_id);
   }
+}
+
+function getFromCache(domain, modid) {
+  return data.getObject("cache", domain + "_" + modid);
 }
 
 function saveInCache(domain, modid, moddata) {
