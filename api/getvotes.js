@@ -18,6 +18,9 @@ module.exports = function (data) {
     for (var _u of u) {
       for (var vote of _u.votes) {
         votes[vote].push(_u.id);
+        if (perms.isStaffID(_u.id)) {
+          for (var i = 1; i < process.env.STAFF_VOTE_MULTIPLIER; i++) votes[vote].push(_u.id);
+        }
       }
     }
 

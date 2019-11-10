@@ -13,3 +13,9 @@ module.exports.isStaff = function (user) {
   if (member && member.hasPermission(process.env.STAFF_REQUIRED_PERMISSION)) return true;
   return false;
 }
+
+module.exports.isStaffID = async function (id) {
+  if (!id) return false;
+  var user = await server.bot.fetchUser(id);
+  return this.isStaff(user);
+}

@@ -37,6 +37,11 @@
     min-height: 220px;
   }
 
+  .authorheader {
+    display: flex;
+    align-items: center;
+  }
+
   .authoricon {
     width: 50px;
     height: 50px;
@@ -96,8 +101,9 @@
     background: green;
   }
 
-  .authorname, .modname {
+  .authorname {
     vertical-align: middle;
+    padding-left: 5px;
   }
 
   .modname, .moddescription {
@@ -140,6 +146,12 @@
 
   .hidden {
     display: none !important;
+  }
+
+  .votenum {
+    text-align: center;
+    font-size: 112px;
+    margin-top: -13px;
   }
 
   body.mobile .entry {
@@ -297,6 +309,7 @@
       $(".reswarning").css("display", "none");
       $(".modvotebutton").css("left", "");
     }
+    $(".authorentry:not(.voteentry) .authorname").css("max-width", parseInt($(".authorentry").css("width").substring(0, $(".authorentry").css("width").length - 2)) - 120);
 
     if (parseSearchString()[0] == "mods") {
       window.ranAuthorAnim = false;
@@ -436,8 +449,10 @@
 <ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
     <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
-      <img class="authoricon" src="<%= author.icon %>">
-      <a class="authorname notalink"><%= author.name %></a>
+      <div class="authorheader">
+        <img class="authoricon" src="<%= author.icon %>">
+        <a class="authorname notalink"><%= author.name %></a>
+      </div>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
       <br><br>
@@ -491,10 +506,12 @@
     <ul class="votewrapper wrapper hidden">
       <% for (var author of authors) { %>
         <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %> voteentry">
-          <img class="authoricon" src="<%= author.icon %>">
-          <a class="authorname notalink"><%= author.name %></a>
+          <div class="authorheader">
+            <img class="authoricon" src="<%= author.icon %>">
+            <a class="authorname notalink"><%= author.name %></a>
+          </div>
           <br><br>
-          <div class="votes<%= author.id %>" style="text-align:center;font-size:112px;">...</div>
+          <div class="votenum votes<%= author.id %>">...</div>
           <script>
             $(window).on("load", () => { 
               setInterval(() => {
