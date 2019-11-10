@@ -75,7 +75,7 @@ web.all("*", async (req, res) => {
     return res.sendFile(path.join(__dirname, req.path));
   }
 
-  if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isManager(user)) {
+  if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/timer.ejs", {
       timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
       message: false,
@@ -126,9 +126,6 @@ web.all("*", async (req, res) => {
   var p = "/main";
   if (req.path == "/privacy") p = req.path;
 
-  var a = process.env.STAFF_VOTES_COUNT_AS_DOUBLE;
-  var b = perms.isStaff(user);
-
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
     headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
@@ -137,7 +134,7 @@ web.all("*", async (req, res) => {
     metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
     metaImage: process.env.WEBSITE_META_IMAGE,
     mods: modData,
-    staff: process.env.STAFF_VOTES_COUNT_AS_DOUBLE == "true" && perms.isStaff(user),
+    staff: perms.isStaff(user) ? process.env.STAFF_VOTE_MULTIPLIER : -1,
     user,
     votes: voteData,
   });
