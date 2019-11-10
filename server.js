@@ -126,15 +126,18 @@ web.all("*", async (req, res) => {
   var p = "/main";
   if (req.path == "/privacy") p = req.path;
 
+  var a = process.env.STAFF_VOTES_COUNT_AS_DOUBLE;
+  var b = perms.isStaff(user);
+
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
     headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
-    roll: process.env.RICK_ROLL_ON_SELF_VOTE,
+    roll: process.env.RICK_ROLL_ON_SELF_VOTE == "true",
     manager: perms.isManager(user),
     metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
     metaImage: process.env.WEBSITE_META_IMAGE,
     mods: modData,
-    staff: process.env.STAFF_VOTES_COUNT_AS_DOUBLE && perms.isStaff(user),
+    staff: process.env.STAFF_VOTES_COUNT_AS_DOUBLE == "true" && perms.isStaff(user),
     user,
     votes: voteData,
   });
