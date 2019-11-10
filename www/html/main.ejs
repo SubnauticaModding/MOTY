@@ -63,7 +63,7 @@
     background-color: rgb(60, 64, 67);
     cursor: pointer;
     float: right;
-    right: 10px;
+    right: 5px;
     top: 17px;
     position: absolute;
     color: white;
@@ -154,8 +154,50 @@
     margin-top: -13px;
   }
 
+  .votenotice {
+    all: unset;
+    font-size: 30px;
+    padding-top: 5px;
+    margin-bottom: -10px;
+    float: right;
+    margin-right: 10px;
+  }
+
+  .search {
+    margin-top: 10px;
+    margin-bottom: -10px;
+    color: white;
+    background-color: #252525;
+    border: none;
+    border-radius: 25px;
+    width: 350px;
+    height: 50px;
+    margin-left: 10px;
+    font-size: 30px;
+    padding-left: 10px;
+    position: sticky;
+    top: 20;
+    z-index: 10000;
+    background-color: dodgerblue;
+    outline: none;
+  }
+
+  ::placeholder {
+    color: #555;
+  }
+
+  .reswarning {
+    font-size: 40px;
+    display: none;
+    color: red;
+  }
+
   body.mobile .entry {
     width: 100% !important;
+  }
+
+  body.mobile .search {
+    position: unset !important;
   }
 
   @media screen and (min-width: 400px) {
@@ -278,20 +320,8 @@
   }
 
   function refresh() {
-    if (votes.length == 3) { 
-      $(".vote").attr("disabled", true);
-      $(".entry").attr("disabled", true);
-      for (var vote of votes) {
-        $(".entry" + vote).attr("disabled", false);
-      }
-      $(".votenotice").css("display", "none");
-    } else { 
-      $(".vote").attr("disabled", false);
-      $(".entry").attr("disabled", false);
-      $(".votenotice").css("display", "");
-      $(".votenotice").text(`You can vote for ${3 - votes.length} more modder${3 - votes.length == 1 ? "" : "s"}.`);
-    }
-    $(".voteentry").attr("disabled", false);
+    $(".votenotice").css("display", "none");
+    $(".search").css("display", "");
 
     if ($(window).width() < 200) {
       $(".wrapper").css("display", "none");
@@ -308,8 +338,24 @@
       $(".wrapper").css("display", "");
       $(".reswarning").css("display", "none");
       $(".modvotebutton").css("left", "");
+      $(".votenotice").css("display", "");
     }
-    $(".authorentry:not(.voteentry) .authorname").css("max-width", parseInt($(".authorentry").css("width").substring(0, $(".authorentry").css("width").length - 2)) - 120);
+
+    if (votes.length == 3) { 
+      $(".vote").attr("disabled", true);
+      $(".entry").attr("disabled", true);
+      for (var vote of votes) {
+        $(".entry" + vote).attr("disabled", false);
+      }
+      $(".votenotice").css("display", "none");
+    } else { 
+      $(".vote").attr("disabled", false);
+      $(".entry").attr("disabled", false);
+      $(".votenotice").text(`You can vote for ${3 - votes.length} more modder${3 - votes.length == 1 ? "" : "s"}.`);
+    }
+    $(".voteentry").attr("disabled", false);
+
+    $(".authorentry:not(.voteentry) .authorname").css("max-width", parseInt($(".authorentry").css("width").substring(0, $(".authorentry").css("width").length - 2)) - 115);
 
     if (parseSearchString()[0] == "mods") {
       window.ranAuthorAnim = false;
@@ -332,6 +378,7 @@
     <% if (locals.manager) { %>
       } else if (parseSearchString()[0] == "votes") {
         $(".votenotice").css("display", "none");
+        $(".search").css("display", "none");
 
         window.ranAuthorAnim = false;
         window.ranModAnim = false;
@@ -376,6 +423,8 @@
 
     <% if (locals.roll) { %>
       $(".votefor<%= user.id %>").attr("disabled", document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/));
+    <% } else { %>
+      $(".votefor<%= user.id %>").attr("disabled", "true");
     <% } %>
   }
 
@@ -419,6 +468,22 @@
         setTimeout(() => scrollAnimation(), 1000);
       }
     }
+
+    $(".search").on("change paste keyup", function () {
+      if (!$(this).val()) return $(".entry").css("display", "");
+      var values = $(this).val().split(" ");
+
+      $(".entry:not(.voteentry)").css("display", "none");
+
+      $(".authorname, .modname").each(function () {
+        for (var value of values) {
+          if ($(this).text().toLowerCase().includes(value.toLowerCase())) {
+            $(this).closest(".entry").css("display", "");
+            break;
+          }
+        }
+      });
+    });
   });
 
   function scrollAnimation() {
@@ -442,9 +507,11 @@
   }
 </script>
 
-<div class="votenotice" style="font-size:30px;padding-top:10px;margin-bottom:-10px;">You can vote for ... more modders.</div>
+<input class="search" placeholder="Search...">
 
-<div class="reswarning" style="font-size:40px;display:none;color:red;">Your resolution is too low to view this website.</div>
+<div class="votenotice">You can vote for ... more modders.</div>
+
+<div class="reswarning">Your resolution is too low to view this website.</div>
 
 <ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
@@ -529,7 +596,7 @@
         </div>
       <% } %>
     </ul>
-    <button onclick="if(window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
+    <button onclick="if (window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
   </div>
 <% } %>
 
