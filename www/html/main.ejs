@@ -183,8 +183,8 @@
     outline: none;
   }
 
-  ::placeholder {
-    color: #555;
+  .search::placeholder {
+    color: #a9a9a9;
   }
 
   .reswarning {
@@ -199,6 +199,13 @@
 
   body.mobile .search {
     position: unset !important;
+  }
+
+  .removevotes {
+    background-color: #181a1b;
+    border-color: #575757;
+    color: #e8e6e3;
+    border-radius: 5px;
   }
 
   @media screen and (min-width: 400px) {
@@ -400,6 +407,17 @@
         $(".modentry").css("filter", "");
         $(".modentry *").css("filter", "");
         $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
+
+        var entries = $(".voteentry");
+        for (var i = 0; i < entries.length; i++) {
+          for (var j = i + 1; j < entries.length; j++) {
+            if (parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text()) || (parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text()) && $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())) {
+              var prev = $(entries[j]).prev();
+              $(entries[j]).insertBefore($(entries[i]));
+              $(entries[i]).insertAfter(prev);
+            }
+          }
+        }
     <% } %>
     } else {
       window.ranModAnim = false;
@@ -597,7 +615,7 @@
         </div>
       <% } %>
     </ul>
-    <button onclick="if (window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
+    <button class="removevotes" onclick="if (window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
   </div>
 <% } %>
 

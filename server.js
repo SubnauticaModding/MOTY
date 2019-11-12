@@ -40,6 +40,7 @@ this.bot.on("ready", () => {
 
 this.bot.on("message", (message) => {
   if (!message.guild) return;
+  if (message.guild.id != process.env.DISCORD_GUILD) return;
   if (!message.content.toLowerCase().startsWith("moty/")) return;
   if (!perms.isManager(message.author)) return;
 
