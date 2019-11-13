@@ -340,8 +340,7 @@
   }
 
   function refresh() {
-    $(".votenotice").css("display", "");
-    $(".search").css("display", "");
+
 
     if (window.innerWidth < 300) {
       $(".wrapper").css("display", "none");
@@ -355,6 +354,8 @@
     } else {
       $(".wrapper").css("display", "");
       $(".reswarning").css("display", "none");
+      $(".votenotice").css("display", "");
+      $(".search").css("display", "");
     }
 
     if (votes.length == 3) { 
