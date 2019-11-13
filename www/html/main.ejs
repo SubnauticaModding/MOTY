@@ -208,9 +208,21 @@
     border-radius: 5px;
   }
 
-  @media screen and (min-width: 400px) {
+  @media screen and (min-width: 500px) {
     body.mobile .entry {
-      width: 45% !important;
+      width: 47% !important;
+    }
+  }
+
+  @media screen and (min-width: 800px) {
+    body.mobile .entry {
+      width: 31% !important;
+    }
+  }
+
+  @media screen and (min-width: 1000px) {
+    body.mobile .entry {
+      width: 23% !important;
     }
   }
 </style>
@@ -328,25 +340,21 @@
   }
 
   function refresh() {
-    $(".votenotice").css("display", "none");
+    $(".votenotice").css("display", "");
     $(".search").css("display", "");
 
-    if ($(window).width() < 200) {
+    if (window.innerWidth < 300) {
       $(".wrapper").css("display", "none");
       $(".reswarning").css("display", "block");
-    } else if ($(window).width() < 400) {
+      $(".votenotice").css("display", "none");
+      $(".search").css("display", "none");
+      return;
+    } else if (window.innerWidth < 1070) {
       $(".wrapper").css("display", "");
       $(".reswarning").css("display", "none");
-      $(".modvotebutton").css("left", `${120 + 0.954773869 * ($(window).width() - 200)}px`);
-    } else if ($(window).width() < 1040) {
-      $(".wrapper").css("display", "");
-      $(".reswarning").css("display", "none");
-      $(".modvotebutton").css("left", `${110 + 0.45 * ($(window).width() - 400)}px`);
     } else {
       $(".wrapper").css("display", "");
       $(".reswarning").css("display", "none");
-      $(".modvotebutton").css("left", "");
-      $(".votenotice").css("display", "");
     }
 
     if (votes.length == 3) { 
@@ -363,7 +371,7 @@
     }
     $(".voteentry").attr("disabled", false);
 
-    $(".authorentry:not(.voteentry) .authorname").css("max-width", parseInt($(".authorentry").css("width").substring(0, $(".authorentry").css("width").length - 2)) - 115);
+    $(".authorentry:not(.voteentry) .authorname").css("max-width", $(".authorentry").width() - 115);
 
     if (parseSearchString()[0] == "mods" && !$("body").hasClass("mobile")) {
       window.ranAuthorAnim = false;
@@ -443,6 +451,16 @@
 
     if ($("body").hasClass("mobile")) {
       $(".entry").css("height", 50);
+      $(".entry").css("min-height", 50);
+      $(".entry").css("max-height", 50);
+      $(".entry ul").css("display", "none");
+      $(".votenotice").css("display", "none");
+      $(".search").css("display", "none");
+    } else {
+      $(".entry").css("height", "");
+      $(".entry").css("min-height", "");
+      $(".entry").css("max-height", "");
+      $(".entry ul").css("display", "");
     }
 
     <% if (locals.roll) { %>
