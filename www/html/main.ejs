@@ -2,7 +2,7 @@
 <%- include("partials/header", { user: !!locals.user ? user : undefined, manager, staff, headerImage }) %>
 
 <style>
-  body:not(.mobile) {
+  body {
     overflow-y: scroll;
   }
 
@@ -148,7 +148,7 @@
     display: none !important;
   }
 
-  .votenum {
+  body:not(.mobile) .votenum {
     text-align: center;
     font-size: 112px;
     margin-top: -13px;
@@ -206,6 +206,13 @@
     border-color: #575757;
     color: #e8e6e3;
     border-radius: 5px;
+  }
+
+  .mobilevotenum {
+    font-size: 29px;
+    text-align: center;
+    top: 10px;
+    cursor: default;
   }
 
   @media screen and (min-width: 500px) {
@@ -340,8 +347,6 @@
   }
 
   function refresh() {
-
-
     if (window.innerWidth < 300) {
       $(".wrapper").css("display", "none");
       $(".reswarning").css("display", "block");
@@ -393,7 +398,7 @@
         if (window.readyForAnim) scrollAnimation();
       }
     <% if (locals.manager) { %>
-      } else if (parseSearchString()[0] == "votes" && !$("body").hasClass("mobile")) {
+      } else if (parseSearchString()[0] == "votes") {
         $(".votenotice").css("display", "none");
         $(".search").css("display", "none");
 
@@ -420,7 +425,18 @@
         var entries = $(".voteentry").detach();
         for (var i = 0; i < entries.length; i++) {
           for (var j = i + 1; j < entries.length; j++) {
-            if (parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text()) || (parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text()) && $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())) {
+            if (
+              (
+                window.innerWidth > 1070 && 
+                parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text())
+              ) || 
+              (
+                (
+                  window.innerWidth < 1070 || 
+                  parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text())
+                ) && 
+                $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())
+              ) {
               var temp = entries[i];
               entries[i] = entries[j];
               entries[j] = temp;
@@ -645,6 +661,7 @@
             <img class="authoricon" src="<%= author.icon %>">
             <a class="authorname notalink"><%= author.name %></a>
           </div>
+          <div class="votenum votes<%= author.id %> votebutton mobilevotenum">0</div>
           <br><br>
           <div class="votenum votes<%= author.id %>">...</div>
           <script>
@@ -652,10 +669,19 @@
               setInterval(() => {
                 try {
                   $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
-                  $(".votes<%= author.id %>").fitText(0.2);
+                  if (window.innerWidth >= 1070) { 
+                    $(".votes<%= author.id %>:not(.mobilevotenum)").fitText(0.2);
+                    $(".votes<%= author.id %>").css("display", "block");
+                    $(".votes<%= author.id %>.mobilevotenum").css("display", "none");
+                  } else {
+                    $(".votes<%= author.id %>").css("display", "none");
+                    $(".votes<%= author.id %>.mobilevotenum").css("display", "block");
+                  }
                 } catch (e) {
                   $(".votes<%= author.id %>").text("...");
-                  $(".votes<%= author.id %>").fitText(0.2);
+                  if (window.innerWidth >= 1070) { 
+                    $(".votes<%= author.id %>").fitText(0.2);
+                  }
                 }
               }, 100)
             });
@@ -668,4 +694,4 @@
   </div>
 <% } %>
 
-<form name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>
+<form style="height:0px;width:0px;" name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>

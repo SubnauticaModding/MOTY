@@ -91,7 +91,7 @@
 
     $.when($.ready).then(() => {
       setInterval(() => {
-        if ($(window).width() < 1070) $("body").addClass("mobile");
+        if (window.innerWidth < 1070) $("body").addClass("mobile");
         else $("body").removeClass("mobile");
       })
     });

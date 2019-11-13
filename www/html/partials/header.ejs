@@ -35,7 +35,7 @@
     border-radius: 4px;
   }
 
-  .header a:hover:not(.notalink) {
+  .header a:hover:not(.notalink):not(.tabswitcher) {
     background-color: rgb(34, 36, 37);
     color: rgb(232, 230, 227);
   }
@@ -150,6 +150,11 @@
     color: red;
     font-size: 40px;
   }
+
+  .header-down a {
+    text-align: center;
+    color: dodgerblue;
+  }
 </style>
 
 <script>
@@ -238,6 +243,25 @@
     <% } %>
     <a class="privacyheader" href="/privacy">Privacy</a>
   </div>
+  <% if (locals.manager) { %>
+    <div class="header-down">
+      <br>
+      <a href="#votes" class="tabswitcher">Show Votes</a>
+    </div>
+
+    <script>
+      if (window.location.pathname != "/") $(".header-down").remove();
+      $(".tabswitcher").on("click", function () {
+        if ($(this).attr("href") == "#votes") {
+          $(this).attr("href", "#authors");
+          $(this).text("Show Votes");
+        } else {
+          $(this).attr("href", "#votes");
+          $(this).text("Hide Votes");
+        }
+      });
+    </script>
+  <% } %>
 </div>
 
 <noscript>You need to enable javascript in order to display this website!</noscript>
