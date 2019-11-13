@@ -365,7 +365,7 @@
 
     $(".authorentry:not(.voteentry) .authorname").css("max-width", parseInt($(".authorentry").css("width").substring(0, $(".authorentry").css("width").length - 2)) - 115);
 
-    if (parseSearchString()[0] == "mods") {
+    if (parseSearchString()[0] == "mods" && !$("body").hasClass("mobile")) {
       window.ranAuthorAnim = false;
       if (!window.ranModAnim) {
         window.ranModAnim = true;
@@ -384,7 +384,7 @@
         if (window.readyForAnim) scrollAnimation();
       }
     <% if (locals.manager) { %>
-      } else if (parseSearchString()[0] == "votes") {
+      } else if (parseSearchString()[0] == "votes" && !$("body").hasClass("mobile")) {
         $(".votenotice").css("display", "none");
         $(".search").css("display", "none");
 
@@ -408,16 +408,17 @@
         $(".modentry *").css("filter", "");
         $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
 
-        var entries = $(".voteentry");
+        var entries = $(".voteentry").detach();
         for (var i = 0; i < entries.length; i++) {
           for (var j = i + 1; j < entries.length; j++) {
             if (parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text()) || (parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text()) && $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())) {
-              var prev = $(entries[j]).prev();
-              $(entries[j]).insertBefore($(entries[i]));
-              $(entries[i]).insertAfter(prev);
+              var temp = entries[i];
+              entries[i] = entries[j];
+              entries[j] = temp;
             }
           }
         }
+        $("ul.votewrapper").append(entries);
     <% } %>
     } else {
       window.ranModAnim = false;
@@ -438,6 +439,10 @@
 
         if (window.readyForAnim) scrollAnimation();
       }
+    }
+
+    if ($("body").hasClass("mobile")) {
+      $(".entry").css("height", 50);
     }
 
     <% if (locals.roll) { %>
