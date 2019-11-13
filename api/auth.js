@@ -14,8 +14,6 @@ module.exports = async function (data) {
     }
 
     if (!data.req.query.code) return data.res.redirect("/?alert=Invalid authentication code. Ping @AlexejheroYTB%231636 about this.");
-    
-    if (data.req.query.stop) return data.res.sendStatus(204);
 
     var response = await request.post({
       uri: "https://discordapp.com/api/oauth2/token",
