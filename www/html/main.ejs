@@ -513,13 +513,38 @@
 
     $(".search").on("change paste keyup", function () {
       if (!$(this).val()) return $(".entry").css("display", "");
-      var values = $(this).val().split(" ");
+      var values = $(this).val().split(" ").filter(e => !!e);
 
       $(".entry:not(.voteentry)").css("display", "none");
 
-      $(".authorname, .modname").each(function () {
-        for (var value of values) {
-          if ($(this).text().toLowerCase().includes(value.toLowerCase())) {
+      var achildren = [".authorname", "ul li a"];
+      $(".authorentry").each(function () {
+        for (var child of achildren) {
+          var ok = true;
+          for (var value of values) {
+            if (!$(this).find(child).text().toLowerCase().includes(value.toLowerCase())) {
+              ok = false;
+              break;
+            }
+          }
+          if (ok) {
+            $(this).closest(".entry").css("display", "");
+            break;
+          }
+        }
+      });
+
+      var bchildren = [".modname", "div.moddescription", "ul li a"];
+      $(".modentry").each(function () {
+        for (var child of bchildren) {
+          var ok = true;
+          for (var value of values) {
+            if (!$(this).find(child).text().toLowerCase().includes(value.toLowerCase())) {
+              ok = false;
+              break;
+            }
+          }
+          if (ok) {
             $(this).closest(".entry").css("display", "");
             break;
           }
