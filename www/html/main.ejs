@@ -74,7 +74,7 @@
     outline: none;
   }
 
-  .votebutton[disabled] {
+  .votebutton.disabledbutton {
     background-color: rgb(30, 32, 34);
     color: darkgray;
     cursor: no-drop;
@@ -242,6 +242,8 @@
   ];
 
   function vote(author) {
+    if ($(`.votefor${author}`).hasClass("disabledbutton")) return;
+
     $.ajax({
       url: "/vote?id=" + author,
       statusCode: {
@@ -288,6 +290,8 @@
   }
 
   function unvote(author) {
+    if ($(`.unvotefor${author}`).hasClass("disabledbutton")) return;
+
     $.ajax({
       url: "/unvote?id=" + author,
       statusCode: {
@@ -364,18 +368,22 @@
     }
 
     if (votes.length == 3) { 
-      $(".vote").attr("disabled", true);
+      $(".vote").addClass("disabledbutton");
       $(".entry").attr("disabled", true);
       for (var vote of votes) {
         $(".entry" + vote).attr("disabled", false);
       }
       $(".votenotice").css("display", "none");
     } else { 
-      $(".vote").attr("disabled", false);
+      $(".vote").removeClass("disabledbutton");
       $(".entry").attr("disabled", false);
       $(".votenotice").text(`You can vote for ${3 - votes.length} more modder${3 - votes.length == 1 ? "" : "s"}.`);
     }
     $(".voteentry").attr("disabled", false);
+    <% if (!locals.user) { %>
+      $(".votenotice").text("You need to be logged in to vote.");
+      $(".votebutton").addClass("disabledbutton");
+    <% } %>
 
     $(".authorentry:not(.voteentry) .authorname").css("max-width", $(".authorentry").width() - 115);
 
@@ -471,10 +479,12 @@
       $(".entry ul").css("display", "");
     }
 
-    <% if (locals.roll) { %>
-      $(".votefor<%= user.id %>").attr("disabled", document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/));
-    <% } else { %>
-      $(".votefor<%= user.id %>").attr("disabled", "true");
+    <% if (locals.user) { %>
+      <% if (locals.roll) { %>
+        document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/) ? $(".votefor<%= user.id %>").addClass("disabledbutton") : $(".votefor<%= user.id %>").removeClass("disabledbutton");
+      <% } else { %>
+        $(".votefor<%= user.id %>").addClass("disabledbutton");
+      <% } %>
     <% } %>
   }
 
@@ -504,6 +514,18 @@
           });
         }
       }, 1000);
+    <% } %>
+
+    <% if (!locals.user) { %>
+      $(".votebutton").attr("title", "You need to be logged in to vote.");
+    <% } %>
+
+    <% if (locals.user) { %>
+      <% if (locals.roll) { %>
+        document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/) ? $(".votefor<%= user.id %>").attr("title", "You can't vote for yourself.") : null;
+      <% } else { %>
+        $(".votefor<%= user.id %>").attr("title", "You can't vote for yourself.");
+      <% } %>
     <% } %>
   });
 

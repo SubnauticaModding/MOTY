@@ -71,6 +71,7 @@
     padding: 0px;
     margin: 0px;
     filter: invert(53%) sepia(94%) saturate(341%) hue-rotate(193deg) brightness(86%) contrast(98%);
+    margin-right: -20px;
   }
 
   .navbar-editor {
@@ -84,12 +85,14 @@
   .header-center {
     border: 1px solid dodgerblue;
     border-radius: 4px;
+    height: 50px;
   }
 
   .header-center .header-authors {
     border-right: 1px solid dodgerblue;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+    height: 48px;
   }
 
   .header-center .header-mods {
@@ -98,6 +101,7 @@
     <% if (locals.manager) { %>
       border-radius: 0;
     <% } %>
+    height: 48px;
   }
 
   <% if (locals.manager) { %>
