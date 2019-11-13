@@ -251,15 +251,20 @@
 
     <script>
       if (window.location.pathname != "/") $(".header-down").remove();
-      $(".tabswitcher").on("click", function () {
-        if ($(this).attr("href") == "#votes") {
-          $(this).attr("href", "#authors");
-          $(this).text("Show Votes");
+      else setInterval(() => {
+        if (parseSearchString()[0] == "votes") {
+          $(".tabswitcher").attr("href", "#authors");
+          $(".tabswitcher").text("Hide Votes");
         } else {
-          $(this).attr("href", "#votes");
-          $(this).text("Hide Votes");
+          $(".tabswitcher").attr("href", "#votes");
+          $(".tabswitcher").text("Show Votes");
         }
-      });
+      }, 100);
+
+      if (parseSearchString()[0] == "votes") {
+        $(".tabswitcher").attr("href", "#votes");
+        $(".tabswitcher").text("Hide Votes");
+      }
     </script>
   <% } %>
 </div>

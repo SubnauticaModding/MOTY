@@ -422,28 +422,19 @@
         $(".modentry *").css("filter", "");
         $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
 
-        var entries = $(".voteentry").detach();
-        for (var i = 0; i < entries.length; i++) {
-          for (var j = i + 1; j < entries.length; j++) {
-            if (
-              (
-                window.innerWidth > 1070 && 
-                parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text())
-              ) || 
-              (
-                (
-                  window.innerWidth < 1070 || 
-                  parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text())
-                ) && 
-                $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())
-              ) {
-              var temp = entries[i];
-              entries[i] = entries[j];
-              entries[j] = temp;
+        if (window.innerWidth > 1070) {
+          var entries = $(".voteentry").detach();
+          for (var i = 0; i < entries.length; i++) {
+            for (var j = i + 1; j < entries.length; j++) {
+              if (parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text()) || (parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text()) && $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())) {
+                var temp = entries[i];
+                entries[i] = entries[j];
+                entries[j] = temp;
+              }
             }
           }
+          $("ul.votewrapper").append(entries);
         }
-        $("ul.votewrapper").append(entries);
     <% } %>
     } else {
       window.ranModAnim = false;
@@ -661,21 +652,22 @@
             <img class="authoricon" src="<%= author.icon %>">
             <a class="authorname notalink"><%= author.name %></a>
           </div>
-          <div class="votenum votes<%= author.id %> votebutton mobilevotenum">0</div>
+          <div class="votenum votes<%= author.id %> votebutton mobilevotenum">...</div>
           <br><br>
           <div class="votenum votes<%= author.id %>">...</div>
           <script>
             $(window).on("load", () => { 
               setInterval(() => {
+                var scroll = window.pageYOffset || document.documentElement.scrollTop;
                 try {
                   $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
                   if (window.innerWidth >= 1070) { 
                     $(".votes<%= author.id %>:not(.mobilevotenum)").fitText(0.2);
-                    $(".votes<%= author.id %>").css("display", "block");
+                    $(".votes<%= author.id %>:not(.mobilevotenum)").css("display", "block");
                     $(".votes<%= author.id %>.mobilevotenum").css("display", "none");
                   } else {
-                    $(".votes<%= author.id %>").css("display", "none");
                     $(".votes<%= author.id %>.mobilevotenum").css("display", "block");
+                    $(".votes<%= author.id %>:not(.mobilevotenum)").css("display", "none");
                   }
                 } catch (e) {
                   $(".votes<%= author.id %>").text("...");
@@ -683,6 +675,7 @@
                     $(".votes<%= author.id %>").fitText(0.2);
                   }
                 }
+                document.documentElement.scrollTop = document.body.scrollTop = scroll;
               }, 100)
             });
           </script>
