@@ -1,47 +1,54 @@
-<%- include("partials/head", { metaGameName, metaImage }) %>
-<%- include("partials/header", { user: !!locals.user ? user : undefined, admin: admin }) %>
+<%- include("partials/head", locals) %>
+<%- include("partials/header", locals) %>
 
-<style>
-  .entry {
-    background-color: #252525;
-    font-size: 20px;
-    color: white;
-    width: 310px;
-    height: auto;
-    margin: 6.9px;
-    bottom: 0px;
-    box-sizing: border-box;
-    left: 0px;
-    letter-spacing: 0.3px;
-    overflow-wrap: break-word;
-    position: relative;
-    right: 0px;
-    text-align: left;
-    text-decoration: none solid rgb(0, 0, 0);
-    text-rendering: optimizelegibility;
-    text-size-adjust: 100%;
-    top: 0px;
-    width: 224px;
-    column-rule-color: rgb(0, 0, 0);
-    perspective-origin: 112px 200.188px;
-    transform-origin: 112px 200.188px;
-    caret-color: rgb(0, 0, 0);
-    border: 0px none rgb(0, 0, 0);
-    font-size: 15px;
-    list-style: none outside none;
-    outline: rgb(255, 255, 255) none 0px;
-    min-height: 220px;
-  }
+<script>
+  var authors = JSON.parse(decode("<%= JSON.stringify(authors) %>"));
 
-  .authoricon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    vertical-align: middle;
-  }
+  $.when($.ready).then(() => {
+    $.ajax({
+      url: "/getvotes?rankings=true",
+      statusCode: {
+        401: () => {
+          console.log("Can't show votes, unauthorized.");
+        },
+        403: () => {
+          console.log("Can't show votes, unauthorized.");
+        },
+        200: (data) => {
+          window.data = data;
+          console.log(authors.filter(a => a.id == data[0])[0].icon);
+          $("#one .authorname").text(authors.filter(a => a.id == data[0])[0].name);
+          $("#two .authorname").text(authors.filter(a => a.id == data[1])[0].name);
+          $("#three .authorname").text(authors.filter(a => a.id == data[2])[0].name);
+          $("#one .authoricon").attr("src", authors.filter(a => a.id == data[0])[0].icon);
+          $("#two .authoricon").attr("src", authors.filter(a => a.id == data[1])[0].icon);
+          $("#three .authoricon").attr("src", authors.filter(a => a.id == data[2])[0].icon);
+        },
+        500: () => {
+          console.log("Error getting votes!");
+        },
+      },
+    });
+  });
+</script>
 
-  .authorname {
-    vertical-align: middle;
-  }
-</style>
-
+<ul class="authorwrapper wrapper">
+  <div id="one" class="entry authorentry winnerentry">
+    <div class="authorheader">
+      <img class="authoricon" src="">
+      <a class="authorname notalink"></a>
+    </div>
+  </div>
+  <div id="two" class="entry authorentry winnerentry">
+    <div class="authorheader">
+      <img class="authoricon" src="">
+      <a class="authorname notalink"></a>
+    </div>
+  </div>
+  <div id="three" class="entry authorentry winnerentry">
+    <div class="authorheader">
+      <img class="authoricon" src="">
+      <a class="authorname notalink"></a>
+    </div>
+  </div>
+</ul>

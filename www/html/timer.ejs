@@ -1,123 +1,66 @@
-<%- include("partials/head", { metaGameName, metaImage }) %>
+<%- include("partials/head", locals) %>
 
-<% if (message) { %>
+<link rel="stylesheet" href="/www/css/odometer.css">
+<script class="odometerlink" src="/www/js/odometer.js"></script>
 
-  <style>
-    .container {
-      text-align: center;
-      margin: 0 auto;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      overflow: hidden;
-      display: inline-flex;
-    }
-    .text {
-      display: inline-flex;
-      vertical-align: middle;
-      position: relative;
-      margin: auto;
-      font-size: 75px;
-    }
-    body.mobile * {
-      font-size: 80px;
-    }
-  </style>
+<script>
+  $.when($.ready).then(() => {
+    setInterval(() => {
+      $("*").css("font-size", $(window).width()/6);
+    }, 100);
+  });
 
-  <div class="container"><div class="text"><%= message %></div></div>
+  odometerOptions = { auto: false, duration: 250 };
+  window.addEventListener("load", () => {
+    var days = document.getElementsByClassName("daysNumber")[0];
+    var hours = document.getElementsByClassName("hoursNumber")[0];
+    var minutes = document.getElementsByClassName("minutesNumber")[0];
+    var seconds = document.getElementsByClassName("secondsNumber")[0];
 
-<% } else { %>
+    setInterval(updateTimer, 250);
+    function updateTimer() {
+      var ms = new Date("<%= timer %>") - new Date();
+      var s = Math.floor(ms / 1000);
+      var m = Math.floor(s / 60);
+      s = s - m * 60;
+      var h = Math.floor(m / 60);
+      m = m - h * 60;
+      var d = Math.floor(h / 24);
+      h = h - d *24;
 
-  <style>
-    .timerOly {
-      text-align: center;
-      margin: 0 auto;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      overflow: hidden;
-      display: inline-flex;
-    }
-    .timerCont {
-      display: inline-flex;
-      vertical-align: middle;
-      position: relative;
-      margin: auto;
-    }
-    .timerCont div {
-      display: inline-block;
-      font-size: 200px;
-      user-select: none;
-      vertical-align: middle;
-    }
-</style>
-  <link rel="stylesheet" href="/www/css/odometer.css">
-
-  <script>
-    $.when($.ready).then(() => {
-      setInterval(() => {
-        $("*").css("font-size", $(window).width()/6);
-      }, 100);
-    });
-
-    odometerOptions = { auto: false, duration: 250 };
-    window.addEventListener("load", () => {
-      var days = document.getElementsByClassName("daysNumber")[0];
-      var hours = document.getElementsByClassName("hoursNumber")[0];
-      var minutes = document.getElementsByClassName("minutesNumber")[0];
-      var seconds = document.getElementsByClassName("secondsNumber")[0];
-
-      setInterval(updateTimer, 250);
-      function updateTimer() {
-        var ms = new Date("<%= timer %>") - new Date();
-        var s = Math.floor(ms / 1000);
-        var m = Math.floor(s / 60);
-        s = s - m * 60;
-        var h = Math.floor(m / 60);
-        m = m - h * 60;
-        var d = Math.floor(h / 24);
-        h = h - d *24;
-
-        if (d == 0) {
-          days.style.display = "none";
-          document.getElementsByClassName("daysSep")[0].style.display = "none";
-          if (h == 0) {
-            hours.style.display = "none";
-            document.getElementsByClassName("hoursSep")[0].style.display = "none";
-            if (m == 0) {
-              minutes.style.display = "none";
-              document.getElementsByClassName("minutesSep")[0].style.display = "none";
-              if (s == 0) {
-                window.location = window.location;
-              }
+      if (d == 0) {
+        days.style.display = "none";
+        document.getElementsByClassName("daysSep")[0].style.display = "none";
+        if (h == 0) {
+          hours.style.display = "none";
+          document.getElementsByClassName("hoursSep")[0].style.display = "none";
+          if (m == 0) {
+            minutes.style.display = "none";
+            document.getElementsByClassName("minutesSep")[0].style.display = "none";
+            if (s == 0) {
+              window.location = window.location;
             }
           }
         }
-
-        days.innerText = d.toString().length == 1 ? "0" + d : d;
-        hours.innerText = h.toString().length == 1 ? "0" + h : h;
-        minutes.innerText = m.toString().length == 1 ? "0" + m : m;
-        seconds.innerText = s.toString().length == 1 ? "0" + s : s;
       }
-      updateTimer();
-    });
-</script>
-  <script class="odometerlink" src="/www/js/odometer.js"></script>
-  
-  <div class="timerOly">
-    <div class="timerCont">
-      <div class="timerN daysNumber odometer"></div>
-      <div class="timerSep daysSep">:</div>
-      <div class="timerN hoursNumber odometer"></div>
-      <div class="timerSep hoursSep">:</div>
-      <div class="timerN minutesNumber odometer"></div>
-      <div class="timerSep minutesSep">:</div>
-      <div class="timerN secondsNumber odometer"></div>
-    </div>
-  </div>
 
-<% } %>
+      days.innerText = d.toString().length == 1 ? "0" + d : d;
+      hours.innerText = h.toString().length == 1 ? "0" + h : h;
+      minutes.innerText = m.toString().length == 1 ? "0" + m : m;
+      seconds.innerText = s.toString().length == 1 ? "0" + s : s;
+    }
+    updateTimer();
+  });
+</script>
+  
+<div class="timerOly">
+  <div class="timerCont">
+    <div class="timerN daysNumber odometer"></div>
+    <div class="timerSep daysSep">:</div>
+    <div class="timerN hoursNumber odometer"></div>
+    <div class="timerSep hoursSep">:</div>
+    <div class="timerN minutesNumber odometer"></div>
+    <div class="timerSep minutesSep">:</div>
+    <div class="timerN secondsNumber odometer"></div>
+  </div>
+</div>

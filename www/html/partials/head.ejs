@@ -13,45 +13,11 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+  <link rel="stylesheet" href="/www/css/main.css">
   <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
   <link rel="shortcut icon" href="<%= metaImage %>">
   <link rel="icon" href="<%= metaImage %>">
-
-  <style>
-    html, body {
-      background-color: #181a1b;
-      color: white;
-      font-family: "Helvetica Neue", sans-serif;
-      margin: 0;
-    }
-
-    a:not(.notalink) {
-      color: #3391ff;
-    }
-
-    div[role="tooltip"] {
-      color: white;
-      background-color: #333;
-      text-align: justify;
-    }
-
-    ::-webkit-scrollbar {
-      background-color: #1c1e1f;
-    }
-
-    ::-webkit-scrollbar-corner {
-      background-color: #181a1b;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background-color: #2a2c2e;
-    }
-
-    * {
-      scrollbar-color: #2a2c2e #1c1e1f;
-    }
-  </style>
 
   <script>
     $(function(){
@@ -79,6 +45,12 @@
       );
       return objURL;
     };
+
+    function decode(html) {
+      var txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    }
 
     if (parseQueryString().alert) {
       alert(unescape(parseQueryString().alert));
