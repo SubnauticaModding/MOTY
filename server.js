@@ -85,12 +85,6 @@ web.all("*", async (req, res) => {
     });
   }
 
-  if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d) {
-    return res.render("www/html/winners.ejs", {
-      message: "The event has ended",
-    });
-  }
-
   var authorData = authors.getAuthors();
   var modData = mods.getMods();
   var voteData = users.getUser(authUserID) && users.getUser(authUserID).votes ? users.getUser(authUserID).votes : [];
@@ -103,6 +97,16 @@ web.all("*", async (req, res) => {
       author.icon = discordUser.user.displayAvatarURL;
     }
   }
+
+  //if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
+  return res.render("www/html/winners.ejs", {
+    authors: authorData,
+    headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
+    metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
+    metaImage: process.env.WEBSITE_META_IMAGE,
+    winners: true,
+  });
+  //}
 
   await modcache.update();
   var cache = modcache.getAllCached();
@@ -129,6 +133,7 @@ web.all("*", async (req, res) => {
 
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
+    ended: new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d,
     headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
     roll: process.env.RICK_ROLL_ON_SELF_VOTE == "true",
     manager: perms.isManager(user),

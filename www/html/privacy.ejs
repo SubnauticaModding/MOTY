@@ -1,5 +1,5 @@
-<%- include("partials/head", { metaGameName, metaImage }) %>
-<%- include("partials/header", { user: !!locals.user ? user : undefined, headerImage, metaGameName }) %>
+<%- include("partials/head", locals) %>
+<%- include("partials/header", locals) %>
 
 <div
   style="font-family: 'Days One', sans-serif; font-size:16px; color:white; text-align: left;padding-left: 10px;padding-right:10px;">

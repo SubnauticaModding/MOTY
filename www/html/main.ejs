@@ -1,238 +1,5 @@
-<%- include("partials/head", { metaGameName, metaImage }) %>
-<%- include("partials/header", { user: !!locals.user ? user : undefined, manager, staff, headerImage }) %>
-
-<style>
-  body {
-    overflow-y: scroll;
-  }
-
-  .entry {
-    background-color: #252525;
-    font-size: 20px;
-    color: white;
-    width: 310px;
-    height: auto;
-    margin: 6.9px;
-    bottom: 0px;
-    box-sizing: border-box;
-    left: 0px;
-    letter-spacing: 0.3px;
-    overflow-wrap: break-word;
-    position: relative;
-    right: 0px;
-    text-align: left;
-    text-decoration: none solid rgb(0, 0, 0);
-    text-rendering: optimizelegibility;
-    text-size-adjust: 100%;
-    top: 0px;
-    width: 224px;
-    column-rule-color: rgb(0, 0, 0);
-    perspective-origin: 112px 200.188px;
-    transform-origin: 112px 200.188px;
-    caret-color: rgb(0, 0, 0);
-    border: 0px none rgb(0, 0, 0);
-    font-size: 15px;
-    list-style: none outside none;
-    outline: rgb(255, 255, 255) none 0px;
-    min-height: 220px;
-  }
-
-  .authorheader {
-    display: flex;
-    align-items: center;
-  }
-
-  .authoricon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    vertical-align: middle;
-  }
-
-  .modentry > img:first-child {
-    width: 100%;
-    min-height: 126px;
-    max-height: 126px;
-    vertical-align: middle;
-    object-fit: cover;
-  }
-
-  .votebutton {
-    border-radius: 20%;
-    border: none;
-    background-color: rgb(60, 64, 67);
-    cursor: pointer;
-    float: right;
-    right: 5px;
-    top: 17px;
-    position: absolute;
-    color: white;
-    width: 58px;
-  }
-  
-  .votebutton:focus, .votebutton:active {
-    outline: none;
-  }
-
-  .votebutton.disabledbutton {
-    background-color: rgb(30, 32, 34);
-    color: darkgray;
-    cursor: no-drop;
-  }
-
-  .modvotebutton {
-    left: 156px;
-    top: 5px;
-  }
-
-  .modauthors li:nth-child(2) .modvotebutton {
-    top: 40px;
-  }
-
-  .entry[disabled] {
-    filter: opacity(50%);
-  }
-  
-  .entry[disabled] > * {
-    filter: blur(1px);
-  }
-
-  .unvote {
-    background: green;
-  }
-
-  .authorname {
-    vertical-align: middle;
-    padding-left: 5px;
-  }
-
-  .modname, .moddescription {
-    display: block;
-    padding-left: 5px;
-    padding-right: 5px;
-  }
-
-  .modname {
-    font-size: 16px;
-  }
-
-  br.shrink {
-    line-height: 13px;
-  }
-
-  .wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    list-style: none;
-    padding: 0;
-  }
-
-  .modauthors {
-    list-style: none;
-    padding: 0;
-    position: absolute;
-    bottom: 0px;
-  }
-
-  .modauthors li {
-    padding-left: 5px;
-    padding-bottom: 5px;
-  }
-
-  .modauthors img {
-    width: 30px;
-    height: 30px;
-  }
-
-  .hidden {
-    display: none !important;
-  }
-
-  body:not(.mobile) .votenum {
-    text-align: center;
-    font-size: 112px;
-    margin-top: -13px;
-  }
-
-  .votenotice {
-    all: unset;
-    font-size: 30px;
-    padding-top: 5px;
-    margin-bottom: -10px;
-    float: right;
-    margin-right: 10px;
-    margin-top: 15px;
-  }
-
-  .search {
-    margin-top: 10px;
-    margin-bottom: -10px;
-    color: white;
-    background-color: #252525;
-    border: none;
-    border-radius: 25px;
-    width: 350px;
-    height: 50px;
-    margin-left: 10px;
-    font-size: 30px;
-    padding-left: 10px;
-    position: sticky;
-    top: 20;
-    z-index: 10000;
-    background-color: dodgerblue;
-    outline: none;
-  }
-
-  .search::placeholder {
-    color: #a9a9a9;
-  }
-
-  .reswarning {
-    font-size: 40px;
-    display: none;
-    color: red;
-  }
-
-  body.mobile .entry {
-    width: 100% !important;
-  }
-
-  body.mobile .search {
-    position: unset !important;
-  }
-
-  .removevotes {
-    background-color: #181a1b;
-    border-color: #575757;
-    color: #e8e6e3;
-    border-radius: 5px;
-  }
-
-  .mobilevotenum {
-    font-size: 29px;
-    text-align: center;
-    top: 10px;
-    cursor: default;
-  }
-
-  @media screen and (min-width: 500px) {
-    body.mobile .entry {
-      width: 47% !important;
-    }
-  }
-
-  @media screen and (min-width: 800px) {
-    body.mobile .entry {
-      width: 31% !important;
-    }
-  }
-
-  @media screen and (min-width: 1000px) {
-    body.mobile .entry {
-      width: 23% !important;
-    }
-  }
-</style>
+<%- include("partials/head", locals) %>
+<%- include("partials/header", locals) %>
 
 <script>
   var votes = [
@@ -369,13 +136,16 @@
 
     if (votes.length == 3) { 
       $(".vote").addClass("disabledbutton");
+      $(".vote:not([aria-describedby]), .vote[aria-describedby='']").attr("title", "You may only vote for 3 modders.");
       $(".entry").attr("disabled", true);
       for (var vote of votes) {
         $(".entry" + vote).attr("disabled", false);
+        $(".votefor" + vote).attr("title", "");
       }
       $(".votenotice").css("display", "none");
     } else { 
       $(".vote").removeClass("disabledbutton");
+      $(".vote").attr("title", "");
       $(".entry").attr("disabled", false);
       $(".votenotice").text(`You can vote for ${3 - votes.length} more modder${3 - votes.length == 1 ? "" : "s"}.`);
     }
@@ -386,6 +156,10 @@
     <% } %>
 
     $(".authorentry:not(.voteentry) .authorname").css("max-width", $(".authorentry").width() - 115);
+
+    <% if (locals.ended) { %>
+      if (parseSearchString()[0] != "votes") window.location.hash = "#votes";
+    <% } %>
 
     if (parseSearchString()[0] == "mods" && !$("body").hasClass("mobile")) {
       window.ranAuthorAnim = false;
@@ -431,6 +205,7 @@
         $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
 
         if (window.innerWidth > 1070) {
+          window.lastbig = true;
           var entries = $(".voteentry").detach();
           for (var i = 0; i < entries.length; i++) {
             for (var j = i + 1; j < entries.length; j++) {
@@ -442,9 +217,23 @@
             }
           }
           $("ul.votewrapper").append(entries);
+        } else if (window.lastbig) {
+          window.lastbig = false;
+          var entries = $(".voteentry").detach();
+          for (var i = 0; i < entries.length; i++) {
+            for (var j = i + 1; j < entries.length; j++) {
+              if ($(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase()) {
+                var temp = entries[i];
+                entries[i] = entries[j];
+                entries[j] = temp;
+              }
+            }
+          }
+          $("ul.votewrapper").append(entries);
         }
     <% } %>
     } else {
+      if (parseSearchString()[0] != "authors") window.location.hash = "#authors";
       window.ranModAnim = false;
       if (!window.ranAuthorAnim) {
         window.ranAuthorAnim = true;
@@ -482,8 +271,10 @@
     <% if (locals.user) { %>
       <% if (locals.roll) { %>
         document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/) ? $(".votefor<%= user.id %>").addClass("disabledbutton") : $(".votefor<%= user.id %>").removeClass("disabledbutton");
+        document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/) ? $(".votefor<%= user.id %>:not([aria-describedby]), .votefor<%= user.id %>[aria-describedby='']").attr("title", "You can't vote for yourself.") : $(".votefor<%= user.id %>:not([aria-describedby]), .votefor<%= user.id %>[aria-describedby='']").attr("title", "");
       <% } else { %>
         $(".votefor<%= user.id %>").addClass("disabledbutton");
+        $(".votefor<%= user.id %>").attr("title", "You can't vote for yourself.");
       <% } %>
     <% } %>
   }
@@ -501,6 +292,9 @@
           $.ajax({
             url: "/getvotes",
             statusCode: {
+              401: () => {
+                console.log("Can't show votes, unauthorized.");
+              },
               403: () => {
                 console.log("Can't show votes, unauthorized.");
               },
@@ -518,14 +312,6 @@
 
     <% if (!locals.user) { %>
       $(".votebutton").attr("title", "You need to be logged in to vote.");
-    <% } %>
-
-    <% if (locals.user) { %>
-      <% if (locals.roll) { %>
-        document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/) ? $(".votefor<%= user.id %>").attr("title", "You can't vote for yourself.") : null;
-      <% } else { %>
-        $(".votefor<%= user.id %>").attr("title", "You can't vote for yourself.");
-      <% } %>
     <% } %>
   });
 
