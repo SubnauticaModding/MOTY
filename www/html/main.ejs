@@ -216,7 +216,7 @@
               }
             }
           }
-          $("ul.votewrapper").append(entries);
+          $("ul.votewrapper").prepend(entries);
         } else if (window.lastbig) {
           window.lastbig = false;
           var entries = $(".voteentry").detach();
@@ -229,7 +229,7 @@
               }
             }
           }
-          $("ul.votewrapper").append(entries);
+          $("ul.votewrapper").prepend(entries);
         }
     <% } %>
     } else {
@@ -416,6 +416,9 @@
       <br>
     </div>
   <% } %>
+  <% for (var author of authors) { %>
+    <div class="entry dummy"></div>
+  <% } %>
 </ul>
 
 <ul class="modwrapper wrapper hidden">
@@ -448,6 +451,9 @@
         <br><br>
       <% } %>
     </div>
+  <% } %>
+  <% for (var mod of mods) { %>
+    <div class="entry dummy"></div>
   <% } %>
 </ul>
 
@@ -489,6 +495,9 @@
           </script>
           <br>
         </div>
+      <% } %>
+      <% for (var author of authors) { %>
+        <div class="entry dummy"></div>
       <% } %>
     </ul>
     <button class="removevotes" onclick="if (window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
