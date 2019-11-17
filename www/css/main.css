@@ -291,6 +291,12 @@
   flex-wrap: wrap;
   list-style: none;
   padding: 0;
+  justify-content: space-between;
+}
+
+.wrapper::after {
+  content: " ";
+  flex: auto;
 }
 
 .modauthors {
@@ -416,10 +422,9 @@ body {
   color: white;
   font-family: "Helvetica Neue", sans-serif;
   margin: 0;
-  overflow-y: scroll;
 }
 
-a:not(.notalink) {
+:not(.header)>*>a:not(.notalink) {
   color: #3391ff;
 }
 
@@ -457,4 +462,15 @@ div[role="tooltip"] {
   body.mobile .entry {
     width: 23% !important;
   }
+}
+
+.winnerentry {
+  font-size: 60px;
+  width: 31%;
+  min-height: 0px;
+}
+
+.winnerentry .authoricon {
+  width: 100px;
+  height: 100px;
 }
