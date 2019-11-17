@@ -1,10 +1,29 @@
 <%- include("partials/head", locals) %>
 <%- include("partials/header", locals) %>
 
+<style>
+  .entry {
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+
 <script>
   var authors = JSON.parse(decode("<%= JSON.stringify(authors) %>"));
 
+  function update() {
+    $(".congrats").css("font-size", 100 * window.innerWidth / 1920);
+    $(".authorentry").css("width", window.innerWidth / 3.2);
+    $(".authorname").css("font-size", 60 * window.innerWidth / 1920);
+    $(".authoricon").css({
+      height: 100 * window.innerWidth / 1920,
+      width: 100 * window.innerWidth / 1920,
+    });
+  }
+
   $.when($.ready).then(() => {
+    setInterval(update, 100);
+
     $.ajax({
       url: "/getvotes?rankings=true",
       statusCode: {
@@ -20,9 +39,9 @@
           $("#one .authorname").text(authors.filter(a => a.id == data[0])[0].name);
           $("#two .authorname").text(authors.filter(a => a.id == data[1])[0].name);
           $("#three .authorname").text(authors.filter(a => a.id == data[2])[0].name);
-          $("#one .authoricon").attr("src", authors.filter(a => a.id == data[0])[0].icon);
-          $("#two .authoricon").attr("src", authors.filter(a => a.id == data[1])[0].icon);
-          $("#three .authoricon").attr("src", authors.filter(a => a.id == data[2])[0].icon);
+          $("#one .authoricon:not(.placeicon)").attr("src", authors.filter(a => a.id == data[0])[0].icon);
+          $("#two .authoricon:not(.placeicon)").attr("src", authors.filter(a => a.id == data[1])[0].icon);
+          $("#three .authoricon:not(.placeicon)").attr("src", authors.filter(a => a.id == data[2])[0].icon);
         },
         500: () => {
           console.log("Error getting votes!");
@@ -30,25 +49,27 @@
       },
     });
   });
+
+
 </script>
 
-<ul class="authorwrapper wrapper">
+<div class="congrats" style="font-size:100px;text-align:center;">Congratulations!</div>
+
+<ul class="authorwrapper wrapper" style="justify-content:space-around;">
   <div id="one" class="entry authorentry winnerentry">
-    <div class="authorheader">
-      <img class="authoricon" src="">
-      <a class="authorname notalink"></a>
-    </div>
+    <img class="authoricon" src="">
+    <a class="authorname notalink"></a>
+    <img class="authoricon placeicon" title="First place" src="https://cdn.glitch.com/b1c66395-fb48-4bd1-9d76-f353fea953bb%2Fezgif-4-a969d80d5f86.png?v=1574028536860">
   </div>
   <div id="two" class="entry authorentry winnerentry">
-    <div class="authorheader">
-      <img class="authoricon" src="">
-      <a class="authorname notalink"></a>
-    </div>
+    <img class="authoricon" src="">
+    <a class="authorname notalink" style="text-align: middle"></a>
+    <img class="authoricon placeicon" title="Second place" src="https://cdn.glitch.com/b1c66395-fb48-4bd1-9d76-f353fea953bb%2Fezgif-4-62e121a7067b.png?v=1574028536957">
   </div>
   <div id="three" class="entry authorentry winnerentry">
-    <div class="authorheader">
-      <img class="authoricon" src="">
-      <a class="authorname notalink"></a>
-    </div>
+    <img class="authoricon" src="">
+    <a class="authorname notalink"></a>
+    <img class="authoricon placeicon" title="Third place" src="https://cdn.glitch.com/b1c66395-fb48-4bd1-9d76-f353fea953bb%2Fezgif-4-33826953776f.png?v=1574028537037">
   </div>
+  <div class="entry dummy"></div>
 </ul>

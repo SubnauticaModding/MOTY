@@ -3,18 +3,6 @@
   box-sizing: border-box;
 }
 
-::-webkit-scrollbar {
-  background-color: #1c1e1f;
-}
-
-::-webkit-scrollbar-corner {
-  background-color: #181a1b;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #2a2c2e;
-}
-
 .header {
   overflow: hidden;
   background-color: #f1f1f1;
@@ -373,6 +361,22 @@
   cursor: auto;
 }
 
+.winnerentry {
+  font-size: 60px;
+  width: 31%;
+  min-height: 0px;
+}
+
+.winnerentry .authoricon {
+  width: 100px;
+  height: 100px;
+}
+
+.dummy {
+  height: 0px;
+  min-height: 0px;
+}
+
 body.mobile .removevotes {
   display: none;
 }
@@ -424,14 +428,31 @@ body {
   margin: 0;
 }
 
-:not(.header)>*>a:not(.notalink) {
-  color: #3391ff;
-}
-
 div[role="tooltip"] {
   color: white;
   background-color: #333;
   text-align: justify;
+}
+
+::-webkit-scrollbar {
+  background-color: #1c1e1f;
+}
+
+::-webkit-scrollbar-corner {
+  background-color: #181a1b;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #2a2c2e;
+}
+
+:not(.header)>*>a:not(.notalink) {
+  color: #3391ff;
+}
+
+[title],
+[aria-described-by] {
+  cursor: help;
 }
 
 @media screen and (min-width: 500px) {
@@ -462,15 +483,4 @@ div[role="tooltip"] {
   body.mobile .entry {
     width: 23% !important;
   }
-}
-
-.winnerentry {
-  font-size: 60px;
-  width: 31%;
-  min-height: 0px;
-}
-
-.winnerentry .authoricon {
-  width: 100px;
-  height: 100px;
 }

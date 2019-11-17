@@ -21,7 +21,7 @@ module.exports = async function (data) {
         "client_id": server.bot.user.id,
         "client_secret": process.env.DISCORD_SECRET,
         "grant_type": "authorization_code",
-        "redirect_uri": `https://${process.env.PROJECT_DOMAIN}.glitch.me/auth`,
+        "redirect_uri": `https://${process.env.PROJECT_DOMAIN}.glitch.me/auth${data.req.query.dev ? "-dev" : ""}`,
         "scope": "identify email",
         "code": data.req.query.code,
       }),
