@@ -456,66 +456,79 @@
     "nexusID": "25845075"
   },
   {
+    "id": "352963693832830977",
     "discordName": "@Taskmaster#6185",
     "nexusID": "627714"
   },
   {
+    "id": "247080708454088705",
     "discordName": "@TehPers#5779",
     "nexusID": "3994776"
   },
   {
+    "id": "434432402820169730",
     "discordName": "@tenthousandcats#0967",
     "nexusID": "50579086"
   },
   {
+    "id": "84665200728346624",
     "discordName": "@h3oCharles#5397",
     "nexusID": "57201212"
   },
   {
+    "id": "389163311712829441",
+    "left": true,
     "discordName": "@TNT#4515",
     "nexusID": "60583086"
   },
   {
+    "id": "319088789165309952",
+    "admin": true,
     "discordName": "@toe#2186",
     "nexusID": "64022386"
   },
   {
+    "id": "272166383268397056",
     "discordName": "@Trent#4455",
     "nexusID": "60742951"
   },
   {
+    "id": "260270235494514689",
     "discordName": "@Tyo Atrosa#7996",
     "nexusID": "1524273"
   },
   {
+    "id": "344058210686337024",
     "discordName": "@vadie#8461",
     "nexusID": "60817311"
   },
   {
+    "id": "132714099241910273",
     "discordName": "@vaindil#4444",
     "nexusID": "21399409"
   },
   {
+    "id": "276814751504400385",
     "discordName": "@Webxro#5650",
     "nexusID": "2147443"
   },
   {
+    "id": "298281836075810816",
     "discordName": "@tittysprinkles#8018",
     "nexusID": "45907897"
   },
   {
+    "id": "218189268051296256",
     "discordName": "@imbaguy#3218",
     "nexusID": "47303933"
   },
   {
     "id": "590199528733540386",
-    "name": "zen",
     "discordName": "@Zen#9512",
     "nexusID": "74023193"
   },
   {
     "id": "390229694324277258",
-    "name": "zerogravitas",  
     "discordName": "@ZeroGravitas#0001",
     "nexusID": "33332635"
   }
