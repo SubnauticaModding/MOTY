@@ -337,7 +337,6 @@
   },
   {
     "id": "465141583134851072",
-    "staff": true,
     "discordName": "@MouseyPounds#0557",
     "nexusID": "3604264"
   },
@@ -357,12 +356,6 @@
     "nexusID": "51094596"
   },
   {
-    "id": "186153008462036992",
-    "left": true,
-    "discordName": "@Zola#2185",
-    "nexusID": "38947035"
-  },
-  {
     "id": "244179852654018570",
     "discordName": "@PanTran#9042",
     "nexusID": "50172121"
@@ -373,12 +366,6 @@
     "nexusID": "26612284"
   },
   {
-    "id": "226803198218731520",
-    "staff": true,
-    "discordName": "@Pathoschild#8665",
-    "nexusID": "1552317"
-  },
-  {
     "id": "117368015216967680",
     "discordName": "@Pookachu#4273",
     "nexusID": "55565677"
@@ -387,12 +374,6 @@
     "id": "303639464670920725",
     "discordName": "@fawny#0001",
     "nexusID": "55113082"
-  },
-  {
-    "id": "456226577798135808",
-    "deleted": true,
-    "discordName": "@Potato#5266",
-    "nexusID": "45095652"
   },
   {
     "id": "213911999891898370",
@@ -430,12 +411,6 @@
     "nexusID": "42440425"
   },
   {
-    "id": "71983539876265984",
-    "left": true,
-    "discordName": "@Sabera#5324",
-    "nexusID": "245828"
-  },
-  {
     "id": "161200176160047104",
     "discordName": "@ఠ_ఠ#0001",
     "nexusID": "2920064"
@@ -464,12 +439,6 @@
     "id": "140231789217054721",
     "discordName": "@spacechase0#0724",
     "nexusID": "34250790"
-  },
-  {
-    "id": "270811337515335680",
-    "left": true,
-    "discordName": "@squishface#7190",
-    "nexusID": "54322952"
   },
   {
     "id": "117511922487787529",
@@ -512,14 +481,7 @@
     "nexusID": "57201212"
   },
   {
-    "id": "389163311712829441",
-    "left": true,
-    "discordName": "@TNT#4515",
-    "nexusID": "60583086"
-  },
-  {
     "id": "319088789165309952",
-    "admin": true,
     "discordName": "@toe#2186",
     "nexusID": "64022386"
   },
