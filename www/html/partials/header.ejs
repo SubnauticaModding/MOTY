@@ -39,7 +39,7 @@
 <div class="header">
   <div class="header-left">
     <img src="<%= headerImage %>">
-    <a class="notalink">Modder of the Year 2019</a>
+    <a class="notalink">Modder of the Year <% if (!locals.winners) { %>2019<% } %></a>
   </div>
   <% if (!locals.winners) { %>
     <div class="header-center" <% if (locals.ended) { %> disabled <% } %>>
@@ -83,7 +83,7 @@
   <div class="header-left">
     <img src="<%= headerImage %>" onclick="window.location.href='/'">
   </div>
-  <a href="/">Modder of the Year 2019</a>
+  <a href="/">MOTY <% if (!locals.winners) { %>2019<% } %></a>
   <% if (!locals.winners) { %>
     <div class="header-right">
       <% if (!locals.user) { %>
