@@ -100,10 +100,17 @@ web.all("*", async (req, res) => {
     var ids = author.discordids.split(",");
     if (ids.length == 1) {
       var discordUser = await discord.getUser(ids[0]);
+      if (!discordUser) {
+        console.log("Missing user with id " + ids[0]);
+        author.remove = true;
+        continue;
+      }
       author.name = discordUser.user.username;
       author.icon = discordUser.user.displayAvatarURL;
     }
   }
+  
+  authorData = authorData.filter(a => !a.remove);
 
   if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/winners.ejs", {
