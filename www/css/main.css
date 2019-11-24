@@ -287,6 +287,10 @@
   flex: auto;
 }
 
+.placeicon {
+  position: relative;
+}
+
 .modauthors {
   list-style: none;
   padding: 0;
@@ -370,6 +374,10 @@
 .winnerentry .authoricon {
   width: 100px;
   height: 100px;
+}
+
+.winnerentry .authorname {
+  position: relative;
 }
 
 .dummy {
