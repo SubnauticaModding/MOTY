@@ -400,7 +400,7 @@
   <% for (var author of authors) { %>
     <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
       <div class="authorheader">
-        <img class="authoricon" src="<%= author.icon %>">
+        <img class="authoricon" src="<%= author.icon.replace('?size=2048', '?size=128') %>">
         <a class="authorname notalink"><%= author.name %></a>
       </div>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
@@ -463,7 +463,7 @@
       <% for (var author of authors) { %>
         <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %> voteentry">
           <div class="authorheader">
-            <img class="authoricon" src="<%= author.icon %>">
+            <img class="authoricon" src="<%= author.icon.replace('?size=2048', '?size=128') %>">
             <a class="authorname notalink"><%= author.name %></a>
           </div>
           <div class="votenum votes<%= author.id %> votebutton mobilevotenum">...</div>
