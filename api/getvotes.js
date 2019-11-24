@@ -40,20 +40,29 @@ module.exports = function (data) {
       var count = [];
       for (var author in votes) {
         if (!top[0] || count[0] < votes[author].length) {
+          top[3] = top[2];
           top[2] = top[1];
           top[1] = top[0];
           top[0] = author;
+          count[3] = count[2];
           count[2] = count[1];
           count[1] = count[0];
           count[0] = votes[author].length;
         } else if (!top[1] || count[1] < votes[author].length) {
+          top[3] = top[2];
           top[2] = top[1];
           top[1] = author;
+          count[3] = count[2];
           count[2] = count[1];
           count[1] = votes[author].length;
         } else if (!top[2] || count[2] < votes[author].length) {
+          top[3] = top[2];
           top[2] = author;
+          count[3] = count[2];
           count[2] = votes[author].length;
+        } else if (!top[3] || count[3] < votes[author].length) {
+          top[3] = author;
+          count[3] = votes[author].length;
         }
       }
 
