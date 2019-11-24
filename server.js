@@ -38,8 +38,7 @@ this.bot.on("ready", async () => {
   for (let i = 0; i < guilds.length; i++) {
     await this.bot.guilds.get(guilds[i].id).fetchMembers();
   }
-  
-  
+
   console.log("Logged in as " + this.bot.user.tag);
   commands();
   this.db.prepare("CREATE TABLE if not exists logindata (userid TEXT PRIMARY KEY, sessionkey TEXT, authkey TEXT);").run();
@@ -86,7 +85,6 @@ web.all("*", async (req, res) => {
   if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/timer.ejs", {
       timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
-      message: false,
       metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
       metaImage: process.env.WEBSITE_META_IMAGE,
     });
@@ -109,7 +107,7 @@ web.all("*", async (req, res) => {
       author.icon = discordUser.user.displayAvatarURL;
     }
   }
-  
+
   authorData = authorData.filter(a => !a.remove);
 
   if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
