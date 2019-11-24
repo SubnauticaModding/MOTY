@@ -1,18 +1,11 @@
 <%- include("partials/head", locals) %>
 <%- include("partials/header", locals) %>
 
-<style>
-  .entry {
-    display: flex;
-    justify-content: space-between;
-  }
-</style>
-
 <script>
   var authors = JSON.parse(decode("<%= JSON.stringify(authors) %>"));
 
   function update() {
-    if (!$("body.mobile").exists()) {
+    if (!$("body").hasClass("mobile")) {
       $(".congrats").css("font-size", 100 * window.innerWidth / 1920);
       $(".authorentry:not(.firstplacedummy)").css("width", window.innerWidth / 3.2);
       $(".authorname").css({
@@ -43,7 +36,10 @@
         width: 100 * window.innerWidth / 1920 / 1.3 * 1.28,
       });
       $(".firstplacedummy").css("width", window.innerWidth / 3.2 / 1.28);
+    } else {
+      $(".congrats").fitText();
     }
+    $(".authorname").fitText();
   }
 
   $.when($.ready).then(() => {
@@ -76,8 +72,6 @@
       },
     });
   });
-
-
 </script>
 
 <div class="congrats" style="font-size:100px;text-align:center;">Congratulations!</div>

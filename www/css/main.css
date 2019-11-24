@@ -55,7 +55,7 @@ body .entry[disabled] {
 }
 
 body.mobile .entry {
-  width: 100% !important;
+  width: 100%;
 }
 
 body.mobile .header {
@@ -72,6 +72,10 @@ body.mobile .removevotes {
 
 body.mobile .search {
   position: unset !important;
+}
+
+body.mobile .winnerentry {
+  width: 100% !important;
 }
 
 body:not(.mobile) .entry[disabled]>* {
@@ -480,6 +484,8 @@ noscript {
   font-size: 60px;
   width: 31%;
   min-height: 0px;
+  display: flex;
+  justify-content: space-between;
 }
 
 .wrapper {

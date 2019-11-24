@@ -474,7 +474,7 @@
               setInterval(() => {
                 var scroll = window.pageYOffset || document.documentElement.scrollTop;
                 try {
-                  $(".votes<%= author.id %>").text(window.totalvotes.<%= author.id %>.length);
+                  $(".votes<%= author.id %>").text(window.totalvotes["<%= author.id %>"].length);
                   if (window.innerWidth >= 1070) { 
                     $(".votes<%= author.id %>:not(.mobilevotenum)").fitText(0.2);
                     $(".votes<%= author.id %>:not(.mobilevotenum)").css("display", "block");
