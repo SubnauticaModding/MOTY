@@ -116,6 +116,10 @@ noscript {
   font-size: 40px;
 }
 
+.authorentry ul li:empty {
+  list-style: none;
+}
+
 .authorentry.showall ul li:nth-last-child(2) {
   margin-bottom: 10px;
 }
