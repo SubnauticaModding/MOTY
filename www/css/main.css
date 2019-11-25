@@ -158,19 +158,19 @@ noscript {
   color: white;
 }
 
-.authorentry:not(.showall) ul li:nth-child(5) {
+.authorentry:not(.showall) ul li:not(:empty):nth-child(5) {
   margin-bottom: 10px;
 }
 
-.authorentry:not(.showall) ul li:nth-child(6) {
+.authorentry:not(.showall) ul li:not(:empty):nth-child(6) {
   list-style: none;
 }
 
-.authorentry:not(.showall) ul li:nth-child(6) a {
+.authorentry:not(.showall) ul li:not(:empty):nth-child(6) a {
   display: none;
 }
 
-.authorentry:not(.showall) ul li:nth-child(6)::after {
+.authorentry:not(.showall) ul li:not(:empty):nth-child(6)::after {
   content: "Show more";
   font-size: 20px;
   -webkit-appearance: button;
