@@ -129,7 +129,7 @@ web.all("*", async (req, res) => {
   modData = modData.filter(m => m.description);
   
   authorData = authorData.filter(a => modData.map(m => m.authors.includes(a.id)).includes(true));
-  modData = modData.filter(m => authorData.map(a => a.id).includes(m.authors[0]) || (m.authors[1] && authorData.map(a => a.id).includes(m.authors[1])));
+  modData = modData.filter(m => authorData.map(a => a.id).includes(m.authors[0]));
 
   authorData.sort(sort);
   modData.sort(sort);
