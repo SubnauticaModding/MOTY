@@ -330,6 +330,13 @@
       }
     }
 
+    $(".authorentry ul li:nth-child(6)").after().on("click", function () {
+      $(this).closest(".authorentry").addClass("showall");
+    });
+    $(".authorentry ul li:nth-last-child(1)").after().on("click", function () {
+      $(this).closest(".authorentry").removeClass("showall");
+    });
+
     $(".search").on("change paste keyup", function () {
       if (!$(this).val()) return $(".entry").css("display", "");
       var values = $(this).val().split(" ").filter(e => !!e);
