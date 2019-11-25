@@ -17,7 +17,7 @@ module.exports = function (data) {
 
     var user = users.getUser(data.user.user.id);
     if (user.votes.includes(data.req.query.id)) return data.res.sendStatus(409);
-    if (user.votes.length == 3) return data.res.sendStatus(406);
+    if (user.votes.length == process.env.MAX_VOTE_COUNT) return data.res.sendStatus(406);
 
     var discordids = authors.getAuthor(data.req.query.id).discordids.split(",");
     if (discordids.includes(data.authUserID)) {

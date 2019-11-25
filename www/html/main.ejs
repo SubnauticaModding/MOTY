@@ -134,9 +134,9 @@
       $(".search").css("display", "");
     }
 
-    if (votes.length == 3) { 
+    if (votes.length == <%= maxVoteCount %>) { 
       $(".vote").addClass("disabledbutton");
-      $(".vote:not([aria-describedby]), .vote[aria-describedby='']").attr("title", "You may only vote for 3 modders.");
+      $(".vote:not([aria-describedby]), .vote[aria-describedby='']").attr("title", "You may only vote for <%= maxVoteCount %> modders.");
       $(".entry").attr("disabled", true);
       for (var vote of votes) {
         $(".entry" + vote).attr("disabled", false);
@@ -147,7 +147,10 @@
       $(".vote").removeClass("disabledbutton");
       $(".vote").attr("title", "");
       $(".entry").attr("disabled", false);
-      $(".votenotice").text(`You can vote for ${3 - votes.length} more modder${3 - votes.length == 1 ? "" : "s"}.`);
+      $(".votenotice").text(`You can vote for ${<%= maxVoteCount %> - votes.length} more modder${<%= maxVoteCount %> - votes.length == 1 ? "" : "s"}.`);
+      if (<%= maxVoteCount %> == -1) {
+        $(".votenotice").text("You may vote for as many modders as you'd like.");
+      }
     }
     $(".voteentry").attr("disabled", false);
     <% if (!locals.user) { %>
