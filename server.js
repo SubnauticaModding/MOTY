@@ -136,6 +136,8 @@ web.all("*", async (req, res) => {
       }
     }
   }
+  
+  modData = modData.filter(m => m.description);
 
   authorData.sort(sort);
   modData.sort(sort);
