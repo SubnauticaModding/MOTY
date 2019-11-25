@@ -108,18 +108,6 @@ web.all("*", async (req, res) => {
     }
   }
 
-  authorData = authorData.filter(a => !a.remove);
-
-  if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
-    return res.render("www/html/winners.ejs", {
-      authors: authorData,
-      headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
-      metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
-      metaImage: process.env.WEBSITE_META_IMAGE,
-      winners: true,
-    });
-  }
-
   await modcache.update();
   var cache = modcache.getAllCached();
   mainloop: for (var mod of modData) {
@@ -137,11 +125,25 @@ web.all("*", async (req, res) => {
     }
   }
   
+  authorData = authorData.filter(a => !a.remove);
   modData = modData.filter(m => m.description);
+  
+  authorData = authorData.filter(a => modData.map(m => m.authors.includes(a.id)).includes(true));
+  modData = modData.filter(m => authorData.map(a => a.id).includes(m.authors[0]) || (m.authors[1] && authorData.map(a => a.id).includes(m.authors[1])));
 
   authorData.sort(sort);
   modData.sort(sort);
 
+  if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
+    return res.render("www/html/winners.ejs", {
+      authors: authorData,
+      headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
+      metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
+      metaImage: process.env.WEBSITE_META_IMAGE,
+      winners: true,
+    });
+  }
+  
   var p = "/main";
   if (req.path == "/privacy") p = req.path;
 
