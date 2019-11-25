@@ -367,6 +367,30 @@
         }
       });
     });
+
+    var entries = $(".authorentry:not(.voteentry)").detach();
+    for (var i = 0; i < entries.length; i++) {
+      for (var j = i + 1; j < entries.length; j++) {
+        if ($(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase()) {
+          var temp = entries[i];
+          entries[i] = entries[j];
+          entries[j] = temp;
+        }
+      }
+    }
+    $("ul.authorwrapper").prepend(entries);
+
+    var modentries = $(".modentry").detach();
+    for (var i = 0; i < modentries.length; i++) {
+      for (var j = i + 1; j < modentries.length; j++) {
+        if ($(modentries[j]).find(".modname").text().toLowerCase() < $(modentries[i]).find(".modname").text().toLowerCase()) {
+          var temp = modentries[i];
+          modentries[i] = modentries[j];
+          modentries[j] = temp;
+        }
+      }
+    }
+    $("ul.modwrapper").prepend(modentries);
   });
 
   function scrollAnimation() {
