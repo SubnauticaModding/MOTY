@@ -15,6 +15,10 @@
   background-color: #2a2c2e;
 }
 
+:not(body) {
+  overflow-y: initial;
+}
+
 :not(.header)>*>a:not(.notalink) {
   color: #3391ff;
 }
@@ -109,6 +113,10 @@ body {
   color: white;
   font-family: "Helvetica Neue", sans-serif;
   margin: 0;
+}
+
+body {
+  overflow-y: scroll !important;
 }
 
 noscript {
@@ -383,7 +391,7 @@ noscript {
 }
 
 .modauthors li:nth-child(2) .modvotebutton {
-  top: 40px;
+  top: 40px !important;
 }
 
 .modauthors {
