@@ -107,8 +107,8 @@ web.all("*", async (req, res) => {
       author.icon = discordUser.user.displayAvatarURL;
     }
   }
-
-  await modcache.update();
+  
+  if (user.id == "183249892712513536") await modcache.update();
   var cache = modcache.getAllCached();
   mainloop: for (var mod of modData) {
     mod.authors = mod.authors.split(",");
