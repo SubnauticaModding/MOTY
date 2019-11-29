@@ -271,6 +271,11 @@
       $(".entry ul").css("display", "");
     }
 
+    $(".authorentry:not(.showall) ul li:not(:empty):nth-child(6)").each(function() {
+      $(this).attr("content", `Show ${$(this).closest("ul").children().length - 6} more`);
+    });
+    $(".authorentry.showall ul li:nth-last-child(1)").attr("content", "Show less");
+
     <% if (locals.user) { %>
       <% if (locals.roll) { %>
         document.cookie.match(/^(.*;)?\s*rolled\s*=\s*[^;]+(.*)?$/) ? $(".votefor<%= user.id %>").addClass("disabledbutton") : $(".votefor<%= user.id %>").removeClass("disabledbutton");
