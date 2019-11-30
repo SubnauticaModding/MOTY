@@ -87,13 +87,13 @@ web.all("*", async (req, res) => {
     return res.sendFile(path.join(__dirname, req.path));
   }
 
-  if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
+  /*if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/timer.ejs", {
       timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
       metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
       metaImage: process.env.WEBSITE_META_IMAGE,
     });
-  }
+  }*/
 
   var authorData = authors.getAuthors();
   var modData = !process.env.DISABLE_MODS ? mods.getMods() : null;
@@ -114,7 +114,7 @@ web.all("*", async (req, res) => {
   }
 
   if (!process.env.DISABLE_MODS) {
-    if (user.id == "183249892712513536") await modcache.update();
+    if (user && user.id == "183249892712513536") await modcache.update();
     var cache = modcache.getAllCached();
     mainloop: for (var mod of modData) {
       mod.authors = mod.authors.split(",");
@@ -148,15 +148,17 @@ web.all("*", async (req, res) => {
   if (req.path == "/faq") p = req.path;
 
   var faqs = [];
-  for (var faq of process.env.FAQS.split(" //// ")) faqs.push({
-    q: faq.split(" // ")[0],
-    a: faq.split(" // ")[1]
-  });
+  if (process.env.FAQS) {
+    for (var faq of process.env.FAQS.split(" \/\/\/\/ ")) faqs.push({
+      q: faq.split(" \/\/ ")[0],
+      a: faq.split(" \/\/ ")[1]
+    });
+  }
 
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
     ended: new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d,
-    faqs,
+    faqs: faqs.length != 0 ? faqs : null,
     headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
     manager: perms.isManager(user),
     maxVoteCount: process.env.MAX_VOTE_COUNT,
