@@ -87,11 +87,15 @@ body.mobile .winnerentry {
   width: 100% !important;
 }
 
+body.nomods .entry {
+  min-height: 0px !important;
+}
+
 body:not(.mobile) .entry[disabled]>* {
   filter: blur(1px);
 }
 
-body:not(.mobile) .votenum {
+body:not(.mobile):not(.nomods) .votenum {
   text-align: center;
   font-size: 112px;
   margin-top: -13px;
