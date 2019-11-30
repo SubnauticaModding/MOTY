@@ -7,7 +7,7 @@ module.exports.getUser = async function (id) {
 }
 
 module.exports.getUsers = async function () {
-  if (!members) {
+  if (!members || Object.keys(members).length == 0) {
     var guilds = server.bot.guilds.array();
 
     for (var guild of guilds) {
