@@ -1,6 +1,6 @@
 const server = require("../server");
 
-var members;
+var members = {};
 
 module.exports.getUser = async function (id) {
   return (await this.getUsers())[id];
