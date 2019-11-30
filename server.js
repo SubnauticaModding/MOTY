@@ -1,4 +1,9 @@
 require("dotenv").config();
+for (var prop in process.env) {
+  if (process.env[prop] == "true") process.env[prop] = true;
+  else if (process.env[prop] == "false") process.env[prop] = false;
+  else if (parseInt(process.env[prop]).toString() == process.env[prop]) process.env[prop] = parseInt(process.env[prop]);
+}
 
 const betterSqlite3 = require("better-sqlite3");
 const Discord = require("discord.js");
@@ -91,7 +96,7 @@ web.all("*", async (req, res) => {
   }
 
   var authorData = authors.getAuthors();
-  var modData = mods.getMods();
+  var modData = !process.env.DISABLE_MODS ? mods.getMods() : null;
   var voteData = users.getUser(authUserID) && users.getUser(authUserID).votes ? users.getUser(authUserID).votes : [];
 
   for (var author of authorData) {
@@ -107,32 +112,27 @@ web.all("*", async (req, res) => {
       author.icon = discordUser.user.displayAvatarURL;
     }
   }
-  
-  if (user.id == "183249892712513536") await modcache.update();
-  var cache = modcache.getAllCached();
-  mainloop: for (var mod of modData) {
-    mod.authors = mod.authors.split(",");
 
-    for (var cacheElement of cache) {
-      if (mod.domain == cacheElement.domain && mod.nexusid == cacheElement.id) {
-        for (var prop in cacheElement) {
-          if (cacheElement.hasOwnProperty(prop) && prop != "id") {
-            mod[prop] = cacheElement[prop];
+  if (!process.env.DISABLE_MODS) {
+    if (user.id == "183249892712513536") await modcache.update();
+    var cache = modcache.getAllCached();
+    mainloop: for (var mod of modData) {
+      mod.authors = mod.authors.split(",");
+      for (var cacheElement of cache) {
+        if (mod.domain == cacheElement.domain && mod.nexusid == cacheElement.id) {
+          for (var prop in cacheElement) {
+            if (cacheElement.hasOwnProperty(prop) && prop != "id") {
+              mod[prop] = cacheElement[prop];
+            }
           }
+          continue mainloop;
         }
-        continue mainloop;
       }
     }
   }
-  
-  authorData = authorData.filter(a => !a.remove);
-  modData = modData.filter(m => m.description);
-  
-  authorData = authorData.filter(a => modData.map(m => m.authors.includes(a.id)).includes(true));
-  modData = modData.filter(m => authorData.map(a => a.id).includes(m.authors[0]));
 
-  authorData.sort(sort);
-  modData.sort(sort);
+  authorData = authorData.filter(a => !a.remove).filter(a => process.env.DISABLE_MODS ? true : modData.map(m => m.authors.includes(a.id)).includes(true)).sort(sort);
+  if (!process.env.DISABLE_MODS) modData = modData.filter(m => m.description).filter(m => authorData.map(a => a.id).includes(m.authors[0])).sort(sort);
 
   if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/winners.ejs", {
@@ -143,7 +143,7 @@ web.all("*", async (req, res) => {
       winners: true,
     });
   }
-  
+
   var p = "/main";
   if (req.path == "/privacy") p = req.path;
 
@@ -156,7 +156,7 @@ web.all("*", async (req, res) => {
     metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
     metaImage: process.env.WEBSITE_META_IMAGE,
     mods: modData,
-    roll: process.env.RICK_ROLL_ON_SELF_VOTE == "true",
+    roll: process.env.RICK_ROLL_ON_SELF_VOTE,
     staff: perms.isStaff(user) ? process.env.STAFF_VOTE_MULTIPLIER : -1,
     user,
     votes: voteData,

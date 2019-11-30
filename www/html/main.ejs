@@ -158,13 +158,13 @@
       $(".votebutton").addClass("disabledbutton");
     <% } %>
 
-    $(".authorentry:not(.voteentry) .authorname").css("max-width", $(".authorentry").width() - 115);
+    $(".authorentry:not(.voteentry) .authorname, body.mobile .authorentry .authorname, body.nomods .authorentry .authorname").css("max-width", $(".authorentry").width() - 115);
 
     <% if (locals.ended) { %>
       if (parseSearchString()[0] != "votes") window.location.hash = "#votes";
     <% } %>
 
-    if (parseSearchString()[0] == "mods" && !$("body").hasClass("mobile")) {
+    if (parseSearchString()[0] == "mods" && !$("body").hasClass("mobile") && !$("body").hasClass("nomods")) {
       window.ranAuthorAnim = false;
       if (!window.ranModAnim) {
         window.ranModAnim = true;
@@ -207,7 +207,7 @@
         $(".modentry *").css("filter", "");
         $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
 
-        if (window.innerWidth > 1070) {
+        if (window.innerWidth > 1070 && !$("body").hasClass("nomods")) {
           window.lastbig = true;
           var entries = $(".voteentry").detach();
           for (var i = 0; i < entries.length; i++) {
@@ -257,7 +257,7 @@
       }
     }
 
-    if ($("body").hasClass("mobile")) {
+    if ($("body").hasClass("mobile") || $("body").hasClass("nomods")) {
       $(".entry").css("height", 50);
       $(".entry").css("min-height", 50);
       $(".entry").css("max-height", 50);
@@ -320,6 +320,10 @@
 
     <% if (!locals.user) { %>
       $(".votebutton").attr("title", "You need to be logged in to vote.");
+    <% } %>
+
+    <% if (!locals.mods) { %>
+      $("body").addClass("nomods");
     <% } %>
   });
 
@@ -444,16 +448,18 @@
       </div>
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
-      <br><br>
-      <ul>
-        <% for (var mod of mods) { %>
-          <% if (mod.authors.includes(author.id)) { %>
-            <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
+      <% if (locals.mods) { %>
+        <br><br>
+        <ul>
+          <% for (var mod of mods) { %>
+            <% if (mod.authors.includes(author.id)) { %>
+              <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
+            <% } %>
           <% } %>
-        <% } %>
-        <li></li>
-      </ul>
-      <br>
+          <li></li>
+        </ul>
+        <br>
+      <% } %>
     </div>
   <% } %>
   <% for (var author of authors) { %>
@@ -461,41 +467,43 @@
   <% } %>
 </ul>
 
-<ul class="modwrapper wrapper hidden">
-  <% for (var mod of mods) { %>
-    <div id="<%= mod.id %>" class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
-      <img src="<%= mod.image %>"><br><br class="shrink">
-      <a class="modname notalink"><%= mod.name %></a><br><br>
-      <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
-      <a class="moddescription" href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>">View on NexusMods</a>
-      <ul class="modauthors">
-        <% var lines = 0; %>
-        <% for (var author of mod.authors) { %>
-          <% for (var author2 of authors) { %>
-            <% if (author == author2.id) { %>
-              <li>
-                <img class="authoricon" src="<%= author2.icon %>">
-                <a href="#authors#<%= author2.id %>"><%= author2.name %></a>
-                <button class="votebutton modvotebutton vote votefor<%= author2.id %> votefor<%= author2.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author2.id %>')" <% if (votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTE</button>
-                <button class="votebutton modvotebutton unvote unvotefor<%= author2.id %> unvotefor<%= author2.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author2.id %>')" <% if (!votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTED</button>
-                <br>
-              </li>
-              <% lines++; %>
-              <% continue; %>
+<% if (locals.mods) { %>
+  <ul class="modwrapper wrapper hidden">
+    <% for (var mod of mods) { %>
+      <div id="<%= mod.id %>" class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
+        <img src="<%= mod.image %>"><br><br class="shrink">
+        <a class="modname notalink"><%= mod.name %></a><br><br>
+        <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
+        <a class="moddescription" href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>">View on NexusMods</a>
+        <ul class="modauthors">
+          <% var lines = 0; %>
+          <% for (var author of mod.authors) { %>
+            <% for (var author2 of authors) { %>
+              <% if (author == author2.id) { %>
+                <li>
+                  <img class="authoricon" src="<%= author2.icon %>">
+                  <a href="#authors#<%= author2.id %>"><%= author2.name %></a>
+                  <button class="votebutton modvotebutton vote votefor<%= author2.id %> votefor<%= author2.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author2.id %>')" <% if (votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTE</button>
+                  <button class="votebutton modvotebutton unvote unvotefor<%= author2.id %> unvotefor<%= author2.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author2.id %>')" <% if (!votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTED</button>
+                  <br>
+                </li>
+                <% lines++; %>
+                <% continue; %>
+              <% } %>
             <% } %>
           <% } %>
-        <% } %>
-      </ul>
-      <br><br>
-      <% for (var i = 0; i < lines; i++) { %>
+        </ul>
         <br><br>
-      <% } %>
-    </div>
-  <% } %>
-  <% for (var mod of mods) { %>
-    <div class="entry dummy"></div>
-  <% } %>
-</ul>
+        <% for (var i = 0; i < lines; i++) { %>
+          <br><br>
+        <% } %>
+      </div>
+    <% } %>
+    <% for (var mod of mods) { %>
+      <div class="entry dummy"></div>
+    <% } %>
+  </ul>
+<% } %>
 
 <% if (locals.manager) { %>
   <div class="votewrapper wrapper hidden">
@@ -515,19 +523,25 @@
                 var scroll = window.pageYOffset || document.documentElement.scrollTop;
                 try {
                   $(".votes<%= author.id %>").text(window.totalvotes["<%= author.id %>"].length);
-                  if (window.innerWidth >= 1070) { 
-                    $(".votes<%= author.id %>:not(.mobilevotenum)").fitText(0.2);
-                    $(".votes<%= author.id %>:not(.mobilevotenum)").css("display", "block");
-                    $(".votes<%= author.id %>.mobilevotenum").css("display", "none");
-                  } else {
+                  <% if (locals.mods) { %>
+                    if (window.innerWidth >= 1070) { 
+                      $(".votes<%= author.id %>:not(.mobilevotenum)").fitText(0.2);
+                      $(".votes<%= author.id %>:not(.mobilevotenum)").css("display", "block");
+                      $(".votes<%= author.id %>.mobilevotenum").css("display", "none");
+                    } else {
+                  <% } %>
                     $(".votes<%= author.id %>.mobilevotenum").css("display", "block");
                     $(".votes<%= author.id %>:not(.mobilevotenum)").css("display", "none");
-                  }
+                  <% if (locals.mods) { %>
+                    }
+                  <% } %>
                 } catch (e) {
                   $(".votes<%= author.id %>").text("...");
-                  if (window.innerWidth >= 1070) { 
-                    $(".votes<%= author.id %>").fitText(0.2);
-                  }
+                  <% if (locals.mods) { %>
+                    if (window.innerWidth >= 1070) { 
+                      $(".votes<%= author.id %>").fitText(0.2);
+                    }
+                  <% } %>
                 }
                 document.documentElement.scrollTop = document.body.scrollTop = scroll;
               }, 100)
