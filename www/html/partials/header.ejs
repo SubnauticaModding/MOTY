@@ -73,7 +73,7 @@
         <img src="<%= user.user.displayAvatarURL %>">
       <% } %>
       <a class="notalink navbar-sep"></a>
-      <a class="privacyheader" href="/privacy">Privacy</a>
+      <a class="privacyheader" href="/faq">FAQ</a>
     </div>
   <% } else { %>
     <div class="header-center">
@@ -96,7 +96,7 @@
         <a class="user" href="javascript:if(confirm('Are you sure you want to log out?')) window.location.href='/logout'">Logout</a>
         <img src="<%= user.user.displayAvatarURL %>" onclick="window.location.href='/'">
       <% } %>
-      <a class="privacyheader" href="/privacy">Privacy</a>
+      <a class="privacyheader" href="/faq">FAQ</a>
     </div>
     <% if (locals.manager && !locals.ended) { %>
       <div class="header-down">

@@ -1,18 +1,21 @@
 const server = require("../server");
 
+var members;
+
 module.exports.getUser = async function (id) {
   return (await this.getUsers())[id];
 }
 
 module.exports.getUsers = async function () {
-  var guilds = server.bot.guilds.array();
-  var result = {};
+  if (!members) {
+    var guilds = server.bot.guilds.array();
 
-  for (var guild of guilds) {
-    var _guild = await server.bot.guilds.get(guild.id).fetchMembers();
+    for (var guild of guilds) {
+      var _guild = await server.bot.guilds.get(guild.id).fetchMembers();
 
-    _guild.members.forEach((v, k) => result[k] = v);
+      _guild.members.forEach((v, k) => members[k] = v);
+    }
   }
 
-  return result;
+  return members;
 }

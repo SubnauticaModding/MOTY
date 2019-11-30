@@ -145,7 +145,7 @@ web.all("*", async (req, res) => {
   }
 
   var p = "/main";
-  if (req.path == "/privacy") p = req.path;
+  if (req.path == "/faq") p = req.path;
 
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
