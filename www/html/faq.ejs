@@ -6,20 +6,20 @@
     <span style="font-size: 30px">Frequently Asked Questions</span><br>
     <br>
     <% for (var faq of faqs) { %>
-      <b><%= faq.q %></b><br>
+      <span style="font-weight: bold; font-size: 20px"><%= faq.q %></span><br>
       <%= faq.a %><br>
       <br>
     <% } %>
   <% } %>
   <span style="font-size: 30px">How is my data being used?</span><br>
   <br>
-  <b>Summary</b><br>
+  <span style="font-weight: bold; font-size: 20px">Summary</span><br>
   Your data is not being sent to any third-parties (excluding Glitch and Discord as stated below) and will only be used by this website.<br>
   We will never manually read sensitive information, such as you Discord authentication key.<br>
   Please see <a href="https://discordapp.com/privacy">Discord</a>'s and <a href="https://glitch.com/about/legal/">Glitch</a>'s privacy policy for details on how they process and use user data.<br>
   <br>
   <br>
-  <b>Long answer:</b><br>
+  <span style="font-weight: bold; font-size: 20px">Long answer:</span><br>
   We collect and store the following data upon login:<br>
   - The user ID of the Discord account<br>
   - The authentication token provided by Discord for the use of their API<br>
