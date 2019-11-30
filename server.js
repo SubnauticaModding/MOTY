@@ -134,8 +134,6 @@ web.all("*", async (req, res) => {
   authorData = authorData.filter(a => !a.remove).filter(a => process.env.DISABLE_MODS ? true : modData.map(m => m.authors.includes(a.id)).includes(true)).sort(sort);
   if (!process.env.DISABLE_MODS) modData = modData.filter(m => m.description).filter(m => authorData.map(a => a.id).includes(m.authors[0])).sort(sort);
 
-  for (var a of authorData) console.log(`${a.id} - ${(await this.bot.fetchUser(a.id)).tag}`);
-
   if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/winners.ejs", {
       authors: authorData,
@@ -149,9 +147,16 @@ web.all("*", async (req, res) => {
   var p = "/main";
   if (req.path == "/faq") p = req.path;
 
+  var faqs = [];
+  for (var faq of process.env.FAQS.split(" //// ")) faqs.push({
+    q: faq.split(" // ")[0],
+    a: faq.split(" // ")[1]
+  });
+
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
     ended: new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d,
+    faqs,
     headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
     manager: perms.isManager(user),
     maxVoteCount: process.env.MAX_VOTE_COUNT,
