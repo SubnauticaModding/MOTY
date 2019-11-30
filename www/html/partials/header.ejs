@@ -42,13 +42,17 @@
     <a class="notalink">Modder of the Year <% if (!locals.winners) { %>2019<% } %></a>
   </div>
   <% if (!locals.winners) { %>
-    <div class="header-center" <% if (locals.ended) { %> disabled <% } %>>
-      <a href="/#authors" class="header-link header-authors" <% if (locals.ended) { %> disabled <% } %>>Authors</a>
-      <a href="/#mods" class="header-link header-mods" <% if (locals.ended) { %> disabled <% } %>>Mods</a>
-      <% if (locals.manager) { %>
-        <a href="/#votes" class="header-link header-votes">Votes</a>
-      <% } %>
-    </div>
+    <% if (locals.mods || locals.manager) { %>
+      <div class="header-center" <% if (locals.ended) { %> disabled <% } %>>
+        <a href="/#authors" class="header-link header-authors" <% if (locals.ended) { %> disabled <% } %>>Authors</a>
+        <% if (locals.mods) { %>
+          <a href="/#mods" class="header-link header-mods" <% if (locals.ended) { %> disabled <% } %>>Mods</a>
+        <% } %>
+        <% if (locals.manager) { %>
+          <a href="/#votes" class="header-link header-votes">Votes</a>
+        <% } %>
+      </div>
+    <% } %>
     <div class="header-right">
       <% if (!locals.user) { %>
         <a class="navbar-editor" href="/login" target="_top">Login with <svg id="navbar-discord-logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 272.1">
@@ -66,7 +70,7 @@
         <a class="user tooltip" href="javascript:if(confirm('Are you sure you want to log out?')) window.location.href='/logout'">
           <%= user.user.tag %>
         </a>
-        <img src="<%= user.user.displayAvatarURL %>" onclick="window.location.href='/'">
+        <img src="<%= user.user.displayAvatarURL %>">
       <% } %>
       <a class="notalink navbar-sep"></a>
       <a class="privacyheader" href="/privacy">Privacy</a>
