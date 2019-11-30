@@ -128,11 +128,14 @@ web.all("*", async (req, res) => {
   authorData = authorData.filter(a => !a.remove);
   modData = modData.filter(m => m.description);
   
-  authorData = authorData.filter(a => modData.map(m => m.authors.includes(a.id)).includes(true));
+  authorData = authorData.filter(a => !modData.map(m => m.authors.includes(a.id)).includes(true));
   modData = modData.filter(m => authorData.map(a => a.id).includes(m.authors[0]));
-
+  
   authorData.sort(sort);
   modData.sort(sort);
+  
+  for (var a of authorData) console.log(`${(await this.bot.fetchUser(a.id)).tag} - ${a.id}`);
+
 
   if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/winners.ejs", {
