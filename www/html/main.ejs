@@ -410,6 +410,18 @@
       }
     }
     $("ul.modwrapper").prepend(modentries);
+
+    var entries = $(".voteentry").detach();
+    for (var i = 0; i < entries.length; i++) {
+      for (var j = i + 1; j < entries.length; j++) {
+        if ($(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase()) {
+          var temp = entries[i];
+          entries[i] = entries[j];
+          entries[j] = temp;
+        }
+      }
+    }
+    $("ul.votewrapper").prepend(entries);
   });
 
   function scrollAnimation() {
