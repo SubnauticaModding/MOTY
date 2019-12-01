@@ -176,7 +176,6 @@ function sort(a, b) {
   return a.name ? b.name ? a.name.localeCompare(b.name) : 1 : 0;
 }
 
-/*
 process.on("unhandledRejection", (reason, p) => {
   console.error("Unhandled Rejection at: ", p, "reason:", reason);
 });
@@ -188,4 +187,3 @@ this.bot.on("error", (e) => {
 this.bot.on("warn", (w) => {
   console.warn(w);
 });
-*/

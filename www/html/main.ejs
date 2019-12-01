@@ -285,6 +285,10 @@
         $(".votefor<%= user.id %>").attr("title", "You can't vote for yourself.");
       <% } %>
     <% } %>
+
+    <% if (!locals.user) { %>
+      $(".votebutton:not([aria-describedby]), .votebutton[aria-describedby='']").attr("title", "You need to be logged in to vote.");
+    <% } %>
   }
 
   $.when($.ready).then(() => {
@@ -316,10 +320,6 @@
           });
         }
       }, 1000);
-    <% } %>
-
-    <% if (!locals.user) { %>
-      $(".votebutton").attr("title", "You need to be logged in to vote.");
     <% } %>
 
     <% if (!locals.mods) { %>
