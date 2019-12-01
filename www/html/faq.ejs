@@ -6,11 +6,15 @@
     <span style="font-size: 30px">Frequently Asked Questions</span><br>
     <br>
     <% for (var faq of faqs) { %>
-      <span style="font-weight: bold; font-size: 20px"><%= faq.q %></span><br>
-      <%= faq.a %><br>
+      <span id="<%= faqs.indexOf(faq) %>" style="font-weight: bold; font-size: 20px"><%= faq.q %></span>
       <br>
+      <br>
+      <script>
+        $(window).on("load", () => $(`<br><span>${decode("<%= faq.a %>")}</span>`).insertAfter("#<%= faqs.indexOf(faq) %>"));
+      </script>
     <% } %>
   <% } %>
+  <br>
   <span style="font-size: 30px">How is my data being used?</span><br>
   <br>
   <span style="font-weight: bold; font-size: 20px">Summary</span><br>
