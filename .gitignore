@@ -1,8 +1,9 @@
+data/authors/*
+data/cache/*
+data/mods/*
 data/users/*
 data/login.db
-data/cache/*
-data/authors/*
-data/mods/*
+data/nexus.json
 !/**/.gitkeep
 package-lock.json
 node_modules

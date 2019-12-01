@@ -18,6 +18,7 @@ const commands = require("./src/commands");
 const discord = require("./src/discord");
 const modcache = require("./src/modcache");
 const mods = require("./src/mods");
+const nexus = require("./src/nexus");
 const perms = require("./src/perms");
 const users = require("./src/users");
 
@@ -96,6 +97,7 @@ web.all("*", async (req, res) => {
   }
 
   var authorData = authors.getAuthors();
+  var nexusData = process.env.NEXUS_LINKS ? nexus.getAuthors() : null;
   var modData = !process.env.DISABLE_MODS ? mods.getMods() : null;
   var voteData = users.getUser(authUserID) && users.getUser(authUserID).votes ? users.getUser(authUserID).votes : [];
 
@@ -165,6 +167,7 @@ web.all("*", async (req, res) => {
     metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
     metaImage: process.env.WEBSITE_META_IMAGE,
     mods: modData,
+    nexus: nexusData,
     roll: process.env.RICK_ROLL_ON_SELF_VOTE,
     staff: perms.isStaff(user) ? process.env.STAFF_VOTE_MULTIPLIER : -1,
     user,
