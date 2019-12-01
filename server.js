@@ -87,13 +87,13 @@ web.all("*", async (req, res) => {
     return res.sendFile(path.join(__dirname, req.path));
   }
 
-  /*if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
+  if (new Date(Date.now()) < moment("2019-12-01T01:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
     return res.render("www/html/timer.ejs", {
-      timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
+      timer: moment("2019-12-01T01:00:00Z").tz("UTC")._d.toString(),
       metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
       metaImage: process.env.WEBSITE_META_IMAGE,
     });
-  }*/
+  }
 
   var authorData = authors.getAuthors();
   var modData = !process.env.DISABLE_MODS ? mods.getMods() : null;
