@@ -130,8 +130,6 @@
     } else {
       $(".wrapper").css("display", "");
       $(".reswarning").css("display", "none");
-      $(".votenotice").css("display", "");
-      $(".search").css("display", "");
     }
 
     if (votes.length == <%= maxVoteCount %>) { 
@@ -151,6 +149,7 @@
       if (<%= maxVoteCount %> == -1) {
         $(".votenotice").text("You may vote for as many modders as you'd like.");
       }
+      $(".votenotice").css("display", "");
     }
     $(".voteentry").attr("disabled", false);
     <% if (!locals.user) { %>
@@ -246,13 +245,15 @@
       $(".entry").css("min-height", 50);
       $(".entry").css("max-height", 50);
       $(".entry ul").css("display", "none");
-      $(".votenotice").css("display", "none");
+      $(".votenotice").css("float", "none");
       $(".search").css("display", "none");
     } else {
       $(".entry").css("height", "");
       $(".entry").css("min-height", "");
       $(".entry").css("max-height", "");
       $(".entry ul").css("display", "");
+      $(".votenotice").css("float", "right");
+      $(".search").css("display", "");
     }
 
     $(".authorentry:not(.showall) ul li:not(:empty):nth-child(6)").each(function() {

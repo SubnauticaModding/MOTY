@@ -87,8 +87,17 @@ body.mobile .winnerentry {
   width: 100% !important;
 }
 
+body.nomods {
+  text-align: center;
+}
+
 body.nomods .entry {
   min-height: 0px !important;
+}
+
+body.nomods .votenotice {
+  margin-top: 10px;
+  margin-bottom: -10px;
 }
 
 body:not(.mobile) .entry[disabled]>* {
