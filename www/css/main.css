@@ -93,6 +93,7 @@ body.nomods {
 
 body.nomods .entry {
   min-height: 0px !important;
+  width: 290px;
 }
 
 body.nomods .votenotice {
@@ -243,7 +244,7 @@ noscript {
   text-rendering: optimizelegibility;
   text-size-adjust: 100%;
   top: 0px;
-  width: 290px;
+  width: 224px;;
   column-rule-color: rgb(0, 0, 0);
   perspective-origin: 112px 200.188px;
   transform-origin: 112px 200.188px;
