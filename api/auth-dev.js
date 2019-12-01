@@ -1,3 +1,6 @@
+const auth = require("./auth");
+
 module.exports = async function (data) {
-  return data.res.sendStatus(200);
+  if (process.env.PROJECT_INVITE) return data.res.sendStatus(200);
+  return auth(data, true);
 }

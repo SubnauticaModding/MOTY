@@ -207,33 +207,17 @@
         $(".modentry *").css("filter", "");
         $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
 
-        if (window.innerWidth > 1070 && !$("body").hasClass("nomods")) {
-          window.lastbig = true;
-          var entries = $(".voteentry").detach();
-          for (var i = 0; i < entries.length; i++) {
-            for (var j = i + 1; j < entries.length; j++) {
-              if (parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text()) || (parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text()) && $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())) {
-                var temp = entries[i];
-                entries[i] = entries[j];
-                entries[j] = temp;
-              }
+        var entries = $(".voteentry").detach();
+        for (var i = 0; i < entries.length; i++) {
+          for (var j = i + 1; j < entries.length; j++) {
+            if (parseInt($(entries[j]).find(".votenum").text()) > parseInt($(entries[i]).find(".votenum").text()) || (parseInt($(entries[j]).find(".votenum").text()) == parseInt($(entries[i]).find(".votenum").text()) && $(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase())) {
+              var temp = entries[i];
+              entries[i] = entries[j];
+              entries[j] = temp;
             }
           }
-          $("ul.votewrapper").prepend(entries);
-        } else if (window.lastbig) {
-          window.lastbig = false;
-          var entries = $(".voteentry").detach();
-          for (var i = 0; i < entries.length; i++) {
-            for (var j = i + 1; j < entries.length; j++) {
-              if ($(entries[j]).find(".authorname").text().toLowerCase() < $(entries[i]).find(".authorname").text().toLowerCase()) {
-                var temp = entries[i];
-                entries[i] = entries[j];
-                entries[j] = temp;
-              }
-            }
-          }
-          $("ul.votewrapper").prepend(entries);
         }
+        $("ul.votewrapper").prepend(entries);
     <% } %>
     } else {
       if (parseSearchString()[0] != "authors") window.location.hash = "#authors";

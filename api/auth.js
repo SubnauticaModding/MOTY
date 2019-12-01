@@ -6,7 +6,7 @@ const discord = require("../src/discord");
 const server = require("../server");
 const users = require("../src/users");
 
-module.exports = async function (data) {
+module.exports = async function (data, dev) {
   try {
     if (auth.sessionValid(data.authUserID, data.authSession)) {
       if (!data.user) return data.res.redirect(process.env.DISCORD_INVITE);
@@ -21,7 +21,7 @@ module.exports = async function (data) {
         "client_id": server.bot.user.id,
         "client_secret": process.env.DISCORD_SECRET,
         "grant_type": "authorization_code",
-        "redirect_uri": `https://${process.env.PROJECT_DOMAIN}.glitch.me/auth${data.req.query.dev ? "-dev" : ""}`,
+        "redirect_uri": `https://${process.env.PROJECT_DOMAIN}.glitch.me/auth${dev ? "-dev" : ""}`,
         "scope": "identify email",
         "code": data.req.query.code,
       }),
