@@ -147,7 +147,7 @@
       $(".entry").attr("disabled", false);
       $(".votenotice").text(`You may${votes.length == 0 ? " only" : ""} vote for ${<%= maxVoteCount %> - votes.length}${votes.length == 0 ? "" : " more"} modder${<%= maxVoteCount %> - votes.length == 1 ? "" : "s"}.`);
       if (<%= maxVoteCount %> == -1) {
-        $(".votenotice").text("You may vote for as many modders as you'd like.");
+        $(".votenotice").text("You can vote for any number of modders.");
       }
       $(".votenotice").css("display", "");
     }
