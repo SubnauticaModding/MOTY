@@ -156,6 +156,8 @@ web.all("*", async (req, res) => {
       a: faq.split(" \/\/ ")[1]
     });
   }
+  
+  if (!user) auth.clearCookies(res);
 
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
