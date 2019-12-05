@@ -13,7 +13,7 @@ module.exports = async function (data, dev) {
       return data.res.redirect("/");
     }
 
-    if (!data.req.query.code) return data.res.redirect("/?alert=Invalid authentication code. Ping @AlexejheroYTB%231636 about this.");
+    if (!data.req.query.code) return data.res.redirect("/?alert=Invalid authentication code. Let @AlexejheroYTB know about this.");
 
     var response = await request.post({
       uri: "https://discordapp.com/api/oauth2/token",
@@ -34,7 +34,7 @@ module.exports = async function (data, dev) {
     var userData = await auth.getUserData(response.access_token, response.token_type);
     var user = await discord.getUser(userData.id);
     if (!userData.verified) return data.res.redirect("/?alert=You need to have a verified email on your account in order to vote.");
-    if (!user) return data.res.redirect("/?server=true");
+    if (!user) return data.res.redirect("/?server=true&invite=" + encodeURIComponent(process.env.DISCORD_INVITE));
     if (user.user.createdTimestamp > 1575158400000) return data.res.redirect("/?alert=Your account was created after December 1st 2019, which means you cannot vote.");
 
     var sessionToken = auth.generateToken();

@@ -58,7 +58,7 @@
 
     if (parseQueryString().server) {
       alert("You need to be in our Discord server in order to vote.");
-      window.location.href = "https://discord.gg/UpWuWwq";  
+      window.location.href = decodeURIComponent(parseQueryString().invite);  
     }
 
     $.when($.ready).then(() => {

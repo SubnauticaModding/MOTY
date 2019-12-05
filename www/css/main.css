@@ -58,7 +58,7 @@ body .entry[disabled] {
   filter: opacity(50%);
 }
 
-body.mobile .entry {
+body.mobile .entry.authorentry {
   width: 100%;
 }
 
