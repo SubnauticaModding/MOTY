@@ -37,3 +37,11 @@ export function setObject(folder: string, file: string, data: any) {
 export function removeObject(folder: string, file: string) {
   fs.unlinkSync(path.join(__dirname, "../data/", folder, file + ".json"));
 };
+
+
+export function createFolders() {
+  if (!fs.existsSync(path.join(__dirname, "../data"))) fs.mkdirSync(path.join(__dirname, "../data"));
+  if (!fs.existsSync(path.join(__dirname, "../data/authors"))) fs.mkdirSync(path.join(__dirname, "../data/authors"));
+  if (!fs.existsSync(path.join(__dirname, "../data/mods"))) fs.mkdirSync(path.join(__dirname, "../data/mods"));
+  if (!fs.existsSync(path.join(__dirname, "../data/users"))) fs.mkdirSync(path.join(__dirname, "../data/users"));
+}

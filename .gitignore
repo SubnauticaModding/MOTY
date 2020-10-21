@@ -1,10 +1,4 @@
-data/authors/*
-data/cache/*
-data/mods/*
-data/users/*
-data/login.db
-data/nexus.json
-!/**/.gitkeep
+data
 package-lock.json
 node_modules
 .vscode
@@ -16,3 +10,4 @@ shrinkwrap.yaml
 pull.sh
 push.sh
 pnpm-lock.yaml
+dist

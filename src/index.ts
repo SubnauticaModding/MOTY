@@ -1,13 +1,17 @@
 import betterSqlite3 from "better-sqlite3";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 import Discord from "discord.js";
 import { config as dotenv } from "dotenv";
 import express from "express";
+import { Request as TypeRequest, Response as TypeResponse } from "express-serve-static-core";
 import fs from "fs";
 import path from "path";
 import * as config from "../config.json";
 import * as auth from "./auth";
 import * as authors from "./authors";
 import { initialize as initCommands } from "./commands";
+import * as data from "./data";
 import * as modcache from "./modcache";
 import * as mods from "./mods";
 import * as nexus from "./nexus";
@@ -15,18 +19,27 @@ import * as perms from "./perms";
 import * as users from "./users";
 
 dotenv();
+data.createFolders();
+
+export type EndpointData = {
+  authSession: string,
+  authUserID: string,
+  res: TypeResponse,
+  req: TypeRequest,
+  user?: Discord.GuildMember,
+};
 
 export const bot = new Discord.Client();
 bot.login(process.env.DISCORD_TOKEN);
 
 export const web = express();
-web.set("views", __dirname);
-web.use(require("cookie-parser")());
-web.use(require("body-parser").json());
-web.use(require("body-parser").urlencoded({ extended: false }));
+web.set("views", process.cwd());
+web.use(cookieParser());
+web.use(bodyParser.json());
+web.use(bodyParser.urlencoded({ extended: false }));
 web.listen(process.env.PORT);
 
-export const db = betterSqlite3("data/login.db");
+export const db = betterSqlite3(path.join(__dirname, "../data/login.db"));
 
 export const commands: { [key: string]: (message: Discord.Message, command: string, args: string[]) => any } = {};
 
@@ -60,8 +73,9 @@ web.all("*", async (req, res) => {
   const cookies = auth.getCookies(req);
   const member = auth.sessionValid(cookies.authUserID, cookies.authSession) ? await guild?.members.fetch(cookies.authUserID) : undefined;
 
-  if (fs.existsSync(path.join(__dirname, "/api/", req.path + ".js"))) {
-    return require("./" + path.join("api/", req.path))({
+  if (fs.existsSync(path.join(__dirname, "../api/", req.path + ".js"))) {
+    const func: { default: (data: EndpointData) => any } = await import(path.join(__dirname, "../api/", req.path + ".js"));
+    return func.default({
       authSession: cookies.authSession,
       authUserID: cookies.authUserID,
       res: res,
@@ -71,7 +85,7 @@ web.all("*", async (req, res) => {
   }
 
   if (/[\s\S]*?.[html|css|js|ico|ttf|png|jpg]$/g.test(req.path)) {
-    return res.sendFile(path.join(__dirname, req.path));
+    return res.sendFile(path.join(process.cwd(), req.path));
   }
 
   if (Date.now() < 1606780800000 && !perms.isManager(member?.id)) { // December 1st 2020, 00:00 UTC
@@ -90,7 +104,7 @@ web.all("*", async (req, res) => {
   authorData = authorData.filter(a => config.DisableMods || modData.map(m => m.authors.includes(a.id)).includes(true)).sort(sort);
   if (!config.DisableMods) modData = modData.filter(m => m.description).filter(m => authorData.map(a => a.id).includes(m.authors[0])).sort(sort);
 
-  if (Date.now() >= 1577836800000 && !perms.isManager(member?.id)) { // January 1st 2021, 00:00 UTC
+  if (Date.now() >= 1609459200000 && !perms.isManager(member?.id)) { // January 1st 2021, 00:00 UTC
     return res.render("www/html/winners.ejs", { // TODO: Modify winners page
       authors: authorData,
       headerImage: guild?.iconURL({ format: "png", dynamic: true }),
@@ -106,7 +120,7 @@ web.all("*", async (req, res) => {
 
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
-    ended: Date.now() >= 1577836800000, // January 1st 2021, 00:00 UTC
+    ended: Date.now() >= 1609459200000, // January 1st 2021, 00:00 UTC
     faqs: config.FAQ,
     headerImage: guild?.iconURL({ format: "png", dynamic: true }),
     manager: perms.isManager(member?.id),
@@ -115,7 +129,6 @@ web.all("*", async (req, res) => {
     metaImage: guild?.iconURL({ format: "png", dynamic: true }),
     mods: modData,
     nexus: nexusData,
-    roll: process.env.RICK_ROLL_ON_SELF_VOTE,
     user: member,
     votes: voteData,
   });
@@ -139,8 +152,8 @@ async function parseAuthorData(authorData: authors.Author[]) {
         console.log("Missing member with id " + ids[0]);
         continue;
       }
-      authorObj.name ??= member.user.username;
-      authorObj.icon ??= member.user.displayAvatarURL();
+      authorObj.name = authorObj.name ?? member.user.username;
+      authorObj.icon = authorObj.icon ?? member.user.displayAvatarURL();
     }
 
     parsedAuthorData.push(authorObj);

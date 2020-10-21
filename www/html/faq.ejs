@@ -3,24 +3,24 @@
 
 <div style="font-family: 'Days One', sans-serif; font-size:16px; color:white; text-align: left;padding-left: 10px;padding-right:10px;">
   <% if (locals.faqs) { %>
-    <span style="font-size: 30px">Frequently Asked Questions</span><br>
-    <br>
-    <% for (var faq of faqs) { %>
-      <span id="<%= faqs.indexOf(faq) %>" style="font-weight: bold; font-size: 20px"><%= faq.q %></span>
-      <br>
-      <br>
-      <script>
-        $(window).on("load", () => $(`<br><span>${decode("<%= faq.a %>")}</span>`).insertAfter("#<%= faqs.indexOf(faq) %>"));
-      </script>
-    <% } %>
+  <span style="font-size: 30px">Frequently Asked Questions</span><br>
+  <br>
+  <% for (var faq of faqs) { %>
+  <span id="<%= faqs.indexOf(faq) %>" style="font-weight: bold; font-size: 20px"><%= faq.q %></span>
+  <br>
+  <br>
+  <script>
+    $(window).on("load", () => $(`<br><span>${decode("<%= faq.a %>")}</span>`).insertAfter("#<%= faqs.indexOf(faq) %>"));
+  </script>
+  <% } %>
   <% } %>
   <br>
   <span style="font-size: 30px">How is my data being used?</span><br>
   <br>
   <span style="font-weight: bold; font-size: 20px">Summary</span><br>
-  Your data is not being sent to any third-parties (excluding Glitch and Discord as stated below) and will only be used by this website.<br>
+  Your data is not being sent to any third-parties (excluding DigitalOcean and Discord as stated below) and will only be used by this website.<br>
   We will never manually read sensitive information, such as you Discord authentication key.<br>
-  Please see <a href="https://discordapp.com/privacy">Discord</a>'s and <a href="https://glitch.com/about/legal/">Glitch</a>'s privacy policy for details on how they process and use user data.<br>
+  Please see <a href="https://discordapp.com/privacy">Discord</a>'s and <a href="https://www.digitalocean.com/legal/privacy-policy/">DigitalOcean</a>'s privacy policy for details on how they process and use user data.<br>
   <br>
   <br>
   <span style="font-weight: bold; font-size: 20px">Long answer:</span><br>
@@ -44,7 +44,7 @@
   Please read the privacy policy of the following services and make sure you agree with them and comply with their terms of service before using our services:<br>
   - <a href="https://discordapp.com/privacy">Discord (discordapp.com)</a> : Used for authenticating the
   user.<br>
-  - <a href="https://glitch.com/about/legal/">Glitch (glitch.com)</a> : The site hosting this application<br>
+  - <a href="https://www.digitalocean.com/legal/privacy-policy/">DigitalOcean (digitalocean.com)</a> : The site hosting this application<br>
   <br>
   <span style="font-size: 28px">Any questions? Contact me on Discord: AlexejheroYTB#1636</span><br>
 </div>
