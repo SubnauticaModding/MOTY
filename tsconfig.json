@@ -19,7 +19,7 @@
   },
   "include": [
     "src/**/*.ts",
-    "index.ts",
+    "src/**/*.js",
     "config.json"
   ],
   "exclude": [

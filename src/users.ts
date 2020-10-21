@@ -1,5 +1,3 @@
-// TODO: Combine this with other data stuff somehow
-
 import * as data from "./data";
 
 type User = {

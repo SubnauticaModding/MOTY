@@ -1,13 +1,10 @@
-// TODO: Combine this with other data stuff somehow
-
 import * as data from "./data";
 
-type Author = {
+export type Author = {
   id: string,
   discordids: string,
   name?: string,
   icon?: string,
-  remove?: boolean,
 };
 
 /** Gets an author from the database by their id */

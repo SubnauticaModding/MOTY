@@ -28,7 +28,7 @@ web.listen(process.env.PORT);
 
 export const db = betterSqlite3("data/login.db");
 
-export const commands: { [key: string]: (message: Discord.Message, command: string, args: string[]) => {} } = {};
+export const commands: { [key: string]: (message: Discord.Message, command: string, args: string[]) => any } = {};
 
 bot.on("ready", async () => {
   console.log("Logged in as " + bot.user?.tag);
@@ -56,8 +56,9 @@ bot.on("message", (message) => {
 });
 
 web.all("*", async (req, res) => {
+  const guild = bot.guilds.cache.get(config.GuildID);
   const cookies = auth.getCookies(req);
-  var user = auth.sessionValid(cookies.authUserID, cookies.authSession) ? await bot.guilds.cache.get(config.GuildID)?.members.fetch(cookies.authUserID) : undefined;
+  const member = auth.sessionValid(cookies.authUserID, cookies.authSession) ? await guild?.members.fetch(cookies.authUserID) : undefined;
 
   if (fs.existsSync(path.join(__dirname, "/api/", req.path + ".js"))) {
     return require("./" + path.join("api/", req.path))({
@@ -65,7 +66,7 @@ web.all("*", async (req, res) => {
       authUserID: cookies.authUserID,
       res: res,
       req: req,
-      user: user,
+      user: member,
     });
   }
 
@@ -73,107 +74,126 @@ web.all("*", async (req, res) => {
     return res.sendFile(path.join(__dirname, req.path));
   }
 
-  if (Date.now() < 1606780800000 && !perms.isManager(user?.id)) { // December 1st 2020, 00:00 UTC
+  if (Date.now() < 1606780800000 && !perms.isManager(member?.id)) { // December 1st 2020, 00:00 UTC
     return res.render("www/html/timer.ejs", { // TODO: Get rid of timer?
       timer: new Date(1606780800000).toUTCString(), // December 1st 2020, 00:00 UTC
-      metaGameName: bot.guilds.cache.get(config.GuildID)?.name,
-      metaImage: process.env.WEBSITE_META_IMAGE, // TODO: Add to config
+      metaGameName: guild?.name,
+      metaImage: guild?.iconURL({ format: "png", dynamic: true }),
     });
   }
 
-  var authorData = authors.getAuthors();
-  var nexusData = process.env.NEXUS_LINKS ? nexus.getAuthors() : undefined;
-  var modData = !process.env.DISABLE_MODS ? mods.getMods() : undefined;
-  var voteData = users.getUser(cookies.authUserID)?.votes ?? [];
+  var authorData = await parseAuthorData(authors.getAuthors());
+  var modData = await parseModData(!config.DisableMods ? mods.getMods() : [], member);
+  const nexusData = process.env.NEXUS_LINKS ? nexus.getAuthors() : undefined;
+  const voteData = users.getUser(cookies.authUserID)?.votes ?? [];
+
+  authorData = authorData.filter(a => config.DisableMods || modData.map(m => m.authors.includes(a.id)).includes(true)).sort(sort);
+  if (!config.DisableMods) modData = modData.filter(m => m.description).filter(m => authorData.map(a => a.id).includes(m.authors[0])).sort(sort);
+
+  if (Date.now() >= 1577836800000 && !perms.isManager(member?.id)) { // January 1st 2021, 00:00 UTC
+    return res.render("www/html/winners.ejs", { // TODO: Modify winners page
+      authors: authorData,
+      headerImage: guild?.iconURL({ format: "png", dynamic: true }),
+      metaGameName: guild?.name,
+      metaImage: guild?.iconURL({ format: "png", dynamic: true }),
+      winners: true,
+    });
+  }
+
+  var p = req.path == "/faq" ? "/faq" : "/main";
+
+  if (!member) auth.clearCookies(res);
+
+  res.render(`www/html${p}.ejs`, {
+    authors: authorData,
+    ended: Date.now() >= 1577836800000, // January 1st 2021, 00:00 UTC
+    faqs: config.FAQ,
+    headerImage: guild?.iconURL({ format: "png", dynamic: true }),
+    manager: perms.isManager(member?.id),
+    maxVoteCount: config.MaxVotes,
+    metaGameName: guild?.name,
+    metaImage: guild?.iconURL({ format: "png", dynamic: true }),
+    mods: modData,
+    nexus: nexusData,
+    roll: process.env.RICK_ROLL_ON_SELF_VOTE,
+    user: member,
+    votes: voteData,
+  });
+});
+
+async function parseAuthorData(authorData: authors.Author[]) {
+  const parsedAuthorData: authors.Author[] = [];
 
   for (var author of authorData) {
+    const authorObj: authors.Author = {
+      id: author.id,
+      discordids: author.discordids,
+      name: author.name,
+      icon: author.icon,
+    };
+
     var ids = author.discordids.split(",");
     if (ids.length == 1) {
       var member = await bot.guilds.cache.get(config.GuildID)?.members.fetch(ids[0]);
       if (!member) {
         console.log("Missing member with id " + ids[0]);
-        author.remove = true;
         continue;
       }
-      author.name = member.user.username;
-      author.icon = member.user.displayAvatarURL();
+      authorObj.name ??= member.user.username;
+      authorObj.icon ??= member.user.displayAvatarURL();
     }
+
+    parsedAuthorData.push(authorObj);
   }
 
+  return parsedAuthorData;
+}
+
+async function parseModData(modData: mods.Mod[], member?: Discord.GuildMember) {
+  type ParsedMod = Omit<mods.Mod, "authors"> & { authors: string[], [key: string]: any };
+  const parsedModData: ParsedMod[] = [];
+
   if (!config.DisableMods) {
-    if (user?.id == "183249892712513536") await modcache.update();
+    if (member?.id == "183249892712513536") await modcache.update();
     var cache = modcache.getAllCached();
-    mainloop: for (var mod of modData || []) {
-      mod.authors = mod.authors.split(","); // Uhh fix this ugly thing
+    mainloop: for (const mod of modData || []) {
+      const modObj: ParsedMod = {
+        id: mod.id,
+        domain: mod.domain,
+        nexusid: mod.nexusid,
+        authors: mod.authors.split(","),
+      }
+
       for (var cacheElement of cache) {
         if (mod.domain == cacheElement.domain && mod.nexusid == cacheElement.id) {
           for (var prop in cacheElement) {
             if (cacheElement.hasOwnProperty(prop) && prop != "id") {
-              mod[prop] = cacheElement[prop];
+              modObj[prop] = cacheElement[prop];
             }
           }
           continue mainloop;
         }
       }
+
+      parsedModData.push(modObj);
     }
   }
 
-  authorData = authorData.filter(a => !a.remove).filter(a => process.env.DISABLE_MODS ? true : modData.map(m => m.authors.includes(a.id)).includes(true)).sort(sort);
-  if (!process.env.DISABLE_MODS) modData = modData.filter(m => m.description).filter(m => authorData.map(a => a.id).includes(m.authors[0])).sort(sort);
+  return parsedModData;
+}
 
-  if (new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
-    return res.render("www/html/winners.ejs", {
-      authors: authorData,
-      headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
-      metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
-      metaImage: process.env.WEBSITE_META_IMAGE,
-      winners: true,
-    });
-  }
-
-  var p = "/main";
-  if (req.path == "/faq") p = req.path;
-
-  var faqs = [];
-  if (process.env.FAQS) {
-    for (var faq of process.env.FAQS.split(" \/\/\/\/ ")) faqs.push({
-      q: faq.split(" \/\/ ")[0],
-      a: faq.split(" \/\/ ")[1]
-    });
-  }
-
-  if (!user) auth.clearCookies(res);
-
-  res.render(`www/html${p}.ejs`, {
-    authors: authorData,
-    ended: new Date(Date.now()) > moment("2020-01-01T00:00:00Z").tz("UTC")._d,
-    faqs: faqs.length != 0 ? faqs : null,
-    headerImage: this.bot.guilds.get(process.env.DISCORD_GUILD).icon.startsWith("a_") ? this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL.split("").reverse().join("").replace(/.*?\./, "fig.").split("").reverse().join("") : this.bot.guilds.get(process.env.DISCORD_GUILD).iconURL,
-    manager: perms.isManager(user),
-    maxVoteCount: process.env.MAX_VOTE_COUNT,
-    metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
-    metaImage: process.env.WEBSITE_META_IMAGE,
-    mods: modData,
-    nexus: nexusData,
-    roll: process.env.RICK_ROLL_ON_SELF_VOTE,
-    staff: perms.isStaff(user) ? process.env.STAFF_VOTE_MULTIPLIER : -1,
-    user,
-    votes: voteData,
-  });
-});
-
-function sort(a, b) {
-  return a.name ? b.name ? a.name.localeCompare(b.name) : 1 : 0;
+function sort(a: any, b: any) {
+  return a.name ? b.name ? a.name.localeCompare(b.name) : 1 : b.name ? -1 : 0;
 }
 
 process.on("unhandledRejection", (reason, p) => {
   console.error("Unhandled Rejection at: ", p, "reason:", reason);
 });
 
-this.bot.on("error", (e) => {
+bot.on("error", (e) => {
   console.error(e);
 });
 
-this.bot.on("warn", (w) => {
+bot.on("warn", (w) => {
   console.warn(w);
 });

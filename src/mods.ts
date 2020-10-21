@@ -1,8 +1,6 @@
-// TODO: Combine this with other data stuff somehow
-
 import * as data from "./data";
 
-type Mod = {
+export type Mod = {
   id: string,
   domain: "subnautica" | "subnauticabelowzero",
   nexusid: string,
