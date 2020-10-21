@@ -2,7 +2,7 @@ const request = require("request-promise");
 
 const data = require("./data");
 const mods = require("./mods");
-const server = require("../server");
+const server = require("..");
 
 var lastUpdate;
 

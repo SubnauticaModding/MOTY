@@ -1,66 +1,54 @@
-require("dotenv").config();
-for (var prop in process.env) {
-  if (process.env[prop] == "true") process.env[prop] = true;
-  else if (process.env[prop] == "false") process.env[prop] = false;
-  else if (parseInt(process.env[prop]).toString() == process.env[prop]) process.env[prop] = parseInt(process.env[prop]);
-}
+import betterSqlite3 from "better-sqlite3";
+import Discord from "discord.js";
+import { config as dotenv } from "dotenv";
+import express from "express";
+import fs from "fs";
+import path from "path";
+import * as config from "../config.json";
+import * as auth from "./auth";
+import * as authors from "./authors";
+import { initialize as initCommands } from "./commands";
+import * as modcache from "./modcache";
+import * as mods from "./mods";
+import * as nexus from "./nexus";
+import * as perms from "./perms";
+import * as users from "./users";
 
-const betterSqlite3 = require("better-sqlite3");
-const Discord = require("discord.js");
-const express = require("express");
-const fs = require("fs");
-const moment = require("moment-timezone");
-const path = require("path");
+dotenv();
 
-const auth = require("./src/auth");
-const authors = require("./src/authors");
-const commands = require("./src/commands");
-const discord = require("./src/discord");
-const modcache = require("./src/modcache");
-const mods = require("./src/mods");
-const nexus = require("./src/nexus");
-const perms = require("./src/perms");
-const users = require("./src/users");
+export const bot = new Discord.Client();
+bot.login(process.env.DISCORD_TOKEN);
 
-const web = express();
+export const web = express();
 web.set("views", __dirname);
 web.use(require("cookie-parser")());
 web.use(require("body-parser").json());
-web.use(require("body-parser").urlencoded({
-  extended: false
-}));
+web.use(require("body-parser").urlencoded({ extended: false }));
 web.listen(process.env.PORT);
 
-module.exports.bot = new Discord.Client({
-  fetchAllMembers: true,
-});
-module.exports.db = betterSqlite3("data/login.db");
+export const db = betterSqlite3("data/login.db");
 
-this.bot.login(process.env.DISCORD_TOKEN);
+export const commands: { [key: string]: (message: Discord.Message, command: string, args: string[]) => {} } = {};
 
-this.bot.on("ready", async () => {
-  var guilds = this.bot.guilds.array();
-
-  for (let i = 0; i < guilds.length; i++) {
-    await this.bot.guilds.get(guilds[i].id).fetchMembers();
-  }
-
-  console.log("Logged in as " + this.bot.user.tag);
-  commands();
-  this.db.prepare("CREATE TABLE if not exists logindata (userid TEXT PRIMARY KEY, sessionkey TEXT, authkey TEXT);").run();
+bot.on("ready", async () => {
+  console.log("Logged in as " + bot.user?.tag);
+  initCommands();
+  db.prepare("CREATE TABLE if not exists logindata (userid TEXT PRIMARY KEY, sessionkey TEXT, authkey TEXT);").run();
 });
 
-this.bot.on("message", (message) => {
-  if (!message.guild) return;
-  if (message.guild.id != process.env.DISCORD_GUILD) return;
-  if (!message.content.toLowerCase().startsWith("moty/")) return;
-  if (!perms.isManager(message.author)) return;
+bot.on("message", (message) => {
+  if (!message.guild || !message.guild.available) return;
+  if (message.guild.id != config.GuildID) return;
+  if (!message.content.toLowerCase().startsWith(config.Prefix)) return;
+  if (!perms.isManager(message.author.id)) return;
 
-  var args = message.content.slice(5).trim().split(/ +/g);
-  var command = args.shift().toLowerCase();
+  var args = message.content.slice(config.Prefix.length).trim().split(/ +/g); // TODO: reload config command?
+  var command = args.shift()?.toLowerCase();
+
+  if (!command) return;
 
   try {
-    var com = this.commands.get(command);
+    var com = commands[command];
     if (com) com(message, command, args);
   } catch (e) {
     console.error(e);
@@ -68,19 +56,16 @@ this.bot.on("message", (message) => {
 });
 
 web.all("*", async (req, res) => {
-  var {
-    authUserID,
-    authSession
-  } = auth.getCookies(req);
-  var user = auth.sessionValid(authUserID, authSession) ? await discord.getUser(authUserID) : undefined;
+  const cookies = auth.getCookies(req);
+  var user = auth.sessionValid(cookies.authUserID, cookies.authSession) ? await bot.guilds.cache.get(config.GuildID)?.members.fetch(cookies.authUserID) : undefined;
 
   if (fs.existsSync(path.join(__dirname, "/api/", req.path + ".js"))) {
     return require("./" + path.join("api/", req.path))({
-      authSession,
-      authUserID,
-      res,
-      req,
-      user,
+      authSession: cookies.authSession,
+      authUserID: cookies.authUserID,
+      res: res,
+      req: req,
+      user: user,
     });
   }
 
@@ -88,38 +73,38 @@ web.all("*", async (req, res) => {
     return res.sendFile(path.join(__dirname, req.path));
   }
 
-  if (new Date(Date.now()) < moment("2019-12-01T00:00:00Z").tz("UTC")._d && !perms.isStaff(user)) {
-    return res.render("www/html/timer.ejs", {
-      timer: moment("2019-12-01T00:00:00Z").tz("UTC")._d.toString(),
-      metaGameName: this.bot.guilds.get(process.env.DISCORD_GUILD).name,
-      metaImage: process.env.WEBSITE_META_IMAGE,
+  if (Date.now() < 1606780800000 && !perms.isManager(user?.id)) { // December 1st 2020, 00:00 UTC
+    return res.render("www/html/timer.ejs", { // TODO: Get rid of timer?
+      timer: new Date(1606780800000).toUTCString(), // December 1st 2020, 00:00 UTC
+      metaGameName: bot.guilds.cache.get(config.GuildID)?.name,
+      metaImage: process.env.WEBSITE_META_IMAGE, // TODO: Add to config
     });
   }
 
   var authorData = authors.getAuthors();
-  var nexusData = process.env.NEXUS_LINKS ? nexus.getAuthors() : null;
-  var modData = !process.env.DISABLE_MODS ? mods.getMods() : null;
-  var voteData = users.getUser(authUserID) && users.getUser(authUserID).votes ? users.getUser(authUserID).votes : [];
+  var nexusData = process.env.NEXUS_LINKS ? nexus.getAuthors() : undefined;
+  var modData = !process.env.DISABLE_MODS ? mods.getMods() : undefined;
+  var voteData = users.getUser(cookies.authUserID)?.votes ?? [];
 
   for (var author of authorData) {
     var ids = author.discordids.split(",");
     if (ids.length == 1) {
-      var discordUser = await discord.getUser(ids[0]);
-      if (!discordUser) {
-        console.log("Missing user with id " + ids[0]);
+      var member = await bot.guilds.cache.get(config.GuildID)?.members.fetch(ids[0]);
+      if (!member) {
+        console.log("Missing member with id " + ids[0]);
         author.remove = true;
         continue;
       }
-      author.name = discordUser.user.username;
-      author.icon = discordUser.user.displayAvatarURL;
+      author.name = member.user.username;
+      author.icon = member.user.displayAvatarURL();
     }
   }
 
-  if (!process.env.DISABLE_MODS) {
-    if (user && user.id == "183249892712513536") await modcache.update();
+  if (!config.DisableMods) {
+    if (user?.id == "183249892712513536") await modcache.update();
     var cache = modcache.getAllCached();
-    mainloop: for (var mod of modData) {
-      mod.authors = mod.authors.split(",");
+    mainloop: for (var mod of modData || []) {
+      mod.authors = mod.authors.split(","); // Uhh fix this ugly thing
       for (var cacheElement of cache) {
         if (mod.domain == cacheElement.domain && mod.nexusid == cacheElement.id) {
           for (var prop in cacheElement) {
@@ -156,7 +141,7 @@ web.all("*", async (req, res) => {
       a: faq.split(" \/\/ ")[1]
     });
   }
-  
+
   if (!user) auth.clearCookies(res);
 
   res.render(`www/html${p}.ejs`, {

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "es2019",
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "lib": [
+      "ES2019",
+      "ES2020.BigInt",
+      "ES2020.String",
+      "ES2020.Symbol.WellKnown"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "index.ts",
+    "config.json"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

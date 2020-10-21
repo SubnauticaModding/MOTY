@@ -2,29 +2,34 @@
   "name": "moty",
   "version": "1.0.0",
   "description": "Modder of the Year",
-  "main": "server.js",
+  "author": "AlexejheroYTB",
+  "license": "GPL-3.0",
+  "main": "dist/src/index.js",
   "scripts": {
-    "start": "node server.js",
-    "push": "bash push.sh",
-    "pull": "bash pull.sh",
-    "nodemon": "nodemon --ignore data/"
+    "start": "tsc && node dist/src/index.js",
+    "nodemon": "nodemon -e \"ts\" -i dist/ -i .env -i config/ -i config/*.json -x \"tsc && node dist/src/index.js || exit 1\""
   },
   "dependencies": {
-    "better-sqlite3": "^5.4.3",
+    "better-sqlite3": "^7.1.1",
     "body-parser": "^1.19.0",
-    "cookie-parser": "^1.4.4",
-    "discord.js": "^11.5.1",
+    "cookie-parser": "^1.4.5",
+    "discord.js": "^12.4.0",
     "dotenv": "^8.2.0",
-    "ejs": "^2.7.1",
-    "express": "^4.16.4",
+    "ejs": "^3.1.5",
+    "express": "^4.17.1",
     "fs-readdir-recursive": "^1.1.0",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.26",
     "querystring": "^0.2.0",
-    "request": "^2.88.0",
-    "request-promise": "^4.2.4"
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
   },
   "engines": {
-    "node": "8.x"
+    "node": "12.x"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^5.4.0",
+    "@types/express": "^4.17.8",
+    "@types/fs-readdir-recursive": "^1.0.0",
+    "@types/request-promise": "^4.1.46",
+    "typescript": "^4.0.3"
   }
 }
