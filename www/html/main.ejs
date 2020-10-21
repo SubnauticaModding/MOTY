@@ -113,6 +113,8 @@
   }
 
   function refresh() {
+    $(".search").css("display", "");
+
     if (window.innerWidth < 300) {
       $(".wrapper").css("display", "none");
       $(".reswarning").css("display", "block");
@@ -248,7 +250,6 @@
       $(".entry").css("max-height", "");
       $(".entry ul").css("display", "");
       $(".votenotice").css("float", "right");
-      $(".search").css("display", "");
     }
 
     $(".authorentry:not(.showall) ul li:not(:empty):nth-child(6)").each(function() {

@@ -70,7 +70,7 @@
         <a class="user tooltip" href="javascript:if(confirm('Are you sure you want to log out?')) window.location.href='/logout'">
           <%= user.user.tag %>
         </a>
-        <img src="<%= user.user.displayAvatarURL %>">
+        <img src="<%= user.user.displayAvatarURL() %>">
       <% } %>
       <a class="notalink navbar-sep"></a>
       <a class="privacyheader" href="/faq">FAQ</a>
@@ -94,9 +94,9 @@
         <a class="navbar-editor" href="/login" target="_top">Login</a>
       <% } else { %>
         <a class="user" href="javascript:if(confirm('Are you sure you want to log out?')) window.location.href='/logout'">Logout</a>
-        <img src="<%= user.user.displayAvatarURL %>" onclick="window.location.href='/'">
+        <img src="<%= user.user.displayAvatarURL() %>" onclick="window.location.href='/'">
       <% } %>
-      <a class="privacyheader" href="/faq">FAQ</a>
+      <a class="privacyheader" href="/faq">Privacy</a>
     </div>
     <% if (locals.manager && !locals.ended) { %>
       <div class="header-down">
