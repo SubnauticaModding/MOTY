@@ -4,7 +4,7 @@
 <script>
   var votes = [
     <% for (var vote of votes) { %>
-    "<%= vote %>",
+      "<%= vote %>",
     <% } %>
   ];
 
@@ -37,11 +37,6 @@
         406: () => {
           console.log("Too many votes!");
           alert("Too many votes!");
-        },
-        418: () => {
-          document.cookie = "rolled=true; expires=Fri, 31 Dec 9999 23:59:59 GMT"
-          alert("Bruh, did you really try to vote for yourself?");
-          window.location = "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
         },
         200: () => {
           $(".votefor" + author).css("display", "none");
@@ -132,7 +127,7 @@
       $(".reswarning").css("display", "none");
     }
 
-    if (votes.length == <%= maxVoteCount %>) {
+    if (votes.length == <%= maxVoteCount %>) { 
       $(".vote").addClass("disabledbutton");
       $(".vote:not([aria-describedby]), .vote[aria-describedby='']").attr("title", "You may only vote for <%= maxVoteCount %> modders.");
       $(".entry").attr("disabled", true);
@@ -141,11 +136,11 @@
         $(".votefor" + vote).attr("title", "");
       }
       $(".votenotice").css("display", "none");
-    } else {
+    } else { 
       $(".vote").removeClass("disabledbutton");
       $(".vote").attr("title", "");
       $(".entry").attr("disabled", false);
-      $(".votenotice").text(`You may${votes.length == 0 ? " only" : ""} vote for ${<%= maxVoteCount %> - votes.length} ${ votes.length == 0 ? "" : " more" } modder${<%= maxVoteCount %> - votes.length == 1 ? "" : "s" }.`);
+      $(".votenotice").text(`You may${votes.length == 0 ? " only" : ""} vote for ${<%= maxVoteCount %> - votes.length}${votes.length == 0 ? "" : " more"} modder${<%= maxVoteCount %> - votes.length == 1 ? "" : "s"}.`);
       if (<%= maxVoteCount %> == -1) {
         $(".votenotice").text("You can vote for any number of modders.");
       }
@@ -204,7 +199,7 @@
         $(".modentry").css("background-color", "#252525");
         $(".modentry").css("filter", "");
         $(".modentry *").css("filter", "");
-        $(`.modentry.modauthors li: nth - child(2).modvotebutton`).css("top", "");
+        $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
 
         var entries = $(".voteentry").detach();
         for (var i = 0; i < entries.length; i++) {
@@ -234,7 +229,7 @@
         $(".modentry").css("background-color", "#252525");
         $(".modentry").css("filter", "");
         $(".modentry *").css("filter", "");
-        $(`.modentry.modauthors li: nth - child(2).modvotebutton`).css("top", "");
+        $(`.modentry .modauthors li:nth-child(2) .modvotebutton`).css("top", "");
 
         if (window.readyForAnim) scrollAnimation();
       }
@@ -257,7 +252,7 @@
     }
 
     $(".authorentry:not(.showall) ul li:not(:empty):nth-child(6)").each(function() {
-      $(this).attr("content", `Show ${ $(this).closest("ul").children().length - 6 } more`);
+      $(this).attr("content", `Show ${$(this).closest("ul").children().length - 6} more`);
     });
     $(".authorentry.showall ul li:nth-last-child(1)").attr("content", "Show less");
 
@@ -407,17 +402,17 @@
   function scrollAnimation() {
     if (parseSearchString()[1]) {
       $([document.documentElement, document.body]).animate({
-        scrollTop: $(`#${ parseSearchString()[1] } `).offset().top - $(`#${ parseSearchString()[1] } `).height() + window.innerHeight / 4,
+        scrollTop: $(`#${parseSearchString()[1]}`).offset().top - $(`#${parseSearchString()[1]}`).height() + window.innerHeight / 4,
       }, 500);
       setTimeout(() => {
-        $(`#${ parseSearchString()[1] } `).animate({
+        $(`#${parseSearchString()[1]}`).animate({
           backgroundColor: "#00496c",
         }, 500);
         $({_:0}).animate({_:1}, {
           step: function () {
-            $(`#${ parseSearchString()[1] } `).css("filter", `contrast(1)`);
-            $(`#${ parseSearchString()[1] } * `).css("filter", "contrast(1)");
-            $(`#${ parseSearchString()[1] } .modauthors li: nth - child(2).modvotebutton`).css("top", "5px");
+            $(`#${parseSearchString()[1]}`).css("filter", `contrast(1)`);
+            $(`#${parseSearchString()[1]} *`).css("filter", "contrast(1)");
+            $(`#${parseSearchString()[1]} .modauthors li:nth-child(2) .modvotebutton`).css("top", "5px");
           },
         })
       }, 600);
@@ -433,83 +428,83 @@
 
 <ul class="authorwrapper wrapper hidden">
   <% for (var author of authors) { %>
-  <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
-    <div class="authorheader">
-      <img class="authoricon" src="<%= author.icon.replace('?size=2048', '?size=128') %>">
-      <span class="authorname notalink"><% if (locals.nexus && nexus[author.id] && author.name.toLowerCase() == nexus[author.id].NexusName.toLowerCase()) { %><a href="#" onclick="window.open('https:\/\/nexusmods.com/<%= nexus.domain %>/users/<%= nexus[author.id].NexusId %>?tab=user+files', '_blank');"><% } %><%= author.name %><% if (locals.nexus && nexus[author.id] && author.name.toLowerCase() == nexus[author.id].NexusName.toLowerCase()) { %></a><% } %><% if (locals.nexus && nexus[author.id] && author.name.toLowerCase() != nexus[author.id].NexusName.toLowerCase()) { %><br><span style="font-size:13px">(aka <a href="#" onclick="window.open('https:\/\/nexusmods.com/<%= nexus.domain %>/users/<%= nexus[author.id].NexusId %>?tab=user+files', '_blank');"><%= nexus[author.id].NexusName %></a>)</span><% } %></span>
+    <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %>">
+      <div class="authorheader">
+        <img class="authoricon" src="<%= author.icon.replace('?size=2048', '?size=128') %>">
+        <span class="authorname notalink"><% if (locals.nexus && nexus[author.id] && author.name.toLowerCase() == nexus[author.id].NexusName.toLowerCase()) { %><a href="#" onclick="window.open('https:\/\/nexusmods.com/<%= nexus.domain %>/users/<%= nexus[author.id].NexusId %>?tab=user+files', '_blank');"><% } %><%= author.name %><% if (locals.nexus && nexus[author.id] && author.name.toLowerCase() == nexus[author.id].NexusName.toLowerCase()) { %></a><% } %><% if (locals.nexus && nexus[author.id] && author.name.toLowerCase() != nexus[author.id].NexusName.toLowerCase()) { %><br><span style="font-size:13px">(aka <a href="#" onclick="window.open('https:\/\/nexusmods.com/<%= nexus.domain %>/users/<%= nexus[author.id].NexusId %>?tab=user+files', '_blank');"><%= nexus[author.id].NexusName %></a>)</span><% } %></span>
+      </div>
+      <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
+      <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
+      <% if (locals.mods) { %>
+        <br><br>
+        <ul>
+          <% for (var mod of mods) { %>
+            <% if (mod.authors.includes(author.id)) { %>
+              <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
+            <% } %>
+          <% } %>
+          <li></li>
+        </ul>
+        <br>
+      <% } %>
     </div>
-    <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;" <% } %>>VOTE</button>
-    <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;" <% } %>>VOTED</button>
-    <% if (locals.mods) { %>
-    <br><br>
-    <ul>
-      <% for (var mod of mods) { %>
-      <% if (mod.authors.includes(author.id)) { %>
-      <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
-      <% } %>
-      <% } %>
-      <li></li>
-    </ul>
-    <br>
-    <% } %>
-  </div>
   <% } %>
   <% for (var author of authors) { %>
-  <div class="entry dummy"></div>
+    <div class="entry dummy"></div>
   <% } %>
 </ul>
 
 <% if (locals.mods) { %>
-<ul class="modwrapper wrapper hidden">
-  <% for (var mod of mods) { %>
-  <div id="<%= mod.id %>" class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
-    <img src="<%= mod.image %>"><br><br class="shrink">
-    <a class="modname notalink"><%= mod.name %></a><br><br>
-    <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
-    <a class="moddescription" href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>">View on NexusMods</a>
-    <ul class="modauthors">
-      <% var lines = 0; %>
-      <% for (var author of mod.authors) { %>
-      <% for (var author2 of authors) { %>
-      <% if (author == author2.id) { %>
-      <li>
-        <img class="authoricon" src="<%= author2.icon %>">
-        <a href="#authors#<%= author2.id %>"><%= author2.name %></a>
-        <button class="votebutton modvotebutton vote votefor<%= author2.id %> votefor<%= author2.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author2.id %>')" <% if (votes.includes(author2.id)) { %> style="display:none;" <% } %>>VOTE</button>
-        <button class="votebutton modvotebutton unvote unvotefor<%= author2.id %> unvotefor<%= author2.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author2.id %>')" <% if (!votes.includes(author2.id)) { %> style="display:none;" <% } %>>VOTED</button>
-        <br>
-      </li>
-      <% lines++; %>
-      <% continue; %>
-      <% } %>
-      <% } %>
-      <% } %>
-    </ul>
-    <br><br>
-    <% for (var i = 0; i < lines; i++) { %>
-    <br><br>
+  <ul class="modwrapper wrapper hidden">
+    <% for (var mod of mods) { %>
+      <div id="<%= mod.id %>" class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
+        <img src="<%= mod.image %>"><br><br class="shrink">
+        <a class="modname notalink"><%= mod.name %></a><br><br>
+        <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
+        <a class="moddescription" href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>">View on NexusMods</a>
+        <ul class="modauthors">
+          <% var lines = 0; %>
+          <% for (var author of mod.authors) { %>
+            <% for (var author2 of authors) { %>
+              <% if (author == author2.id) { %>
+                <li>
+                  <img class="authoricon" src="<%= author2.icon %>">
+                  <a href="#authors#<%= author2.id %>"><%= author2.name %></a>
+                  <button class="votebutton modvotebutton vote votefor<%= author2.id %> votefor<%= author2.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author2.id %>')" <% if (votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTE</button>
+                  <button class="votebutton modvotebutton unvote unvotefor<%= author2.id %> unvotefor<%= author2.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author2.id %>')" <% if (!votes.includes(author2.id)) { %> style="display:none;"<% } %>>VOTED</button>
+                  <br>
+                </li>
+                <% lines++; %>
+                <% continue; %>
+              <% } %>
+            <% } %>
+          <% } %>
+        </ul>
+        <br><br>
+        <% for (var i = 0; i < lines; i++) { %>
+          <br><br>
+        <% } %>
+      </div>
     <% } %>
-  </div>
-  <% } %>
-  <% for (var mod of mods) { %>
-  <div class="entry dummy"></div>
-  <% } %>
-</ul>
+    <% for (var mod of mods) { %>
+      <div class="entry dummy"></div>
+    <% } %>
+  </ul>
 <% } %>
 
 <% if (locals.manager) { %>
-<div class="votewrapper wrapper hidden">
-  <ul class="votewrapper wrapper hidden">
-    <% for (var author of authors) { %>
-    <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %> voteentry">
-      <div class="authorheader">
-        <img class="authoricon" src="<%= author.icon.replace('?size=2048', '?size=128') %>">
-        <span class="authorname notalink"><%= author.name %></span>
-      </div>
-      <div class="votenum votes<%= author.id %> votebutton mobilevotenum">...</div>
-      <br><br>
-      <div class="votenum votes<%= author.id %>">...</div>
-      <script>
+  <div class="votewrapper wrapper hidden">
+    <ul class="votewrapper wrapper hidden">
+      <% for (var author of authors) { %>
+        <div id="<%= author.id %>" class="entry authorentry authorentry<%= author.id %> entry<%= author.id %> authorentry<%= author.discordids.split(',').join(' authorentry') %> entry<%= author.discordids.split(',').join(' entry') %> voteentry">
+          <div class="authorheader">
+            <img class="authoricon" src="<%= author.icon.replace('?size=2048', '?size=128') %>">
+            <span class="authorname notalink"><%= author.name %></span>
+          </div>
+          <div class="votenum votes<%= author.id %> votebutton mobilevotenum">...</div>
+          <br><br>
+          <div class="votenum votes<%= author.id %>">...</div>
+          <script>
             $(window).on("load", () => { 
               setInterval(() => {
                 var scroll = window.pageYOffset || document.documentElement.scrollTop;
@@ -538,16 +533,16 @@
                 document.documentElement.scrollTop = document.body.scrollTop = scroll;
               }, 100)
             });
-      </script>
-      <br>
-    </div>
-    <% } %>
-    <% for (var author of authors) { %>
-    <div class="entry dummy"></div>
-    <% } %>
-  </ul>
-  <button class="removevotes" onclick="if (window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
-</div>
+          </script>
+          <br>
+        </div>
+      <% } %>
+      <% for (var author of authors) { %>
+        <div class="entry dummy"></div>
+      <% } %>
+    </ul>
+    <button class="removevotes" onclick="if (window.confirm('Are you sure you want to remove all votes?')) removeAllVotes()">Remove all votes</button>
+  </div>
 <% } %>
 
-<form style="height:0px;width:0px;" name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0" /></form>
+<form style="height:0px;width:0px;" name="dirty_check"><input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0"/></form>
