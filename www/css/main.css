@@ -195,7 +195,7 @@ noscript {
   margin-bottom: 10px;
 }
 
-.authorentry:not(.showallsubnautica) ul.showallsnl li:not(:empty):nth-child(6),
+.authorentry:not(.showallsubnautica) ul.showallsn li:not(:empty):nth-child(6),
 .authorentry:not(.showallbelowzero) ul.showallbz li:not(:empty):nth-child(6) {
   list-style: none;
 }
