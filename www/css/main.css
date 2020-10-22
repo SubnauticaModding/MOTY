@@ -142,20 +142,25 @@ noscript {
   list-style: none;
 }
 
-.authorentry.showall ul li:nth-last-child(2) {
+.authorentry.showallsubnautica ul.showallsn li:nth-last-child(2),
+.authorentry.showallbelowzero ul.showallbz li:nth-last-child(2) {
   margin-bottom: 10px;
 }
 
-.authorentry.showall ul li:nth-last-child(1) {
+.authorentry.showallsubnautica ul.showallsn li:nth-last-child(1),
+.authorentry.showallbelowzero ul.showallbz li:nth-last-child(1) {
   list-style: none;
 }
 
-.authorentry.showall ul li:nth-last-child(1) a {
+.authorentry.showallsubnautica ul.showallsn li:nth-last-child(1) a,
+.authorentry.showallbelowzero ul.showallbz li:nth-last-child(1) a {
   display: none;
 }
 
-.authorentry.showall ul li:nth-last-child(1)::after,
-.authorentry:not(.showall) ul li:not(:empty):nth-child(6)::after {
+.authorentry.showallsubnautica ul.showallsn li:nth-last-child(1):not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)):not(:nth-child(5)):not(:nth-child(6))::after,
+.authorentry.showallbelowzero ul.showallbz li:nth-last-child(1):not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)):not(:nth-child(5)):not(:nth-child(6))::after,
+.authorentry:not(.showallsubnautica) ul.showallsn li:not(:empty):nth-child(6)::after,
+.authorentry:not(.showallbelowzero) ul.showallbz li:not(:empty):nth-child(6)::after {
   content: attr(content);
   font-size: 20px;
   -webkit-appearance: button;
@@ -185,19 +190,23 @@ noscript {
   color: white;
 }
 
-.authorentry:not(.showall) ul li:not(:empty):nth-child(5) {
+.authorentry:not(.showallsubnautica) ul.showallsn li:not(:empty):nth-child(5),
+.authorentry:not(.showallbelowzero) ul.showallbz li:not(:empty):nth-child(5) {
   margin-bottom: 10px;
 }
 
-.authorentry:not(.showall) ul li:not(:empty):nth-child(6) {
+.authorentry:not(.showallsubnautica) ul.showallsnl li:not(:empty):nth-child(6),
+.authorentry:not(.showallbelowzero) ul.showallbz li:not(:empty):nth-child(6) {
   list-style: none;
 }
 
-.authorentry:not(.showall) ul li:not(:empty):nth-child(6) a {
+.authorentry:not(.showallsubnautica) ul.showallsn li:not(:empty):nth-child(6) a,
+.authorentry:not(.showallbelowzero) ul.showallbz li:not(:empty):nth-child(6) a {
   display: none;
 }
 
-.authorentry:not(.showall) ul li:nth-child(n + 7) {
+.authorentry:not(.showallsubnautica) ul.showallsn li:nth-child(n + 7),
+.authorentry:not(.showallbelowzero) ul.showallbz li:nth-child(n + 7) {
   display: none;
 }
 

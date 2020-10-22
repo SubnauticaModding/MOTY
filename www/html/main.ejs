@@ -252,10 +252,14 @@
       $(".votenotice").css("float", "right");
     }
 
-    $(".authorentry:not(.showall) ul li:not(:empty):nth-child(6)").each(function() {
+    $(".authorentry:not(.showallsubnautica) ul.showallsn li:not(:empty):nth-child(6)").each(function() {
       $(this).attr("content", `Show ${$(this).closest("ul").children().length - 6} more`);
     });
-    $(".authorentry.showall ul li:nth-last-child(1)").attr("content", "Show less");
+    $(".authorentry.showallsubnautica ul.showallsn li:nth-last-child(1):not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)):not(:nth-child(5)):not(:nth-child(6))").attr("content", "Show less");
+    $(".authorentry:not(.showallbelowzero) ul.showallbz li:not(:empty):nth-child(6)").each(function() {
+      $(this).attr("content", `Show ${$(this).closest("ul").children().length - 6} more`);
+    });
+    $(".authorentry.showallbelowzero ul.showallbz li:nth-last-child(1):not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)):not(:nth-child(4)):not(:nth-child(5)):not(:nth-child(6))").attr("content", "Show less");
 
     <% if (locals.user) { %>
       $(".votefor<%= user.id %>").addClass("disabledbutton");
@@ -315,11 +319,17 @@
       }
     }
 
-    $(".authorentry ul li:nth-child(6)").after().on("click", function () {
-      $(this).closest(".authorentry").addClass("showall");
+    $(".authorentry ul.showallsn li:nth-child(6)").after().on("click", function () {
+      $(this).closest(".authorentry").addClass("showallsubnautica");
     });
-    $(".authorentry ul li:nth-last-child(1)").after().on("click", function () {
-      $(this).closest(".authorentry").removeClass("showall");
+    $(".authorentry ul.showallsn li:nth-last-child(1)").after().on("click", function () {
+      $(this).closest(".authorentry").removeClass("showallsubnautica");
+    });
+    $(".authorentry ul.showallbz li:nth-child(6)").after().on("click", function () {
+      $(this).closest(".authorentry").addClass("showallbelowzero");
+    });
+    $(".authorentry ul.showallbz li:nth-last-child(1)").after().on("click", function () {
+      $(this).closest(".authorentry").removeClass("showallbelowzero");
     });
 
     $(".search").on("change paste keyup", function () {
@@ -443,16 +453,28 @@
       <button class="votebutton vote votefor<%= author.id %> votefor<%= author.discordids.split(',').join(' votefor') %>" onclick="vote('<%= author.id %>')" <% if (votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTE</button>
       <button class="votebutton unvote unvotefor<%= author.id %> unvotefor<%= author.discordids.split(',').join(' unvotefor') %>" onclick="unvote('<%= author.id %>')" <% if (!votes.includes(author.id)) { %> style="display:none;"<% } %>>VOTED</button>
       <% if (locals.mods) { %>
-        <br><br>
-        <ul>
-          <% for (var mod of mods) { %>
-            <% if (mod.authors.includes(author.id)) { %>
-              <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
-            <% } %>
-          <% } %>
-          <li></li>
-        </ul>
         <br>
+        <% if (mods.filter(m => m.authors.includes(author.id) && m.domain == "subnautica").length > 0) { %>
+          <span style="padding-left: 10px; padding-bottom: 5px; display: block; font-style: italic">Subnautica mods:</span>
+          <ul class="showallsn">
+            <% for (var mod of mods) { %>
+              <% if (mod.authors.includes(author.id) && mod.domain == "subnautica") { %>
+                <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
+              <% } %>
+            <% } %>
+            <li></li>
+          </ul><br>
+        <% } if (mods.filter(m => m.authors.includes(author.id) && m.domain == "subnauticabelowzero").length > 0) { %>
+          <span style="padding-left: 10px; padding-bottom: 5px; display: block; font-style: italic">Below Zero mods:</span>
+          <ul class="showallbz">
+            <% for (var mod of mods) { %>
+              <% if (mod.authors.includes(author.id) && mod.domain == "subnauticabelowzero") { %>
+                <li><a href="#mods#<%= mod.id %>"><%= mod.name %></a></li>
+              <% } %>
+            <% } %>
+            <li></li>
+          </ul><br>
+        <% } %>
       <% } %>
     </div>
   <% } %>
