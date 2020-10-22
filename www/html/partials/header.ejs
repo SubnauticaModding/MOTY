@@ -64,7 +64,7 @@
           <img title="OWNER. You can manage the project and use the eval command." src="www/assets/owner.png" style="width:50px;height:50px;vertical-align:sub;border-radius:0;">
         <% } if (locals.manager) { %>
           <img title="MANAGER. You can view and manage votes, and add and remove authors and mods via Discord bot commands." src="www/assets/manager.png" style="width:30px;height:30px;vertical-align:sub;border-radius:0;margin-top:10px;">
-        <% } if (locals.participant > 1) { %> <!-- TODO: Figure out participant logic -->
+        <% } if (locals.participant) { %>
           <img title="PARTICIPANT. You cannot vote for yourself." src="www/assets/participant.png" style="width:50px;vertical-align:sub;">
         <% } %>
         <a class="user tooltip" href="javascript:if(confirm('Are you sure you want to log out?')) window.location.href='/logout'">

@@ -68,7 +68,7 @@ bot.on("message", (message) => {
   }
 });
 
-web.all("*", async (req, res) => { // TODO: Differentiate sn and bz mods
+web.all("*", async (req, res) => {
   const guild = bot.guilds.cache.get(config.GuildID);
   const cookies = auth.getCookies(req);
   const member = auth.sessionValid(cookies.authUserID, cookies.authSession) ? await guild?.members.fetch(cookies.authUserID) : undefined;
@@ -104,20 +104,20 @@ web.all("*", async (req, res) => { // TODO: Differentiate sn and bz mods
   authorData = authorData.filter(a => {
     if (config.DisableMods) return true;
     if (modData.map(m => m.authors.includes(a.id)).includes(true)) return true;
-    console.log("Found author with no mods: " + a.id);
+    console.warn("Found author with no mods: " + a.id);
     return false;
   }).sort(sort);
   if (!config.DisableMods) modData = modData.filter(m => {
     if (m.description) return true;
-    console.log("Found mod with no description: " + m.id);
+    console.warn("Found mod with no description: " + m.id);
     return false;
   }).filter(m => {
     if (m.authors.filter(f => authorData.map(a => a.id).includes(f)).length == m.authors.length) return true;
-    console.log("Found mod with invalid authors: " + m.id);
+    console.warn("Found mod with invalid authors: " + m.id);
     return false;
   }).filter(m => {
     if (m.domain == "subnautica" || m.domain == "subnauticabelowzero") return true;
-    console.log("Found mod with invalid domain: " + m.id);
+    console.warn("Found mod with invalid domain: " + m.id);
     return false;
   }).sort(sort);
 
@@ -139,6 +139,7 @@ web.all("*", async (req, res) => { // TODO: Differentiate sn and bz mods
     metaImage: guild?.iconURL({ format: "png", dynamic: true }),
     mods: modData,
     nexus: nexusData,
+    participant: authorData.map(v => v.discordids.split(",")).filter(f => f.includes(member?.id ?? "not an id")).length > 0,
     user: member,
     votes: voteData,
   });
@@ -206,7 +207,12 @@ async function parseModData(modData: mods.Mod[], member?: Discord.GuildMember) {
 }
 
 function sort(a: any, b: any) {
-  return a.name ? b.name ? a.name.localeCompare(b.name) : 1 : b.name ? -1 : 0;
+  if (!a.name || !b.name) return 0;
+
+  const compare = a.name.localeCompare(b.name);
+  if (compare || !a.domain || !b.domain) return compare;
+
+  return a.domain.localeCompare(b.domain);
 }
 
 process.on("unhandledRejection", (reason, p) => {

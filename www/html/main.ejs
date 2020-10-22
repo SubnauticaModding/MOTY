@@ -378,7 +378,13 @@
     var modentries = $(".modentry").detach();
     for (var i = 0; i < modentries.length; i++) {
       for (var j = i + 1; j < modentries.length; j++) {
-        if ($(modentries[j]).find(".modname").text().toLowerCase() < $(modentries[i]).find(".modname").text().toLowerCase()) {
+        var textJ = $(modentries[j]).find(".modname").text().toLowerCase();
+        var textI = $(modentries[i]).find(".modname").text().toLowerCase();
+
+        if (textJ.endsWith("below zero")) textJ = textJ.substr(0, textJ.length - 10) + "subnauticabelowzero";
+        if (textI.endsWith("below zero")) textI = textI.substr(0, textI.length - 10) + "subnauticabelowzero";
+
+        if (textJ < textI) {
           var temp = modentries[i];
           modentries[i] = modentries[j];
           modentries[j] = temp;
@@ -460,7 +466,8 @@
     <% for (var mod of mods) { %>
       <div id="<%= mod.id %>" class="entry modentry <% for (var author of mod.authors) { for (var author2 of authors) { if (author == author2.id) { %> modentry<%= author2.id %> entry<%= author2.id %> <% }}} %>">
         <img src="<%= mod.image %>"><br><br class="shrink">
-        <a class="modname notalink"><%= mod.name %></a><br><br>
+        <a class="modname notalink"><%= mod.name %></a>
+        <span class="modname" style="font-size: 13px; font-style: italic; margin-top: 3px; color: gray"><%= mod.domain == "subnautica" ? "Subnautica" : "Below Zero" %></span><br><br>
         <div class="moddescription"><%= mod.description.replace(/<\s*br[\s\\\/]*>/gi, "\n").replace(/ +/g, " ") %></div><br><br class="shrink">
         <a class="moddescription" href="https://nexusmods.com/<%= mod.domain %>/mods/<%= mod.nexusid %>">View on NexusMods</a>
         <ul class="modauthors">
