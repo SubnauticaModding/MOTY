@@ -7,6 +7,6 @@ export async function initialize() {
 
   for (var f of files) {
     const props = await import(`../commands/${f}`);
-    server.commands[f.substring(0, f.length - 3)] = props;
+    server.commands[f.substring(0, f.length - 3)] = props.default;
   }
 }

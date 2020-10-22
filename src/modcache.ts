@@ -6,7 +6,7 @@ import * as config from "../config.json";
 import * as data from "./data";
 import * as mods from "./mods";
 
-type Domain = "subnautica" | "subnauticabelowzero";
+export type Domain = "subnautica" | "subnauticabelowzero";
 type CachedMod = {
   domain: Domain,
   id: string,

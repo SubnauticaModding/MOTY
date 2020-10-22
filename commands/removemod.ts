@@ -1,6 +1,7 @@
-const mods = require("../src/mods");
+import { Message } from "discord.js";
+import * as mods from "../src/mods";
 
-module.exports = function (message, command, args) {
+export default function (message: Message, command: string, args: string[]) {
   var existingMod = mods.getMod(args[0]);
   if (!existingMod) {
     message.channel.send("Mod does not exist.");

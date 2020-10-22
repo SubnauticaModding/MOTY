@@ -31,11 +31,11 @@ export default async function (data: server.EndpointData) {
     response = JSON.parse(response);
 
     var userData = await auth.getUserData(response.access_token, response.token_type);
-    var user = await server.bot.users.fetch(userData.id);
+    var member = await server.bot.guilds.cache.get(config.GuildID)?.members.fetch(userData.id);
     if (!userData.verified) return data.res.redirect("/?alert=You need to have a verified email on your account in order to vote.");
-    if (!user) return data.res.redirect("/?server=true&invite=" + encodeURIComponent(config.GuildInvite));
-    if (user.createdTimestamp > 1606780800000) // December 1st 2020, 00:00 UTC
-      return data.res.redirect("/?alert=Your account was created after December 1st 2020, which means you cannot vote.");
+    if (!member) return data.res.redirect("/?server=true&invite=" + encodeURIComponent(config.GuildInvite));
+    if (member.joinedTimestamp ?? 0 > 1606780800000) // December 1st 2020, 00:00 UTC
+      return data.res.redirect("/?alert=You joined the Subnautica Modding Discord server after December 1st 2020, which means you cannot vote.");
 
     var sessionToken = auth.generateSessionToken();
     auth.saveLoginData(userData.id, sessionToken, response.access_token);

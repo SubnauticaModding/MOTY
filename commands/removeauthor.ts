@@ -1,6 +1,7 @@
-const authors = require("../src/authors");
+import { Message } from "discord.js";
+import * as authors from "../src/authors";
 
-module.exports = function (message, command, args) {
+export default function (message: Message, command: string, args: string[]) {
   var existingAuthor = authors.getAuthor(args[0]);
   if (!existingAuthor) {
     message.channel.send("Author does not exist.");
