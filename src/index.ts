@@ -55,7 +55,7 @@ bot.on("message", (message) => {
   if (!message.content.toLowerCase().startsWith(config.Prefix)) return;
   if (!perms.isManager(message.author.id)) return;
 
-  var args = message.content.slice(config.Prefix.length).trim().split(/ +/g); // TODO: reload config command?
+  var args = message.content.slice(config.Prefix.length).trim().split(/ +/g);
   var command = args.shift()?.toLowerCase();
 
   if (!command) return;
@@ -68,7 +68,7 @@ bot.on("message", (message) => {
   }
 });
 
-web.all("*", async (req, res) => {
+web.all("*", async (req, res) => { // TODO: Differentiate sn and bz mods
   const guild = bot.guilds.cache.get(config.GuildID);
   const cookies = auth.getCookies(req);
   const member = auth.sessionValid(cookies.authUserID, cookies.authSession) ? await guild?.members.fetch(cookies.authUserID) : undefined;
@@ -101,8 +101,25 @@ web.all("*", async (req, res) => {
   const nexusData = process.env.NEXUS_LINKS ? nexus.getAuthors() : undefined;
   const voteData = users.getUser(cookies.authUserID)?.votes ?? [];
 
-  authorData = authorData.filter(a => config.DisableMods || modData.map(m => m.authors.includes(a.id)).includes(true)).sort(sort);
-  if (!config.DisableMods) modData = modData.filter(m => m.description).filter(m => authorData.map(a => a.id).includes(m.authors[0])).sort(sort);
+  authorData = authorData.filter(a => {
+    if (config.DisableMods) return true;
+    if (modData.map(m => m.authors.includes(a.id)).includes(true)) return true;
+    console.log("Found author with no mods: " + a.id);
+    return false;
+  }).sort(sort);
+  if (!config.DisableMods) modData = modData.filter(m => {
+    if (m.description) return true;
+    console.log("Found mod with no description: " + m.id);
+    return false;
+  }).filter(m => {
+    if (m.authors.filter(f => authorData.map(a => a.id).includes(f)).length == m.authors.length) return true;
+    console.log("Found mod with invalid authors: " + m.id);
+    return false;
+  }).filter(m => {
+    if (m.domain == "subnautica" || m.domain == "subnauticabelowzero") return true;
+    console.log("Found mod with invalid domain: " + m.id);
+    return false;
+  }).sort(sort);
 
   if (Date.now() >= 1609459200000 && !perms.isManager(member?.id)) { // January 1st 2021, 00:00 UTC
     return res.render("www/html/winners.ejs", { // TODO: Modify winners page
@@ -121,7 +138,6 @@ web.all("*", async (req, res) => {
   res.render(`www/html${p}.ejs`, {
     authors: authorData,
     ended: Date.now() >= 1609459200000, // January 1st 2021, 00:00 UTC
-    faqs: config.FAQ,
     headerImage: guild?.iconURL({ format: "png", dynamic: true }),
     manager: perms.isManager(member?.id),
     maxVoteCount: config.MaxVotes,
@@ -169,7 +185,7 @@ async function parseModData(modData: mods.Mod[], member?: Discord.GuildMember) {
   if (!config.DisableMods) {
     if (member?.id == "183249892712513536") await modcache.update();
     var cache = modcache.getAllCached();
-    mainloop: for (const mod of modData || []) {
+    for (const mod of modData) {
       const modObj: ParsedMod = {
         id: mod.id,
         domain: mod.domain,
@@ -184,7 +200,7 @@ async function parseModData(modData: mods.Mod[], member?: Discord.GuildMember) {
               modObj[prop] = cacheElement[prop];
             }
           }
-          continue mainloop;
+          break;
         }
       }
 

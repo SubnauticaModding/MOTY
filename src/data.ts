@@ -2,8 +2,6 @@ import * as fs from "fs";
 import readdir from "fs-readdir-recursive";
 import * as path from "path";
 
-// TODO: Create data folders if not exist
-
 /** Gets an object from the database */
 export function getObject(folder: string, file: string) {
   try {
@@ -38,10 +36,11 @@ export function removeObject(folder: string, file: string) {
   fs.unlinkSync(path.join(__dirname, "../data/", folder, file + ".json"));
 };
 
-
+/** Creates default data folder if they don't exist */
 export function createFolders() {
   if (!fs.existsSync(path.join(__dirname, "../data"))) fs.mkdirSync(path.join(__dirname, "../data"));
   if (!fs.existsSync(path.join(__dirname, "../data/authors"))) fs.mkdirSync(path.join(__dirname, "../data/authors"));
   if (!fs.existsSync(path.join(__dirname, "../data/mods"))) fs.mkdirSync(path.join(__dirname, "../data/mods"));
+  if (!fs.existsSync(path.join(__dirname, "../data/cache"))) fs.mkdirSync(path.join(__dirname, "../data/cache"));
   if (!fs.existsSync(path.join(__dirname, "../data/users"))) fs.mkdirSync(path.join(__dirname, "../data/users"));
 }
