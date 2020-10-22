@@ -78,7 +78,7 @@ export async function cache(domain: Domain, modid: string) {
 }
 
 /** Caches all recent updates on a game */
-export async function updateGame(updates: any, domain: Domain) { // TODO: Add type
+export async function updateGame(updates: { mod_id: string, latest_mod_activity: number }[], domain: Domain) {
   var mappedmods = mods.getMods().map(mod => mod.domain + "_" + mod.nexusid);
   for (var update of updates) {
     if (!mappedmods.includes(domain + "_" + update.mod_id)) continue;

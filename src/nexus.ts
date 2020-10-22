@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 
-export function getAuthors() { // TODO: Figure out return type and JSDOC
+/** Gets the nexus data of authors */
+export function getAuthors(): { [key: string]: { NexusName: string, NexusId: string, } } {
   return JSON.parse(fs.readFileSync(path.join(__dirname, "../data/nexus.json"), "utf-8"));
 }

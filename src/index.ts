@@ -89,7 +89,7 @@ web.all("*", async (req, res) => { // TODO: Differentiate sn and bz mods
   }
 
   if (Date.now() < 1606780800000 && !perms.isManager(member?.id)) { // December 1st 2020, 00:00 UTC
-    return res.render("www/html/timer.ejs", { // TODO: Get rid of timer?
+    return res.render("www/html/timer.ejs", {
       timer: new Date(1606780800000).toUTCString(), // December 1st 2020, 00:00 UTC
       metaGameName: guild?.name,
       metaImage: guild?.iconURL({ format: "png", dynamic: true }),
@@ -98,7 +98,7 @@ web.all("*", async (req, res) => { // TODO: Differentiate sn and bz mods
 
   var authorData = await parseAuthorData(authors.getAuthors());
   var modData = await parseModData(!config.DisableMods ? mods.getMods() : [], member);
-  const nexusData = process.env.NEXUS_LINKS ? nexus.getAuthors() : undefined;
+  const nexusData = config.EnableNexusLinks ? nexus.getAuthors() : undefined;
   const voteData = users.getUser(cookies.authUserID)?.votes ?? [];
 
   authorData = authorData.filter(a => {
@@ -122,13 +122,7 @@ web.all("*", async (req, res) => { // TODO: Differentiate sn and bz mods
   }).sort(sort);
 
   if (Date.now() >= 1609459200000 && !perms.isManager(member?.id)) { // January 1st 2021, 00:00 UTC
-    return res.render("www/html/winners.ejs", { // TODO: Modify winners page
-      authors: authorData,
-      headerImage: guild?.iconURL({ format: "png", dynamic: true }),
-      metaGameName: guild?.name,
-      metaImage: guild?.iconURL({ format: "png", dynamic: true }),
-      winners: true,
-    });
+    return res.status(410).send("The event has ended."); // Gone
   }
 
   var p = req.path == "/faq" ? "/faq" : "/main";
