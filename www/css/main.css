@@ -404,7 +404,7 @@ noscript {
   padding-bottom: 5px;
 }
 
-.modauthors li:nth-child(2):not([style~="filter"][style~="contrast"]) .modvotebutton {
+.modauthors li:nth-child(2):not([style^="filter"]) .modvotebutton {
   top: 40px !important;
 }
 
