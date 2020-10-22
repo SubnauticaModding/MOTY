@@ -7,7 +7,7 @@ switch (os.type()) {
     child.exec("cd dist && del /s *.js.map", log);
     break;
   case "Linux":
-    child.exec("cd dist && find . -name \"*.js\" -type f", log); // TODO: Make sure this works.
+    child.exec("cd dist && find . -name \"*.js\" -type f", log);
     child.exec("cd dist && find . -name \"*.js.map\" -type f", log);
     child.exec("cd dist && find . -name \"*.js\" -type f -delete", log);
     child.exec("cd dist && find . -name \"*.js.map\" -type f -delete", log);
