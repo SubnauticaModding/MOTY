@@ -455,7 +455,7 @@
       <% if (locals.mods) { %>
         <br>
         <% if (mods.filter(m => m.authors.includes(author.id) && m.domain == "subnautica").length > 0) { %>
-          <span style="padding-left: 10px; padding-bottom: 5px; display: block; font-style: italic">Subnautica mods:</span>
+          <span class="showallspan" style="padding-left: 10px; padding-bottom: 5px; display: block; font-style: italic">Subnautica mods:</span>
           <ul class="showallsn">
             <% for (var mod of mods) { %>
               <% if (mod.authors.includes(author.id) && mod.domain == "subnautica") { %>
@@ -465,7 +465,7 @@
             <li></li>
           </ul><br>
         <% } if (mods.filter(m => m.authors.includes(author.id) && m.domain == "subnauticabelowzero").length > 0) { %>
-          <span style="padding-left: 10px; padding-bottom: 5px; display: block; font-style: italic">Below Zero mods:</span>
+          <span class="showallspan" style="padding-left: 10px; padding-bottom: 5px; display: block; font-style: italic">Below Zero mods:</span>
           <ul class="showallbz">
             <% for (var mod of mods) { %>
               <% if (mod.authors.includes(author.id) && mod.domain == "subnauticabelowzero") { %>
