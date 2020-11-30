@@ -83,6 +83,10 @@ body.mobile .search {
   position: unset !important;
 }
 
+body.mobile .showallspan {
+  display: none !important;
+}
+
 body.mobile .winnerentry {
   width: 100% !important;
 }
